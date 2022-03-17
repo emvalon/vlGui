@@ -18,7 +18,8 @@ struct vlonGui_window_t *
 vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
                      int16_t width, int16_t height, uint8_t userDataLen)
 {
-    struct vlonGui_window_t * win;
+    struct vlonGui_window_t *win;
+    struct vlonGui_window_t *brother;
 
     win = vlonGui_malloc(sizeof(*win) + userDataLen);
     if(!win) {
@@ -45,8 +46,16 @@ vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     win->type = VLGUI_WIN_TYPE_BASE;
     
     if(parent) {
-        win->next = parent->child;
-        parent->child = win;
+        brother = parent->child;
+        if (brother) {
+            for (; brother->next; brother = brother->next);
+        }
+
+        if (brother) {
+            brother->next = win;
+        } else {
+            parent->child = win;
+        }
     }
 
     return win;

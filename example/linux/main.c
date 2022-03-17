@@ -13,7 +13,7 @@
 
 struct vlonGui_t screen;
 struct vlonGui_msgBox_t *msgbox;
-struct vlonGui_window_t *win, *topWin;
+struct vlonGui_window_t *mainWin, *win, *topWin;
 struct vlonGui_button_t *btn;
 struct vlonGui_selector_t *sel;
 
@@ -27,7 +27,7 @@ static void
 mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
 {
     int16_t x;
-
+    
     vlonGui_windowClear(win);
     x = 12;
     vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_game);
@@ -160,11 +160,13 @@ main(void)
     vlonGui_screen_init(&screen, 128, 64);
     vlonGui_register_driver(&screen, vlonGui_portGetDriver());
 
-    win = vlinGui_getMainWindow(&screen);
+    mainWin = vlinGui_getMainWindow(&screen);
+
+    win = vlonGui_windowCreate(mainWin, 0, 0, mainWin->win_width, mainWin->win_height, 0);
     vlonGui_windowSetDrawCb(win, mainWindowDrawCb);
     vlonGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
 
-    topWin = vlonGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);
+    topWin = vlonGui_windowCreate(mainWin, 0, 0, win->win_width, win->win_height, 0);
     vlonGui_windowSetDrawCb(topWin, topWindowDrawCb);
 
     // msgbox = vlonGui_msgBoxCreate(vlinGui_getMainWindow(&screen));

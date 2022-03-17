@@ -42,6 +42,18 @@ static void vlonGui_refreshAllChildren(struct vlonGui_window_t *win)
     }
 }
 
+static void vlonGui_refreshAllBrothers(struct vlonGui_window_t *win)
+{
+    struct vlonGui_window_t *next;
+
+    next = win->next;
+
+    while (next) {
+        vlonGui_windowFresh(next);
+        next = next->next;
+    }
+}
+
 void vlonGui_refresh(void)
 {
     uint8_t key;
@@ -49,7 +61,8 @@ void vlonGui_refresh(void)
 
     // 获取最上层的window 
     win = vlonGui_cur_screen->window;
-    for(; win->next; win = win->next);
+    for(; win->child; win = win->child);
+
     //处理队列中的按键
     while(1) {
         key = vlonGui_inputGetKey();
@@ -57,14 +70,15 @@ void vlonGui_refresh(void)
             break;
         }
 
-        win->pProcessKey(win, key);
+        if (win->pProcessKey) {
+            win->pProcessKey(win, key);
+        }
     }
-
 
     if(vlonGui_cur_screen->fresh) {
         // vlonGui_cur_screen->fresh = 0;
         vlonGui_windowFresh(win);
-        vlonGui_refreshAllChildren(win);
+        vlonGui_refreshAllBrothers(win);
         vlonGui_cur_screen->displayDriver->pFresh();
     }
 }

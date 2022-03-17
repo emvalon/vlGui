@@ -23,11 +23,11 @@ static void vlonGui_drawButton(struct vlonGui_window_t *win, void *arg)
     w = win->win_width;
     h = win->win_height;
 
+    vlonGui_windowClear(win);
     if(btn->pressed) {
-        vlonGui_drawRectangle(win, 0, 0, w , h, 0);
-        vlonGui_drawBlock(win, 1, 1, w - 2, h - 2, 1);
+        // vlonGui_drawRectangle(win, 0, 0, w , h, 0);
+        vlonGui_drawBlock(win, 2, 2, w - 3, h - 3, 1);
     } else {
-        vlonGui_windowClear(win);
         vlonGui_drawRectangle(win, 1, 1, w - 3, h - 3, 1);
         // 绘制下阴影
         vlonGui_drawLine(win, 2, h - 2, w - 2, h - 2, 1, 1);
@@ -39,6 +39,9 @@ static void vlonGui_drawButton(struct vlonGui_window_t *win, void *arg)
 
     sx = (w - (btn->font->FontWidth * strlen(btn->text))) >> 1;
     sy = (h - btn->font->FontHeight) >> 1;
+    if (btn->pressed) {
+        ++sy;
+    }
     vlonGui_drawString(win, sx, sy, btn->text, !btn->pressed);
 }
 
@@ -62,7 +65,6 @@ vlonGui_buttonCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     btn->pressed = 0;
     btn->text = "OK";
     btn->font = &vlonGui_font7x10;
-    parent->next = (struct vlonGui_window_t*)btn;
 
     return btn;
 }

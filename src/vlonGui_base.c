@@ -218,7 +218,6 @@ void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
         return;
     }
 
-    // rt_kprintf("%s,%d,%d,%d,%d\n",__func__, actualX1, actualY1, actualX2, actualY2);
     drawLineByPixel(win, x1, y1, x2, y2, color);
     
     if(width <= 1) {

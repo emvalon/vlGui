@@ -108,8 +108,14 @@ keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
     case 0xff51:
         vlonGui_inputEnqueueKey(VLGUI_KEY_LETF);
         break;
+    case 0xff52:
+        vlonGui_inputEnqueueKey(VLGUI_KEY_UP);
+        break;
     case 0xff53:
         vlonGui_inputEnqueueKey(VLGUI_KEY_RIGHT);
+        break;
+    case 0xff54:
+        vlonGui_inputEnqueueKey(VLGUI_KEY_DOWN);
         break;
     case 0xff0d:
         vlonGui_inputEnqueueKey(VLGUI_KEY_OK);
