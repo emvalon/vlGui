@@ -49,9 +49,6 @@ vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
         brother = parent->child;
         if (brother) {
             for (; brother->next; brother = brother->next);
-        }
-
-        if (brother) {
             brother->next = win;
         } else {
             parent->child = win;
@@ -59,6 +56,40 @@ vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     }
 
     return win;
+}
+
+void
+vlonGui_windowDelete(struct vlonGui_window_t *win)
+{
+    struct vlonGui_window_t *child;
+    struct vlonGui_window_t *next;
+
+    child = win->child;
+
+    while (child) {
+        next = child->next;
+        vlonGui_windowDelete(child);
+        child = next;
+    }
+    
+    vlonGui_free(win);
+}
+
+void
+vlonGui_windowDeleteChildren(struct vlonGui_window_t *win)
+{
+    struct vlonGui_window_t *child;
+    struct vlonGui_window_t *next;
+
+    child = win->child;
+    
+    while (child) {
+        next = child->next;
+        vlonGui_windowDelete(child);
+        child = next;
+    }
+    
+    win->child = NULL;
 }
 
 static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
@@ -78,7 +109,7 @@ static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
         win->y_offset = win->ori_y_offset + win->ani_dy;
         win->animation = 0;
         if(win->pAnimatinDone) {
-            win->pAnimatinDone();
+            win->pAnimatinDone(win->animatinDoneArg);
         }
         return;
     }
@@ -133,7 +164,7 @@ void vlonGui_windowSetKeyCb(struct vlonGui_window_t *win, vlonGui_processKeyCb_t
 }
 
 void vlonGui_windowScrollAnimation(struct  vlonGui_window_t *win, int16_t dx, int16_t dy, 
-                                   uint16_t ms, vlonGui_animationDoneCb cb)
+                                   uint16_t ms, vlonGui_animationDoneCb cb, void *arg)
 {
     if(win->animation) {
         win->ani_dx = win->ori_x_offset + win->ani_dx + dx - win->x_offset;
@@ -148,4 +179,5 @@ void vlonGui_windowScrollAnimation(struct  vlonGui_window_t *win, int16_t dx, in
     win->start_time = vlonGui_getTime();
     win->ani_ms     = ms;
     win->pAnimatinDone = cb;
+    win->animatinDoneArg = arg;
 }

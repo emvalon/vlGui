@@ -69,7 +69,6 @@ vlonGui_msgBoxCreate(struct vlonGui_window_t *parent)
     msgbox->win.pDrawWindow = vlonGui_drawMsgBox;
     msgbox->title = "messageBox";
     msgbox->text  = "add Test";
-    parent->next = (struct vlonGui_window_t *)msgbox;
 
     return msgbox;
 }

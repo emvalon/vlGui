@@ -11,9 +11,13 @@ struct vlonGui_selector_t {
     struct vlonGui_font_t *bigFont;
     struct vlonGui_font_t *smallFont;
     void *entry;
-    uint8_t select;
+    uint8_t index;
+    uint8_t temp_index;
     uint8_t num;
 };
+
+
+int vlonGui_selectorProcessKey(struct vlonGui_window_t *win, uint8_t key);
 
 struct vlonGui_selector_t * vlonGui_selectorCreate(struct vlonGui_window_t *parent);
 

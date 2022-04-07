@@ -15,9 +15,12 @@ set(CMAKE_C_FLAGS "-O0 -ggdb") #'pkg-config gtk+-2.0 --cflags --libs gthread-2.0
 # set(LINK_FLAGS "-lpthread")
 
 
+AUX_SOURCE_DIRECTORY(../ DIR_MAIN)
+
 add_executable(${PROJECT_NAME} 
 ${SRC}
 ${PORT}
+${DIR_MAIN}
 "main.c"
 )
 

@@ -69,6 +69,8 @@ extern struct vlonGui_t *vlonGui_cur_screen;
 
 void * vlonGui_malloc(uint32_t size);
 
+void vlonGui_free(void *addr);
+
 uint32_t vlonGui_getTime(void);
 
 int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height);

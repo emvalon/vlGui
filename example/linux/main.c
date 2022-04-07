@@ -10,6 +10,7 @@
 #include "vlonGui_button.h"
 #include "vlonGui_selector.h"
 #include "../bitmap.h"
+#include "../games.h"
 
 struct vlonGui_t screen;
 struct vlonGui_msgBox_t *msgbox;
@@ -94,7 +95,7 @@ topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
 }
 
 static void 
-drawIconName(void)
+drawIconName(void *arg)
 {
    showIconName = true;
 }
@@ -108,7 +109,7 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if(pos) {
             --pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, 128, 0, 500, drawIconName);
+            vlonGui_windowScrollAnimation(win, 128, 0, 500, drawIconName, NULL);
         } else {
             presskey = VLGUI_KEY_RIGHT;
         }
@@ -118,7 +119,7 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if(pos < 4) {
             ++pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, -128, 0, 500, drawIconName);
+            vlonGui_windowScrollAnimation(win, -128, 0, 500, drawIconName, NULL);
         } else {
             presskey = VLGUI_KEY_LETF;
         }
@@ -127,7 +128,9 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         switch (pos)
         {
         case 0: 
-            msgbox = vlonGui_msgBoxCreate(win);
+            // msgbox = vlonGui_msgBoxCreate(win);
+            games_createSelector(win);
+
             break;
         case 1:
             btn = vlonGui_buttonCreate(win, 40, 20, 30, 16);

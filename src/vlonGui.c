@@ -58,19 +58,20 @@ void vlonGui_refresh(void)
 {
     uint8_t key;
     struct vlonGui_window_t *win;
+    struct vlonGui_window_t *parent;
 
-    // 获取最上层的window 
-    win = vlonGui_cur_screen->window;
-    for(; win->child; win = win->child);
-
-    //处理队列中的按键
+    /* Process all of keys enqueued */
     while(1) {
+        /* Get the top layer of dispaly window */
+        for(win = vlonGui_cur_screen->window; win->child; parent = win, win = win->child);
+
         key = vlonGui_inputGetKey();
+
         if(key == VLGUI_KEY_NONE) {
             break;
-        }
-
-        if (win->pProcessKey) {
+        } else if (key == VLGUI_KEY_ESC) {
+            vlonGui_windowDeleteChildren(parent);
+        } else if (win->pProcessKey) {
             win->pProcessKey(win, key);
         }
     }

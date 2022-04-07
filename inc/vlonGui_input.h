@@ -4,6 +4,9 @@
 #include <stdint.h>
 
 
+
+#define VLGUI_KEY_ESC               (0xf0)
+
 #define VLGUI_KEY_OK                (0xf9)
 #define VLGUI_KEY_CANCEL            (0xfa)
 #define VLGUI_KEY_LETF              (0xfb)

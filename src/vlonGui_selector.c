@@ -10,16 +10,36 @@ struct vlonGui_selectorEntry_t {
     struct vlonGui_selectorEntry_t *next;
 };
 
-static int 
+static void
+vlonGui_selectorScrollUpCb(void *arg)
+{
+    struct vlonGui_selector_t *sel;
+
+    sel = (struct vlonGui_selector_t *)arg;
+    sel->index = sel->temp_index;
+}
+
+static void
+vlonGui_selectorScrollDownCb(void *arg)
+{
+    struct vlonGui_selector_t *sel;
+
+    sel = (struct vlonGui_selector_t *)arg;
+    sel->index = sel->temp_index;
+}
+
+int 
 vlonGui_selectorProcessKey(struct vlonGui_window_t *win, uint8_t key)
 {
     struct vlonGui_selector_t *sel;
 
     sel = (struct vlonGui_selector_t *)win;
-    if((key == VLGUI_KEY_UP) && (sel->select < (sel->num - 1))) {
-        ++sel->select;
-    } else if((key == VLGUI_KEY_DOWN) && (sel->select > 0)) {
-        --sel->select;
+    if((key == VLGUI_KEY_UP) && (sel->temp_index > 0)) {
+        --sel->temp_index;
+        vlonGui_windowScrollAnimation(win, 0, sel->bigFont->FontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
+    } else if((key == VLGUI_KEY_DOWN) && (sel->temp_index < (sel->num - 1))) {
+        ++sel->temp_index;
+        vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->FontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
     }
 }
 
@@ -29,40 +49,41 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
     struct vlonGui_selector_t *sel;
     struct vlonGui_selectorEntry_t *entry;
     struct vlonGui_font_t *font;
-    int16_t h, dh, x, y, sy;
-    uint8_t select;
+    int16_t h, y;
+    uint8_t index;
+    int16_t ax, ay;
 
     sel = (struct vlonGui_selector_t *)win;
 
-    // 每个entry所占用的高度
+    index = sel->index;
     h = sel->bigFont->FontHeight + 4;
-    // 需要将每个entry居中，计算其y坐标的偏差
-    dh = (h - sel->smallFont->FontHeight) >> 1;
-    // 被选中entry的y坐标
-    sy = (win->win_height - sel->bigFont->FontHeight) >> 1;
-
-    select = sel->select;
 
     entry = (struct vlonGui_selectorEntry_t *)sel->entry;
 
     vlonGui_windowClear(win);
 
-    vlonGui_drawRectangle(win, 0, sy - 2, win->win_width, sel->bigFont->FontHeight + 4, 1);
-
+    y = win->win_height >> 1;
     while(entry) {
-        if(entry->index != select) {
+        if(entry->index != index) {
             font  = sel->smallFont;
-            y = sy - ((entry->index - select) * h) + dh;
         } else {
             font  = sel->bigFont;
-            y = sy;
         }
 
+        ay = y - (font->FontHeight >> 1);
+
         vlonGui_setFont(font);
-        x = (win->win_width - (font->FontWidth * strlen(entry->str))) >> 1;
-        vlonGui_drawString(win, x, y, entry->str, 1);
+        ax = (win->win_width - (font->FontWidth * strlen(entry->str))) >> 1;
+        vlonGui_drawString(win, ax, ay, entry->str, 1);
         entry = entry->next;
+
+        y += h;
     }
+
+    y = ((win->win_height - sel->bigFont->FontHeight) >> 1) - 2 - win->y_offset;
+
+    vlonGui_drawRectangle(win, 0, y, 
+                          win->win_width, sel->bigFont->FontHeight + 4, 1);
 }
 
 struct vlonGui_selector_t *
@@ -84,10 +105,10 @@ vlonGui_selectorCreate(struct vlonGui_window_t *parent)
     sel->win.pProcessKey = vlonGui_selectorProcessKey;
     sel->smallFont = &vlonGui_font7x10;
     sel->bigFont   = &vlonGui_font11x18;
-    sel->select = 0;
+    sel->index = 0;
+    sel->temp_index = 0;
     sel->num = 0;
     sel->entry = (void *)0;
-    parent->next = (struct vlonGui_window_t *)sel;
 
     return sel;
 }
@@ -96,6 +117,8 @@ int
 vlonGui_selectorAddEntry(struct vlonGui_selector_t *sel, char *str)
 {
     struct vlonGui_selectorEntry_t *entry;
+    struct vlonGui_selectorEntry_t *last;
+    struct vlonGui_window_t *win;
 
     entry = vlonGui_malloc(sizeof(*entry));
 
@@ -105,10 +128,16 @@ vlonGui_selectorAddEntry(struct vlonGui_selector_t *sel, char *str)
 
     entry->str = str;
     entry->index = sel->num;
+    entry->next  = NULL;
     ++sel->num;
 
-    entry->next = (struct vlonGui_selectorEntry_t *)sel->entry;
-    sel->entry  = (void *)entry;
+    // struct vlonGui_window_t 
+    if (sel->entry) {
+        for (last = sel->entry; last->next; last = last->next);
+        last->next = entry;
+    } else {
+        sel->entry  = (void *)entry;
+    }
 }
 
 void

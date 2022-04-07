@@ -16,7 +16,7 @@
 
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
-#define SIMU_SCREEN_MULTIPLE    6
+#define SIMU_SCREEN_MULTIPLE    1
 
 uint8_t closed = 0;
 
@@ -102,9 +102,12 @@ static gboolean
 keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
     guint keyvalue = event->keyval;
-    
+
     switch (keyvalue)
     {
+    case 0xff1b:
+        vlonGui_inputEnqueueKey(VLGUI_KEY_ESC);
+        break;
     case 0xff51:
         vlonGui_inputEnqueueKey(VLGUI_KEY_LETF);
         break;

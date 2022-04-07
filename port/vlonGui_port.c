@@ -13,6 +13,11 @@ void * vlonGui_malloc(uint32_t size)
     return malloc(size);
 }
 
+void vlonGui_free(void *addr)
+{
+    return free(addr);
+}
+
 uint32_t vlonGui_getTime(void)
 {
     return times(NULL) * ms_per_tick;

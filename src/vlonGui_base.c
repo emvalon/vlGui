@@ -107,8 +107,8 @@ void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8
     func(actualX, actualY, color);
 }
 
-static void drawLineByPixel(struct vlonGui_window_t *win, int8_t x1, int8_t y1, 
-                            int8_t x2, int8_t y2, uint8_t color)
+static void drawLineByPixel(struct vlonGui_window_t *win, int16_t x1, int16_t y1, 
+                            int16_t x2, int16_t y2, uint8_t color)
 {
     int16_t deltaX = abs(x2 - x1);
     int16_t deltaY = abs(y2 - y1);
