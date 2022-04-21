@@ -1,3 +1,25 @@
+
+/**
+ * @file vlonGui_fonts.h
+ * @author Weilong Shen (valonshen@foxmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2021-11-09
+ * 
+ * Copyright © 2019-2022 Weilong Shen (valonshen@foxmail.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
@@ -128,7 +150,6 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         switch (pos)
         {
         case 0: 
-            // msgbox = vlonGui_msgBoxCreate(win);
             games_createSelector(win);
 
             break;
@@ -136,12 +157,13 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
             btn = vlonGui_buttonCreate(win, 40, 20, 30, 16);
             break;
         case 2:
-            sel = vlonGui_selectorCreate(win);
-            vlonGui_selectorAddEntry(sel, "Shen Weilong");
-            vlonGui_selectorAddEntry(sel, "Valon Shen");
-            vlonGui_selectorAddEntry(sel, "Ma Suhong");
-            vlonGui_selectorAddEntry(sel, "Suhon Ma");
-            vlonGui_selectorAddEntry(sel, "VlonGui");
+            // sel = vlonGui_selectorCreate(win);
+            // vlonGui_selectorAddEntry(sel, "Shen Weilong");
+            // vlonGui_selectorAddEntry(sel, "Valon Shen");
+            // vlonGui_selectorAddEntry(sel, "Ma Suhong");
+            // vlonGui_selectorAddEntry(sel, "Suhon Ma");
+            // vlonGui_selectorAddEntry(sel, "VlonGui");
+            msgbox = vlonGui_msgBoxCreate(win);
             break;
         default:
             break;
