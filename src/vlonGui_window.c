@@ -25,6 +25,19 @@
 #include "vlonGui_base.h"
 #include <string.h>
 
+/**
+ * @brief Create a window basing on the parent. This window is the basic canvas 
+ * and all objects will be drawn on it. Other widgets inherit from window. 
+ * UserData will store their corresponding special data.
+ * 
+ * @param parent 
+ * @param x 
+ * @param y 
+ * @param width 
+ * @param height 
+ * @param userDataLen 
+ * @return struct vlonGui_window_t* 
+ */
 struct vlonGui_window_t *
 vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
                      int16_t width, int16_t height, uint8_t userDataLen)
