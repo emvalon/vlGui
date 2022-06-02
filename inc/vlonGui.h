@@ -43,9 +43,16 @@
 /* The number of key can be enqueued */
 #define LVGUI_KEY_MAX_NUM               (10)
 
+/* The size of bokeh mask */
+#define VLGUI_BOKEH_SIZE                (1)
+
 /* 
  * Declaration 
  */ 
+#ifndef NULL
+#define NULL    ((void *)0)
+#endif
+
 typedef uint8_t     vlonGui_color;
 
 typedef void (* displayInit_func_t)(void);

@@ -92,10 +92,10 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
             font  = sel->bigFont;
         }
 
+        ax = (win->win_width - (font->FontWidth * strlen(entry->str))) >> 1;
         ay = y - (font->FontHeight >> 1);
 
         vlonGui_setFont(font);
-        ax = (win->win_width - (font->FontWidth * strlen(entry->str))) >> 1;
         vlonGui_drawString(win, ax, ay, entry->str, 1);
         entry = entry->next;
 

@@ -1,3 +1,0 @@
-/home/shenweilong/develop/vlonGui/example/linux/build/CMakeFiles/rebuild_cache.dir
-/home/shenweilong/develop/vlonGui/example/linux/build/CMakeFiles/vlonGui.dir
-/home/shenweilong/develop/vlonGui/example/linux/build/CMakeFiles/edit_cache.dir

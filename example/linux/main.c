@@ -31,6 +31,7 @@
 #include "vlonGui_input.h"
 #include "vlonGui_button.h"
 #include "vlonGui_selector.h"
+#include "vlonGui_progressBar.h"
 #include "../bitmap.h"
 #include "../games.h"
 
@@ -39,6 +40,7 @@ struct vlonGui_msgBox_t *msgbox;
 struct vlonGui_window_t *mainWin, *win, *topWin;
 struct vlonGui_button_t *btn;
 struct vlonGui_selector_t *sel;
+struct vlonGui_progressBar_t *progBar;
 
 static bool showIconName = true;
 volatile int8_t pos = 0;
@@ -165,6 +167,9 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
             // vlonGui_selectorAddEntry(sel, "VlonGui");
             msgbox = vlonGui_msgBoxCreate(win);
             break;
+        case 3:
+            progBar = vlonGui_progressBarCreate(win, 10, 15, 108, 34);
+            vlonGui_progressBarSetValue(progBar, 0);
         default:
             break;
         }
@@ -200,6 +205,6 @@ main(void)
 
     while (1) {
         vlonGui_refresh();
-        usleep(50*1000);
+        usleep(30*1000);
     }
 }

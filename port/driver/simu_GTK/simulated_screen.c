@@ -27,7 +27,7 @@
 
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
-#define SIMU_SCREEN_MULTIPLE    1
+#define SIMU_SCREEN_MULTIPLE    2
 
 uint8_t closed = 0;
 

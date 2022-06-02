@@ -133,8 +133,6 @@ static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
     win->y_offset = win->ori_y_offset + dy;
 } 
 
-#define VLGUI_BOKEH_SIZE        (1)
-
 void vlonGui_windowBokeh(struct vlonGui_window_t *win)
 {
     int pos;
