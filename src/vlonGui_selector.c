@@ -63,6 +63,8 @@ vlonGui_selectorProcessKey(struct vlonGui_window_t *win, uint8_t key)
         ++sel->temp_index;
         vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->FontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
     }
+
+    return 0;
 }
 
 static void 
@@ -111,7 +113,6 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
 struct vlonGui_selector_t *
 vlonGui_selectorCreate(struct vlonGui_window_t *parent)
 {
-    uint16_t w,h;
     struct vlonGui_selector_t *sel;
     VLGUI_ASSERT(parent);
 
@@ -140,7 +141,6 @@ vlonGui_selectorAddEntry(struct vlonGui_selector_t *sel, char *str)
 {
     struct vlonGui_selectorEntry_t *entry;
     struct vlonGui_selectorEntry_t *last;
-    struct vlonGui_window_t *win;
 
     entry = vlonGui_malloc(sizeof(*entry));
 
@@ -160,6 +160,8 @@ vlonGui_selectorAddEntry(struct vlonGui_selector_t *sel, char *str)
     } else {
         sel->entry  = (void *)entry;
     }
+
+    return 0;
 }
 
 void

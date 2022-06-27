@@ -29,7 +29,6 @@
 static void 
 vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
 {
-    int16_t x, y;
     uint16_t len;
     char num[3];
     struct vlonGui_progressBar_t *pbar;
@@ -49,7 +48,13 @@ vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
 
     vlonGui_setFont(&vlonGui_font6x8);
 
-    snprintf(num, sizeof(num), "%02d", pbar->value);
+    if (pbar->value > 99) {
+        num[0] = 'O';
+        num[1] = 'k';
+        num[2] = '\0';
+    } else {
+        snprintf(num, sizeof(num), "%02d", pbar->value);
+    }
     vlonGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
     ++pbar->value; 
     if (pbar->value == 100) {
@@ -70,6 +75,7 @@ vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
     //     ++sel->temp_index;
     //     vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->FontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
     // }
+    return 0;
 }
 
 void
@@ -82,7 +88,6 @@ struct vlonGui_progressBar_t *
 vlonGui_progressBarCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
                           int16_t width, uint16_t height)
 {
-    uint16_t w,h;
     struct vlonGui_progressBar_t *pbar;
     VLGUI_ASSERT(parent);
 

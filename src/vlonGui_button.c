@@ -33,6 +33,8 @@ static int vlonGui_buttonProcessKey(struct vlonGui_window_t *win, uint8_t key)
 
     btn = (struct vlonGui_button_t *)win;
     btn->pressed ^= 1;
+
+    return 0;
 }
 
 static void vlonGui_drawButton(struct vlonGui_window_t *win, void *arg)
@@ -71,7 +73,6 @@ struct vlonGui_button_t *
 vlonGui_buttonCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
                      int16_t width, uint16_t height)
 {
-    uint16_t w,h;
     struct vlonGui_button_t *btn;
     VLGUI_ASSERT(parent);
 
