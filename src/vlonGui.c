@@ -42,6 +42,8 @@ int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height)
     }
 
     vlonGui_cur_screen->window = win;
+
+    return 0;
 }
 
 
@@ -82,6 +84,7 @@ void vlonGui_refresh(void)
     struct vlonGui_window_t *win;
     struct vlonGui_window_t *parent;
 
+    parent = NULL;
     /* Process all of keys enqueued */
     while(1) {
         /* Get the top layer of dispaly window */
