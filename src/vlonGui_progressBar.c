@@ -21,28 +21,40 @@
  * 
  */
 #include <stdio.h>
+#include <string.h>
 #include "vlonGui.h"
 #include "vlonGui_base.h"
 #include "vlonGui_progressBar.h"
+#include "vlonGui_fonts.h"
 
-
+/**
+ * @brief Callback function for progress bar to draw this window.
+ * If want to implement special effect, can modify here. 
+ * 
+ * @param win 
+ * @param arg 
+ */
 static void 
 vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
 {
     uint16_t len;
-    char num[3];
+    char num[4];
+    char *title;
+    struct vlonGui_font_t *font;
     struct vlonGui_progressBar_t *pbar;
 
     pbar = (struct vlonGui_progressBar_t *)win;
+    font = &vlonGui_font6x8;
 
+    vlonGui_setFont(font);
+    /* Clear window */
     vlonGui_windowClear(win);
-
+    /* Draw boundary of window */
     vlonGui_drawRectangle(win, 1, 1, win->win_width - 2, win->win_height - 2, 1);
 
-
-    vlonGui_drawBlock(win, 4, (win->win_height >> 1) - 1, win->win_width - 9, 10, 0);
+    /* Draw boundary of progress bar. Reserve space for percentage value */
     vlonGui_drawRectangle(win, 5, (win->win_height >> 1) - 2, win->win_width - 10 - 25, 10, 1);
-
+    /* Draw process bar with active color */
     len = (win->win_width - 14 - 25) * pbar->value / 100;
     vlonGui_drawBlock(win, 7, (win->win_height >> 1), len, 6, 1);
 
@@ -56,12 +68,24 @@ vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
         snprintf(num, sizeof(num), "%02d", pbar->value);
     }
     vlonGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
-    ++pbar->value; 
-    if (pbar->value == 100) {
-        pbar->value = 0;
+    /* Draw title if has */
+    title = pbar->title;
+    if (title) {
+        len = strlen(title) * font->FontWidth;
+        vlonGui_drawString(win, (win->win_width - len) >> 1, 3, pbar->title, 1);
     }
+    /* Draw the value of percentage */
+    snprintf(num, sizeof(num), "%02d%%", pbar->value);
+    vlonGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
 }
 
+/**
+ * @brief Callback function for progress bar to process coming key.
+ * 
+ * @param win 
+ * @param key 
+ * @return int 
+ */
 int 
 vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
 {
@@ -78,12 +102,44 @@ vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
     return 0;
 }
 
+/**
+ * @brief Set the percentage of progress bar. The maximum value is 100.
+ * 
+ * @param pbar 
+ * @param value 
+ */
 void
 vlonGui_progressBarSetValue(struct vlonGui_progressBar_t * pbar, uint8_t value)
 {
-    pbar->value = value;
+    if (value > 100) {
+        pbar->value = 100;
+    } else {
+        pbar->value = value;
+    }
 }
 
+/**
+ * @brief Set the title of progress bar.
+ * 
+ * @param pbar 
+ * @param title 
+ */
+void
+vlonGui_progressBarSetTitle(struct vlonGui_progressBar_t * pbar, char *title)
+{
+    pbar->title = title;
+}
+
+/**
+ * @brief Create a window for progress bar.
+ * 
+ * @param parent Parent window
+ * @param x      Position of x axis
+ * @param y      Position of y axis
+ * @param width  
+ * @param height 
+ * @return struct vlonGui_progressBar_t* 
+ */
 struct vlonGui_progressBar_t * 
 vlonGui_progressBarCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
                           int16_t width, uint16_t height)
@@ -101,6 +157,13 @@ vlonGui_progressBarCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     pbar->win.pDrawWindow = vlonGui_drawProgressBar;
     pbar->win.pProcessKey = vlonGui_progressBarProcessKey;
     pbar->value = 0;
+    pbar->title = NULL;
 
     return pbar;
+}
+
+void 
+vlonGui_progressBarDestroy(struct vlonGui_progressBar_t *pbar)
+{
+    vlonGui_windowDelete((struct vlonGui_window_t *)pbar);
 }

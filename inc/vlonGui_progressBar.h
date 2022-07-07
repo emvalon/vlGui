@@ -31,6 +31,7 @@
 struct vlonGui_progressBar_t {
     struct vlonGui_window_t win;
     uint8_t value;
+    char *title;
 };
 
 struct vlonGui_progressBar_t * vlonGui_progressBarCreate(struct vlonGui_window_t *parent, 
@@ -38,5 +39,6 @@ struct vlonGui_progressBar_t * vlonGui_progressBarCreate(struct vlonGui_window_t
 
 void vlonGui_progressBarSetValue(struct vlonGui_progressBar_t * pbar, uint8_t value);
 
+void vlonGui_progressBarSetTitle(struct vlonGui_progressBar_t * pbar, char *title);
 
 #endif // _VLONGUI_PROGRESSBAR_H_

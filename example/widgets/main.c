@@ -32,8 +32,8 @@
 #include "vlonGui_button.h"
 #include "vlonGui_selector.h"
 #include "vlonGui_progressBar.h"
-#include "../bitmap.h"
-#include "../games.h"
+#include "bitmap.h"
+#include "games.h"
 
 struct vlonGui_t screen;
 struct vlonGui_msgBox_t *msgbox;
@@ -169,7 +169,8 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
             break;
         case 3:
             progBar = vlonGui_progressBarCreate(win, 10, 15, 108, 34);
-            vlonGui_progressBarSetValue(progBar, 0);
+            vlonGui_progressBarSetValue(progBar, 60);
+            vlonGui_progressBarSetTitle(progBar, "ProgressBar");
         default:
             break;
         }

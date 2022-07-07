@@ -24,9 +24,44 @@
 #include "vlonGui_menu.h"
 #include "vlonGui_base.h"
 
+
+static int 
+vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key)
+{
+    struct vlonGui_menu_t *menu;
+
+    menu = (struct vlonGui_menu_t *)win;
+}
+
+static void 
+vlonGui_drawMenu(struct vlonGui_window_t *win, void *arg)
+{
+    struct vlonGui_menu_t *menu;
+    int16_t w,h, sx, sy;
+
+    menu = (struct vlonGui_menu_t *)win;
+
+    w = win->win_width;
+    h = win->win_height;
+
+}
+
 struct vlonGui_menu_t * 
 vlonGui_menuCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
                      int16_t width, uint16_t height)
 {
-    return NULL;
+    struct vlonGui_menu_t *menu;
+    VLGUI_ASSERT(parent);
+
+    menu = (struct vlonGui_menu_t *)vlonGui_windowCreate(parent, x, y,
+                            width, height, sizeof(*menu) - sizeof(*parent));
+    if(!menu) {
+        return menu;
+    }
+
+    menu->win.type = VLGUI_WIN_TYPE_BUTTON;
+    menu->win.pDrawWindow = vlonGui_drawMenu;
+    menu->win.pProcessKey = vlonGui_menuProcessKey;
+
+    return menu;
 }
