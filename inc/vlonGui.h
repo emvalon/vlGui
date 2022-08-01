@@ -23,37 +23,21 @@
 #ifndef _VLONGUI_H_
 #define _VLONGUI_H_
 
-#include <stdint.h>
+#include "vlonGui_config.h"
 #include "vlonGui_window.h"
+#include "vlonGui_port.h"
 #include "vlonGui_base.h"
 #include "vlonGui_fonts.h"
 
+
+#define VLGUI_COLOR_BLACK       (0)
+#define VLGUI_COLOR_WHITE       (1)
+#define VLGUI_COLOR_CONVERT     (2)
 
 #define VLGUI_ASSERT(cons)  
 #define VLGUI_MIN(a,b)          (a > b ? b : a)
 #define VLGUI_MAX(a,b)          (a > b ? a : b)
 
-/*
- * Config Macro
- */
-
-/* Enable animation feature for window */
-#define LVGUI_ANIMATION                 (1)
-
-/* The number of key can be enqueued */
-#define LVGUI_KEY_MAX_NUM               (10)
-
-/* The size of bokeh mask */
-#define VLGUI_BOKEH_SIZE                (1)
-
-/* 
- * Declaration 
- */ 
-#ifndef NULL
-#define NULL    ((void *)0)
-#endif
-
-typedef uint8_t     vlonGui_color;
 
 typedef void (* displayInit_func_t)(void);
 typedef void (* displayFresh_func_t)(void);
@@ -62,6 +46,7 @@ typedef void (* drawPoint_func_t)(uint16_t x, uint16_t y, uint8_t color);
 typedef void (* drawLineH_func_t)(uint16_t x, uint16_t y, uint16_t length, uint16_t width, uint8_t color);
 typedef void (* drawLineV_func_t)(uint16_t x, uint16_t y, uint16_t length, uint16_t width, uint8_t color);
 typedef void (* drawBitmap_func_t)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t *bitmap);
+typedef vlonGui_color (* getPointColor_func_t)(uint16_t x, uint16_t y);
 
 struct vlonGui_driver_t {
     displayInit_func_t  pInit;
@@ -71,6 +56,7 @@ struct vlonGui_driver_t {
     drawLineH_func_t    pDrawLineH;
     drawLineV_func_t    pDrawLineV;
     drawBitmap_func_t   pDrawBitmap;
+    getPointColor_func_t pGetPointColor;
 };
 
 struct vlonGui_t {
@@ -85,11 +71,6 @@ struct vlonGui_t {
 
 extern struct vlonGui_t *vlonGui_cur_screen;
 
-void * vlonGui_malloc(uint32_t size);
-
-void vlonGui_free(void *addr);
-
-uint32_t vlonGui_getTime(void);
 
 int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height);
 

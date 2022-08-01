@@ -27,15 +27,18 @@
 #include "vlonGui_window.h"
 #include "vlonGui_input.h"
 
-
 struct vlonGui_menu_t {
     struct vlonGui_window_t win;
+    uint16_t num;
+    void *entry;
+    void *selEntry;
 };
 
 struct vlonGui_menu_t * vlonGui_menuCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
 
+int vlonGui_menuAddEntry(struct vlonGui_menu_t *menu, uint16_t index, uint8_t level, char *name);
 
 #endif // _VLONGUI_MENU_H_
 

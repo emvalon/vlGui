@@ -33,7 +33,7 @@ void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8
 
 void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t width, uint8_t color);
 
-void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t *bitmap);
+void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t *bitmap);
 
 void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t color);
 

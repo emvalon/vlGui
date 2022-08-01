@@ -27,7 +27,7 @@
 
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
-#define SIMU_SCREEN_MULTIPLE    2
+#define SIMU_SCREEN_MULTIPLE    3
 
 uint8_t closed = 0;
 
@@ -41,6 +41,16 @@ void
 vlonGui_portDrawPixel(uint16_t x, uint16_t y, vlonGui_color color)
 {
     pixMap[x][y] = color;
+}
+
+vlonGui_color
+vlonGui_portGetPixelColor(uint16_t x, uint16_t y)
+{
+    if (pixMap[x][y]) {
+        return VLGUI_COLOR_WHITE;
+    } else {
+        return VLGUI_COLOR_BLACK;
+    }
 }
 
 void
@@ -160,7 +170,7 @@ vlonGui_portInit()
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),  
                                 SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
-                                SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE + 30);
+                                SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE);
 
     g_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(closeWin), NULL);
     g_signal_connect(window, "key-press-event", G_CALLBACK(keyPressCb), NULL);

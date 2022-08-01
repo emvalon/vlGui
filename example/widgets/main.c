@@ -206,6 +206,6 @@ main(void)
 
     while (1) {
         vlonGui_refresh();
-        usleep(30*1000);
+        vlonGui_delay(20);
     }
 }

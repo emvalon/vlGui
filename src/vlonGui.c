@@ -89,7 +89,6 @@ void vlonGui_refresh(void)
     while(1) {
         /* Get the top layer of dispaly window */
         for(win = vlonGui_cur_screen->window; win->child; parent = win, win = win->child);
-
         key = vlonGui_inputGetKey();
 
         if(key == VLGUI_KEY_NONE) {
@@ -107,7 +106,7 @@ void vlonGui_refresh(void)
             (win->win_width != vlonGui_cur_screen->width)) {
             vlonGui_windowBokeh(vlonGui_cur_screen->window);
         }
-
+        
         vlonGui_windowFresh(win);
         vlonGui_refreshAllBrothers(win);
         vlonGui_cur_screen->displayDriver->pFresh();

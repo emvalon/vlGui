@@ -45,6 +45,11 @@ uint32_t vlonGui_getTime(void)
     return times(NULL) * ms_per_tick;
 }
 
+void vlonGui_delay(uint32_t ms)
+{
+    usleep(ms * 1000);
+}
+
 // static void vlonGui_portDrawPixel(uint16_t x, uint16_t y, uint8_t color)
 // {
 //     ssd1306_DrawPixel(x, y, color);
@@ -57,6 +62,7 @@ struct vlonGui_driver_t * vlonGui_portGetDriver(void)
     vlonGui_driver.pInit = vlonGui_portInit;
     vlonGui_driver.pDrawPoint = vlonGui_portDrawPixel;
     vlonGui_driver.pFresh = vlonGui_portRefresh;
+    vlonGui_driver.pGetPointColor = vlonGui_portGetPixelColor;
 
     return &vlonGui_driver;
 }

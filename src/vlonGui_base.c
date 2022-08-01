@@ -96,11 +96,13 @@ void vlonGui_drawBlock(struct vlonGui_window_t *win, int16_t x, int16_t y,
 
 void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8_t color)
 {
-    drawPoint_func_t func;
     int16_t actualX,actualY;
+    vlonGui_color actualColor;
+    struct vlonGui_driver_t *driver;
 
-    func = vlonGui_cur_screen->displayDriver->pDrawPoint;
-    VLGUI_ASSERT(func);
+    driver = vlonGui_cur_screen->displayDriver;
+    VLGUI_ASSERT(driver->pDrawPoint);
+    VLGUI_ASSERT(driver->pGetPointColor);
 
     actualX = win->x1 + x + win->x_offset;
     if((actualX < win->x1) || (actualX > win->x2)) {
@@ -114,7 +116,16 @@ void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8
         return;
     }
 
-    func(actualX, actualY, color);
+    if (color == VLGUI_COLOR_CONVERT) {
+        if (driver->pGetPointColor(actualX, actualY) == VLGUI_COLOR_BLACK) {
+            actualColor = VLGUI_COLOR_WHITE;
+        } else {
+            actualColor = VLGUI_COLOR_BLACK;
+        }
+    } else {
+        actualColor = color;
+    }
+    driver->pDrawPoint(actualX, actualY, actualColor);
 }
 
 static void drawLineByPixel(struct vlonGui_window_t *win, int16_t x1, int16_t y1, 
@@ -242,7 +253,7 @@ void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
 }
 
 void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y, 
-                        int16_t width, int16_t height, uint8_t *bitmap)
+                        int16_t width, int16_t height, const uint8_t *bitmap)
 {
     uint16_t l,r;
     uint8_t v;
@@ -323,5 +334,93 @@ void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x, int16_t y, char
         vlonGui_drawChar(win, x + offset, y, *str, color);
         offset += vlonGui_cur_screen->curFont->FontWidth;
         ++str;
+    }
+}
+
+
+struct font_table_item_t
+{
+    uint16_t ending;
+    uint16_t len;
+};
+
+struct vlonGui_ext_font_t
+{
+    uint16_t font_width;
+    uint16_t table_len;
+    struct font_table_item_t table[0];
+};
+
+
+void
+vlonGui_drawUnicode(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8_t *str, vlonGui_color color, void *f)
+{
+    struct vlonGui_ext_font_t *font;
+    struct font_table_item_t *item;
+    uint8_t *charAddr;
+    uint16_t unicode;
+    uint16_t start;
+    uint16_t segIndex;
+    uint32_t offset;
+    uint16_t sizePerChar;
+    uint8_t num;
+    int16_t ax, ay, dx;
+
+    font = f;
+    ax = x;
+    num = strlen(str) >> 1;
+    sizePerChar = ((font->font_width * 15) + 7) >> 3;
+    
+    for (; num > 0; num--) {
+        offset = 0;
+        ay = y;
+        start = 0xffff;
+
+#if VLGUI_UNICODE_BIGEND
+        /* Get this unicode with big-endian */
+        unicode = (str[0] << 8) | str[1];
+#else   
+        /* Get this unicode with little-endian */
+        unicode = ((uint16_t)str[1] << 8) | str[0];
+#endif // VLGUI_UNICODE_BIGEND
+        str += sizeof(unicode);
+
+        /* Search for correct segment */
+        for (segIndex = 0; segIndex < font->table_len; segIndex++) {
+            item = &font->table[segIndex];
+            if (unicode <= item->ending) {
+                start = item->ending - 94 + 1;
+                break;
+            } else {
+                // offset += item->len;
+                offset += 94;
+            }
+        }
+        
+        /* If doesn't contain this unicode, continue to draw others */
+        if (start > unicode) {
+            ax += font->font_width;
+            continue;
+        }
+        
+        charAddr = (uint64_t)(font->table + font->table_len) + 
+                   (sizePerChar * offset);
+        charAddr += sizePerChar * (unicode - start);
+
+        /* Draw this character */
+        dx = 0;
+        for (uint16_t i = 0; i < sizePerChar; i++) {
+            for (uint8_t pos = 0; pos < 8; pos++) {
+                if (charAddr[i] & (1 << (7 - pos))) {
+                    vlonGui_drawPoint(win, ax + dx, ay, color);
+                }
+                if (++dx >= font->font_width) {
+                    dx = 0;
+                    ++ay;
+                }
+            }
+        }
+
+        ax += font->font_width;
     }
 }

@@ -30,8 +30,8 @@
 #define VLGUI_WIN_TYPE_MSGBOX       (1)
 #define VLGUI_WIN_TYPE_BUTTON       (2)
 #define VLGUI_WIN_TYPE_SELECTOR     (3)
-#define VLGUI_WIN_TYPE_PROGBAR      (3)
-
+#define VLGUI_WIN_TYPE_PROGBAR      (4)
+#define VLGUI_WIN_TYPE_MENU         (5)
 
 
 struct vlonGui_window_t {

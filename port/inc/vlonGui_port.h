@@ -23,12 +23,21 @@
 #ifndef _VLONGUI_PORT_H_
 #define _VLONGUI_PORT_H_
 
-#include "vlonGui.h"
+#include "vlonGui_config.h"
+
+void * vlonGui_malloc(uint32_t size);
+
+void vlonGui_free(void *addr);
+
+uint32_t vlonGui_getTime(void);
+
+void vlonGui_delay(uint32_t ms);
 
 void vlonGui_portInit(void);
 
 void vlonGui_portDrawPixel(uint16_t x, uint16_t y, vlonGui_color color);
 
+vlonGui_color vlonGui_portGetPixelColor(uint16_t x, uint16_t y);
 
 void vlonGui_portRefresh(void);
 
