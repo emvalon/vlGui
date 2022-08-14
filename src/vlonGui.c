@@ -118,7 +118,7 @@ struct vlonGui_window_t * vlinGui_getMainWindow(struct vlonGui_t *screen)
     return screen->window;
 }
 
-void vlonGui_setFont(struct vlonGui_font_t *font)
+void vlonGui_setFont(const struct vlonGui_font_t *font)
 {
     vlonGui_cur_screen->curFont = font;
 }

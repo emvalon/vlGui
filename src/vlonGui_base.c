@@ -296,131 +296,128 @@ void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y,
     vlonGui_drawLine(win, x, y2, x2 ,y2, 1, color);
 }
 
-static char vlonGui_drawChar(struct vlonGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
+// static char vlonGui_drawChar(struct vlonGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
+// {
+//     uint32_t i, b, j;
+//     struct vlonGui_font_t *font;
+    
+//     // Check if character is valid
+//     if (ch < 32 || ch > 126) {
+//         return 0;
+//     }
+    
+//     font = vlonGui_cur_screen->curFont;
+    
+//     // Use the font to write
+//     for(i = 0; i < font->fontHeight; i++)
+//     {
+//         b = font->data[(ch - 32) * font->fontHeight + i];
+//         for(j = 0; j < font->fontWidth; j++)
+//         {
+//             if((b << j) & 0x8000)
+//             {
+//                 vlonGui_drawPoint(win, x + j, y + i, color);
+//             }
+//         }
+//     }
+    
+//     // Return written char for validation
+//     return ch;
+// }
+
+static void
+vlonGui_drawGlyph(struct vlonGui_window_t *win, int16_t x, int16_t y,  
+                  uint16_t glyph, struct vlonGui_font_t *font, vlonGui_color color)
 {
-    uint32_t i, b, j;
-    struct vlonGui_font_t *font;
-    
-    // Check if character is valid
-    if (ch < 32 || ch > 126) {
-        return 0;
-    }
-    
-    font = vlonGui_cur_screen->curFont;
-    
-    // Use the font to write
-    for(i = 0; i < font->FontHeight; i++)
-    {
-        b = font->data[(ch - 32) * font->FontHeight + i];
-        for(j = 0; j < font->FontWidth; j++)
-        {
-            if((b << j) & 0x8000)
-            {
-                vlonGui_drawPoint(win, x + j, y + i, color);
+    int16_t dx;
+    uint8_t pos;
+    uint8_t width;
+    uint8_t *charAddr;
+    uint16_t segIndex;
+    struct vlonGui_font_table_item_t *item;
+
+    /* Search for correct segment */
+    for (segIndex = 0; segIndex < font->tableLen; segIndex++) {
+        item = &font->table[segIndex];
+        if (glyph <= item->end) {
+            /* If doesn't contain this glyph, return*/
+            if (item->start > glyph) {
+                return;
             }
+            break;
         }
     }
     
-    // Return written char for validation
-    return ch;
+    /* If doesn't contain this glyph, return */
+    if (segIndex >= font->tableLen) {
+        return;
+    }
+        
+    charAddr = (void *)font + item->offset;
+    charAddr += font->bytesPerChar * (glyph - item->start);
+
+    /* Draw this character */
+    dx = 0;
+    
+    width = *charAddr;
+    ++charAddr;
+    pos = 7;
+
+    for (uint8_t col = 0; col < font->fontHeight; col++)
+    for (uint8_t dx = 0; dx < width; dx++) {
+        if (*charAddr & (1 << pos)) {
+            vlonGui_drawPoint(win, x + dx, y + col, color);
+        }
+
+        if (pos > 0) {
+            --pos;
+        } else {
+            pos = 7;
+            ++charAddr;
+        }
+    }    
 }
 
-void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x, int16_t y, char *str, uint8_t color)
+static uint16_t
+vlonGui_getGlyphCode(char **str, uint8_t coding)
+{
+    char *addr;
+    uint16_t glyph;
+
+    addr = *str;
+    if (coding == VLGUI_FONT_ENCODING_GB2312) {
+        if (addr[0] && addr[1]) {
+#if VLGUI_UNICODE_BIGEND
+            /* Get this glyph with big-endian */
+            glyph = (addr[0] << 8) | (uint8_t)addr[1];
+#else   
+            /* Get this glyph with little-endian */
+            glyph = (addr[1] << 8) | (uint8_t)addr[0];
+#endif // VLGUI_UNICODE_BIGEND
+
+            *str = *str + 2;
+        } else {
+            glyph = 0;
+        }
+    } else if (coding == VLGUI_FONT_ENCOIDING_UTF8) {
+        glyph = addr[0];
+        *str = *str + 1;
+    }
+
+    return glyph;
+}
+
+void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x, 
+                        int16_t y, char *str, uint8_t color)
 {
     int16_t offset;
+    uint16_t glyph;
+    struct vlonGui_font_t *font;
 
     offset = 0;
-    while(*str != '\0') {
-        vlonGui_drawChar(win, x + offset, y, *str, color);
-        offset += vlonGui_cur_screen->curFont->FontWidth;
-        ++str;
-    }
-}
-
-
-struct font_table_item_t
-{
-    uint16_t ending;
-    uint16_t len;
-};
-
-struct vlonGui_ext_font_t
-{
-    uint16_t font_width;
-    uint16_t table_len;
-    struct font_table_item_t table[0];
-};
-
-
-void
-vlonGui_drawUnicode(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8_t *str, vlonGui_color color, void *f)
-{
-    struct vlonGui_ext_font_t *font;
-    struct font_table_item_t *item;
-    uint8_t *charAddr;
-    uint16_t unicode;
-    uint16_t start;
-    uint16_t segIndex;
-    uint32_t offset;
-    uint16_t sizePerChar;
-    uint8_t num;
-    int16_t ax, ay, dx;
-
-    font = f;
-    ax = x;
-    num = strlen(str) >> 1;
-    sizePerChar = ((font->font_width * 15) + 7) >> 3;
-    
-    for (; num > 0; num--) {
-        offset = 0;
-        ay = y;
-        start = 0xffff;
-
-#if VLGUI_UNICODE_BIGEND
-        /* Get this unicode with big-endian */
-        unicode = (str[0] << 8) | str[1];
-#else   
-        /* Get this unicode with little-endian */
-        unicode = ((uint16_t)str[1] << 8) | str[0];
-#endif // VLGUI_UNICODE_BIGEND
-        str += sizeof(unicode);
-
-        /* Search for correct segment */
-        for (segIndex = 0; segIndex < font->table_len; segIndex++) {
-            item = &font->table[segIndex];
-            if (unicode <= item->ending) {
-                start = item->ending - 94 + 1;
-                break;
-            } else {
-                // offset += item->len;
-                offset += 94;
-            }
-        }
-        
-        /* If doesn't contain this unicode, continue to draw others */
-        if (start > unicode) {
-            ax += font->font_width;
-            continue;
-        }
-        
-        charAddr = (uint64_t)(font->table + font->table_len) + 
-                   (sizePerChar * offset);
-        charAddr += sizePerChar * (unicode - start);
-
-        /* Draw this character */
-        dx = 0;
-        for (uint16_t i = 0; i < sizePerChar; i++) {
-            for (uint8_t pos = 0; pos < 8; pos++) {
-                if (charAddr[i] & (1 << (7 - pos))) {
-                    vlonGui_drawPoint(win, ax + dx, ay, color);
-                }
-                if (++dx >= font->font_width) {
-                    dx = 0;
-                    ++ay;
-                }
-            }
-        }
-
-        ax += font->font_width;
+    font = vlonGui_cur_screen->curFont;
+    while(glyph = vlonGui_getGlyphCode(&str, font->encoding)) {
+        vlonGui_drawGlyph(win, x + offset, y, glyph, font, color);
+        offset += font->fontWidth;
     }
 }

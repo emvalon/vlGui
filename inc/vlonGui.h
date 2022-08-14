@@ -82,5 +82,5 @@ void vlonGui_refresh(void);
 
 struct vlonGui_driver_t * vlonGui_portGetDriver(void);
 
-void vlonGui_setFont(struct vlonGui_font_t *font);
+void vlonGui_setFont(const struct vlonGui_font_t *font);
 #endif

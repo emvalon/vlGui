@@ -37,8 +37,6 @@
 #include "leftArrow.h"
 #include "btIcon.h"
 
-extern unsigned char gbk2312[];
-
 struct vlonGui_t screen;
 struct vlonGui_window_t *mainWin;
 
@@ -50,15 +48,28 @@ mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
     vlonGui_drawBitmap(win, 0, 10, 20, 30, leftArrow);
     vlonGui_drawBitmap(win, 108, 10, 20, 30, rightArrow);
     vlonGui_drawBitmap(win, 49, 0, 30, 30, btIcon);
-    // vlonGui_setFont(&vlonGui_font16x26);
-    // vlonGui_drawString(win, 0, 0, "test win", 1);
 
+    vlonGui_setFont(vlonGui_wenquan_9pt);
+    vlonGui_drawString(win, 40, 35, "蓝牙设置", VLGUI_COLOR_WHITE);
+}
 
-void vlonGui_drawUnicode(struct vlonGui_window_t *win, int16_t x, int16_t y, char *str, vlonGui_color color, void *font);
-    // vlonGui_drawUnicode(win, 40, 35, "蓝", VLGUI_COLOR_WHITE, gbk2312);
-    // vlonGui_drawUnicode(win, 60, 35, "牙", VLGUI_COLOR_WHITE, gbk2312);
-    // printf("--len:%d\n", strlen("啊"));
-    vlonGui_drawUnicode(win, 20, 35, "蓝牙连接成功", VLGUI_COLOR_WHITE, gbk2312);
+static int 
+btSettingProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
+{
+    struct vlonGui_menu_t *menu;
+
+    menu = (struct vlonGui_menu_t *)win;
+    vlonGui_menuProcessKey(&menu->win, key);
+    if (strcmp(vlonGui_menuGetSelectedEntry(menu), "ON") == 0) {
+        if (key == VLGUI_KEY_OK) {
+            vlonGui_menuSetFont(menu, &vlonGui_font11x18);
+        }
+    }
+    if (strcmp(vlonGui_menuGetSelectedEntry(menu), "OFF") == 0) {
+        if (key == VLGUI_KEY_OK) {
+            vlonGui_menuSetFont(menu, &vlonGui_font7x10);
+        }
+    }
 }
 
 
@@ -74,12 +85,15 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if (!menu) {
             break;
         }
-        vlonGui_menuAddEntry(menu, 0, 0, "Classic BT");
-        vlonGui_menuAddEntry(menu, 1, 1, "ON");
-        vlonGui_menuAddEntry(menu, 2, 1, "OFF");
-        vlonGui_menuAddEntry(menu, 3, 0, "BLE");
-        vlonGui_menuAddEntry(menu, 4, 1, "ON");
-        vlonGui_menuAddEntry(menu, 5, 1, "OFF");
+        vlonGui_windowSetKeyCb(&menu->win, btSettingProcessKeyCb);
+
+        vlonGui_menuSetFont(menu, vlonGui_wenquan_9pt);
+        vlonGui_menuAddEntry(menu, 0, 0, "智能音响");
+        vlonGui_menuAddEntry(menu, 1, 1, "开");
+        vlonGui_menuAddEntry(menu, 2, 1, "关");
+        vlonGui_menuAddEntry(menu, 3, 0, "远程控制器");
+        vlonGui_menuAddEntry(menu, 4, 1, "打开");
+        vlonGui_menuAddEntry(menu, 5, 1, "关闭");
         break;
     
     default:
@@ -92,13 +106,6 @@ void
 main(void)
 {
     struct vlonGui_window_t *win;
-
-    char *str = "鍟?";
-
-    for (uint16_t i = 0; i < strlen(str); i++ ){
-        printf("0x%x ", str[i]);
-    }
-    printf("%s\n", str);
 
     memset(&screen, 0, sizeof(screen));
 

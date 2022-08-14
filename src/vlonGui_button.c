@@ -61,8 +61,8 @@ static void vlonGui_drawButton(struct vlonGui_window_t *win, void *arg)
 
     vlonGui_setFont(btn->font);
 
-    sx = (w - (btn->font->FontWidth * strlen(btn->text))) >> 1;
-    sy = (h - btn->font->FontHeight) >> 1;
+    sx = (w - (btn->font->fontWidth * strlen(btn->text))) >> 1;
+    sy = (h - btn->font->fontHeight) >> 1;
     if (btn->pressed) {
         ++sy;
     }

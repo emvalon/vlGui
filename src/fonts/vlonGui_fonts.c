@@ -414,10 +414,13 @@ static const uint16_t font6x8 [] = {
 0x4000, 0xa800, 0x1000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,  // ~
 };
 
-struct vlonGui_font_t vlonGui_font6x8 = {6,8,font6x8};
+struct vlonGui_font_t vlonGui_font6x8;
 
-struct vlonGui_font_t vlonGui_font7x10 = {7,10,font7x10};
+struct vlonGui_font_t vlonGui_font7x10;
 
-struct vlonGui_font_t vlonGui_font11x18 = {11,18,font11x18};
+struct vlonGui_font_t vlonGui_font11x18;
 
-struct vlonGui_font_t vlonGui_font16x26 = {16,26,font16x26};
+struct vlonGui_font_t vlonGui_font16x26;
+
+extern const unsigned char __vlonGui_wenquan_9pt[];
+const struct vlonGui_font_t const *vlonGui_wenquan_9pt = (const struct vlonGui_font_t *)__vlonGui_wenquan_9pt;

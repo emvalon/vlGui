@@ -71,7 +71,7 @@ vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
     /* Draw title if has */
     title = pbar->title;
     if (title) {
-        len = strlen(title) * font->FontWidth;
+        len = strlen(title) * font->fontWidth;
         vlonGui_drawString(win, (win->win_width - len) >> 1, 3, pbar->title, 1);
     }
     /* Draw the value of percentage */
@@ -94,10 +94,10 @@ vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
     // sel = (struct vlonGui_selector_t *)win;
     // if((key == VLGUI_KEY_UP) && (sel->temp_index > 0)) {
     //     --sel->temp_index;
-    //     vlonGui_windowScrollAnimation(win, 0, sel->bigFont->FontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
+    //     vlonGui_windowScrollAnimation(win, 0, sel->bigFont->fontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
     // } else if((key == VLGUI_KEY_DOWN) && (sel->temp_index < (sel->num - 1))) {
     //     ++sel->temp_index;
-    //     vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->FontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
+    //     vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->fontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
     // }
     return 0;
 }

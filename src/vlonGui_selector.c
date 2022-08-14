@@ -58,10 +58,10 @@ vlonGui_selectorProcessKey(struct vlonGui_window_t *win, uint8_t key)
     sel = (struct vlonGui_selector_t *)win;
     if((key == VLGUI_KEY_UP) && (sel->temp_index > 0)) {
         --sel->temp_index;
-        vlonGui_windowScrollAnimation(win, 0, sel->bigFont->FontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
+        vlonGui_windowScrollAnimation(win, 0, sel->bigFont->fontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
     } else if((key == VLGUI_KEY_DOWN) && (sel->temp_index < (sel->num - 1))) {
         ++sel->temp_index;
-        vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->FontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
+        vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->fontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
     }
 
     return 0;
@@ -80,7 +80,7 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
     sel = (struct vlonGui_selector_t *)win;
 
     index = sel->index;
-    h = sel->bigFont->FontHeight + 4;
+    h = sel->bigFont->fontHeight + 4;
 
     entry = (struct vlonGui_selectorEntry_t *)sel->entry;
 
@@ -94,8 +94,8 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
             font  = sel->bigFont;
         }
 
-        ax = (win->win_width - (font->FontWidth * strlen(entry->str))) >> 1;
-        ay = y - (font->FontHeight >> 1);
+        ax = (win->win_width - (font->fontWidth * strlen(entry->str))) >> 1;
+        ay = y - (font->fontHeight >> 1);
 
         vlonGui_setFont(font);
         vlonGui_drawString(win, ax, ay, entry->str, 1);
@@ -104,10 +104,10 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
         y += h;
     }
 
-    y = ((win->win_height - sel->bigFont->FontHeight) >> 1) - 2 - win->y_offset;
+    y = ((win->win_height - sel->bigFont->fontHeight) >> 1) - 2 - win->y_offset;
 
     vlonGui_drawRectangle(win, 0, y, 
-                          win->win_width, sel->bigFont->FontHeight + 4, 1);
+                          win->win_width, sel->bigFont->fontHeight + 4, 1);
 }
 
 struct vlonGui_selector_t *

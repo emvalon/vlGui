@@ -19,4 +19,5 @@ list(APPEND SRC
     ${DIR_SRCS}
     ${ROOT_PAT}/port/vlonGui_port.c
     ${ROOT_PAT}/src/fonts/vlonGui_fonts.c
+    ${ROOT_PAT}/src/fonts/vlonGui_wenquan_9pt.c
 )

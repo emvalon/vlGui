@@ -280,18 +280,18 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color)
 //         return 0;
     
 //     // Check remaining space on current line
-//     if (SSD1306_WIDTH < (SSD1306.CurrentX + Font.FontWidth) ||
-//         SSD1306_HEIGHT < (SSD1306.CurrentY + Font.FontHeight))
+//     if (SSD1306_WIDTH < (SSD1306.CurrentX + Font.fontWidth) ||
+//         SSD1306_HEIGHT < (SSD1306.CurrentY + Font.fontHeight))
 //     {
 //         // Not enough space on current line
 //         return 0;
 //     }
     
 //     // Use the font to write
-//     for(i = 0; i < Font.FontHeight; i++)
+//     for(i = 0; i < Font.fontHeight; i++)
 //     {
-//         b = Font.data[(ch - 32) * Font.FontHeight + i];
-//         for(j = 0; j < Font.FontWidth; j++)
+//         b = Font.data[(ch - 32) * Font.fontHeight + i];
+//         for(j = 0; j < Font.fontWidth; j++)
 //         {
 //             if((b << j) & 0x8000)
 //             {
@@ -304,7 +304,7 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color)
 //     }
     
 //     // The current space is now taken
-//     SSD1306.CurrentX += Font.FontWidth;
+//     SSD1306.CurrentX += Font.fontWidth;
     
 //     // Return written char for validation
 //     return ch;

@@ -30,15 +30,26 @@
 struct vlonGui_menu_t {
     struct vlonGui_window_t win;
     uint16_t num;
+    int16_t  yPos;
+    struct vlonGui_font_t *font;
     void *entry;
     void *selEntry;
 };
+
+
+int vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key);
 
 struct vlonGui_menu_t * vlonGui_menuCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
 
 int vlonGui_menuAddEntry(struct vlonGui_menu_t *menu, uint16_t index, uint8_t level, char *name);
+
+
+void vlonGui_menuSetFont(struct vlonGui_menu_t *menu, struct vlonGui_font_t *font);
+
+
+char *vlonGui_menuGetSelectedEntry(struct vlonGui_menu_t *menu);
 
 #endif // _VLONGUI_MENU_H_
 

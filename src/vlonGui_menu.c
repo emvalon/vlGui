@@ -26,8 +26,9 @@
 #include "vlonGui_fonts.h"
 #include "vlonGui_input.h"
 
-#define VLGUI_MENU_ENTRY_PADDING        (3)
+#define VLGUI_MENU_ENTRY_PADDING        (8)
 #define VLGUI_MENU_ENTRY_MARGIN         (3)
+#define VLGUI_MENU_LINE_SPACING         (1)
 
 struct vlonGui_menuEntry_t {
     uint8_t level;
@@ -38,12 +39,13 @@ struct vlonGui_menuEntry_t {
     char * str;
 };
 
-static int 
+int 
 vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key)
 {
     uint8_t parentLvl;
     uint8_t nextLvl;
     uint8_t show;
+    uint8_t lineHeigh;
     struct vlonGui_menu_t *menu;
     struct vlonGui_menuEntry_t *sel;
     struct vlonGui_menuEntry_t *next;
@@ -61,7 +63,13 @@ vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key)
             if (!sel) {
                 return 0;
             } else if (sel->show) {
+                lineHeigh = menu->font->fontHeight + (2 * VLGUI_MENU_LINE_SPACING);
                 menu->selEntry = sel;
+                /* Check if need to scroll */
+                menu->yPos -= lineHeigh;
+                if ((menu->yPos + win->y_offset) < lineHeigh) {
+                    win->y_offset += lineHeigh;
+                }
                 return 0;
             }
         }
@@ -74,6 +82,12 @@ vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key)
                 return 0;
             } else if (sel->show) {
                 menu->selEntry = sel;
+                lineHeigh = menu->font->fontHeight + (2 * VLGUI_MENU_LINE_SPACING);
+                /* Check if need to scroll the screen */
+                menu->yPos += lineHeigh;
+                if ((menu->yPos + win->y_offset) > win->win_height) {
+                    win->y_offset -= lineHeigh;
+                }
                 return 0;
             }
         }
@@ -120,8 +134,8 @@ vlonGui_drawMenu(struct vlonGui_window_t *win, void *arg)
 
     vlonGui_windowClear(win);
 
-    font = &vlonGui_font7x10;
-    lineHight = font->FontHeight + 2;
+    font = menu->font;
+    lineHight = font->fontHeight + (2 * VLGUI_MENU_LINE_SPACING);
     vlonGui_setFont(font);
 
     entry = menu->entry;
@@ -130,14 +144,23 @@ vlonGui_drawMenu(struct vlonGui_window_t *win, void *arg)
     while (entry) {
         if (entry->show) {
             y = index * lineHight;
+            if (entry->folded) {
+                vlonGui_drawString(win, VLGUI_MENU_ENTRY_MARGIN , y + 1, "+", 1);
+            } else{
+                vlonGui_drawString(win, VLGUI_MENU_ENTRY_MARGIN , y + 1, "-", 1);
+            }
             vlonGui_drawString(win, VLGUI_MENU_ENTRY_MARGIN + VLGUI_MENU_ENTRY_PADDING + 
-                               (font->FontWidth * entry->level * 2), y + 1, entry->str, 1);
+                               (font->fontWidth * entry->level * 2), y + 1, entry->str, 1);
             if (entry == menu->selEntry) {
                 vlonGui_drawBlock(win, VLGUI_MENU_ENTRY_MARGIN, y, 
-                                  win->win_width - (2 * VLGUI_MENU_ENTRY_PADDING) - 2, 
-                                  font->FontHeight, VLGUI_COLOR_CONVERT);
+                                  win->win_width - (2 * VLGUI_MENU_ENTRY_MARGIN) - 2, 
+                                  font->fontHeight, VLGUI_COLOR_CONVERT);
                 vlonGui_drawPoint(win, VLGUI_MENU_ENTRY_MARGIN, y, VLGUI_COLOR_BLACK);
-                vlonGui_drawPoint(win, VLGUI_MENU_ENTRY_MARGIN, y + font->FontHeight - 1,
+                vlonGui_drawPoint(win, VLGUI_MENU_ENTRY_MARGIN, y + font->fontHeight - 1,
+                                  VLGUI_COLOR_BLACK);
+
+                vlonGui_drawPoint(win, win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3, y, VLGUI_COLOR_BLACK);
+                vlonGui_drawPoint(win, win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3, y + font->fontHeight - 1,
                                   VLGUI_COLOR_BLACK);
                 selIndex = index;
             }
@@ -166,6 +189,8 @@ vlonGui_menuCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     menu->entry = NULL;
     menu->selEntry = NULL;
     menu->num = 0;
+    menu->font = &vlonGui_font7x10;
+    menu->yPos = 10 + (2 * VLGUI_MENU_LINE_SPACING);
     menu->win.type = VLGUI_WIN_TYPE_MENU;
     menu->win.pDrawWindow = vlonGui_drawMenu;
     menu->win.pProcessKey = vlonGui_menuProcessKey;
@@ -222,4 +247,28 @@ vlonGui_menuAddEntry(struct vlonGui_menu_t *menu, uint16_t index, uint8_t level,
     ++menu->num;
 
     return 0;
+}
+
+void
+vlonGui_menuSetFont(struct vlonGui_menu_t *menu, struct vlonGui_font_t *font)
+{
+    menu->font = font;
+    menu->yPos = font->fontHeight;
+    /* Font is changed. Reset menu to initial state. */
+    menu->selEntry = menu->entry;
+    menu->win.y_offset = 0;
+    menu->yPos = font->fontHeight + (2 * VLGUI_MENU_LINE_SPACING);
+}
+
+char *
+vlonGui_menuGetSelectedEntry(struct vlonGui_menu_t *menu)
+{
+    struct vlonGui_menuEntry_t *sel;
+
+    sel = (struct vlonGui_menuEntry_t *)menu->selEntry;
+    if (sel) {
+        return sel->str;
+    }
+
+    return NULL;
 }

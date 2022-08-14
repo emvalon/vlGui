@@ -113,7 +113,7 @@ topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
         break;
     }
 
-    x = 96 - ((strlen(str) * vlonGui_font11x18.FontWidth) >> 1);
+    x = 96 - ((strlen(str) * vlonGui_font11x18.fontWidth) >> 1);
 
     vlonGui_drawString(win, x, 20, str, 1);
 }

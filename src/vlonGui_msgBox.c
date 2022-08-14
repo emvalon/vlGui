@@ -58,7 +58,7 @@ vlonGui_drawMsgBox(struct vlonGui_window_t *win, void *arg)
     
     // 绘制title
     if(msgbox->title) {
-        x = win->win_width - (strlen(msgbox->title) * vlonGui_font6x8.FontWidth);
+        x = win->win_width - (strlen(msgbox->title) * vlonGui_font6x8.fontWidth);
         x >>= 1;
         vlonGui_drawString(win, x, 3, msgbox->title, 1);
     }
