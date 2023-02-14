@@ -6,7 +6,7 @@
  * @version 0.1
  * @date 2022-07-08
  * 
- * Copyright 漏 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
+ * Copyright ? 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
 #include "vlonGui_input.h"
 #include "vlonGui_port.h"
 #include "vlonGui_menu.h"
+#include "vlonGui_clock.h"
 #include "vlonGui_input.h"
 
 #include "rightArrow.h"
@@ -39,6 +40,32 @@
 
 struct vlonGui_t screen;
 struct vlonGui_window_t *mainWin;
+
+const uint16_t bleSetStr[] = {0xb6c0, 0xc0d1, 0xe8c9, 0xc3d6, 0x0000};
+const uint16_t bleStr[] = {0xb6c0, 0xc0d1, 0xe8c9, 0xc3d6, 0x0000};
+const uint16_t smartSpeakerStr[] = {0xc7d6, 0xdcc4, 0xf4d2, 0xeccf, 0x0000};
+const uint16_t onStr[] = {0xf2b4, 0xaabf, 0x0000};
+const uint16_t offStr[] = {0xd8b9, 0xd5b1, 0x0000};
+
+
+static void
+menuBarDrawCb(struct vlonGui_window_t *win, void *arg)
+{
+    // vlonGui_drawBlock(win, 0, 0, win->win_width, 10, VLGUI_COLOR_WHITE);
+    vlonGui_drawRectangle(win, 110, 1, 12, 7, VLGUI_COLOR_WHITE);
+    vlonGui_drawLine(win, 109, 3, 109, 5, 2, VLGUI_COLOR_WHITE);
+
+    for (uint8_t i = 0; i < 3; i++) {
+        vlonGui_drawLine(win, 112 + (i * 3), 3, 
+                         112 + (i * 3), 5, 2, VLGUI_COLOR_WHITE);
+    }
+
+    for (uint8_t i = 0; i < 3; i++) {
+        vlonGui_drawLine(win, 100 - (i * 2), 7 - (i * 2), 
+                         100 + (i * 2), 7 - (i * 2), 
+                         1, VLGUI_COLOR_WHITE);
+    }
+}
 
 static void 
 mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
@@ -50,7 +77,7 @@ mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
     vlonGui_drawBitmap(win, 49, 0, 30, 30, btIcon);
 
     vlonGui_setFont(vlonGui_wenquan_9pt);
-    vlonGui_drawString(win, 40, 35, "蓝牙设置", VLGUI_COLOR_WHITE);
+    vlonGui_drawString(win, 40, 35, (char *)bleSetStr, VLGUI_COLOR_WHITE);
 }
 
 static int 
@@ -88,12 +115,12 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         vlonGui_windowSetKeyCb(&menu->win, btSettingProcessKeyCb);
 
         vlonGui_menuSetFont(menu, vlonGui_wenquan_9pt);
-        vlonGui_menuAddEntry(menu, 0, 0, "智能音响");
-        vlonGui_menuAddEntry(menu, 1, 1, "开");
-        vlonGui_menuAddEntry(menu, 2, 1, "关");
-        vlonGui_menuAddEntry(menu, 3, 0, "远程控制器");
-        vlonGui_menuAddEntry(menu, 4, 1, "打开");
-        vlonGui_menuAddEntry(menu, 5, 1, "关闭");
+        vlonGui_menuAddEntry(menu, 0, 0, (char *)bleStr);
+        vlonGui_menuAddEntry(menu, 1, 1, (char *)onStr);
+        vlonGui_menuAddEntry(menu, 2, 1, (char *)offStr);
+        vlonGui_menuAddEntry(menu, 3, 0, (char *)smartSpeakerStr);
+        vlonGui_menuAddEntry(menu, 4, 1, (char *)onStr);
+        vlonGui_menuAddEntry(menu, 5, 1, (char *)offStr);
         break;
     
     default:
@@ -115,6 +142,9 @@ main(void)
     vlonGui_register_driver(&screen, vlonGui_portGetDriver());
 
     mainWin = vlinGui_getMainWindow(&screen);
+    vlonGui_windowSetDrawCb(mainWin, menuBarDrawCb);
+
+    // vlonGui_clockCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10);
 
     // vlonGui_menuCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10);
 

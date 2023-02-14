@@ -24,7 +24,7 @@
 #define _VLONGUI_WINDOW_H_
 
 #include <stdint.h>
-
+#include "vlonGui_engine.h"
 
 #define VLGUI_WIN_TYPE_BASE         (0)
 #define VLGUI_WIN_TYPE_MSGBOX       (1)
@@ -33,10 +33,10 @@
 #define VLGUI_WIN_TYPE_PROGBAR      (4)
 #define VLGUI_WIN_TYPE_MENU         (5)
 
-
 struct vlonGui_window_t {
     uint8_t type:4;
     uint8_t animation:1;
+    uint8_t refresh:1;
 
     int16_t x1, y1;
     int16_t x2, y2;
@@ -53,6 +53,8 @@ struct vlonGui_window_t {
     uint16_t ani_ms;
     void (*pAnimatinDone)(void *);
     void *animatinDoneArg;
+
+    vlonGui_engine_t *engines;
 
     struct vlonGui_window_t *child;
     struct vlonGui_window_t *next;
@@ -75,7 +77,9 @@ void vlonGui_windowDeleteChildren(struct vlonGui_window_t *win);
 
 void vlonGui_windowBokeh(struct vlonGui_window_t *win);
 
-void vlonGui_windowFresh(struct vlonGui_window_t *win);
+void vlonGui_windowRefresh(struct vlonGui_window_t *win);
+
+void vlonGui_windowSetRefresh(struct vlonGui_window_t * win);
 
 void vlonGui_windowSetDrawCb(struct vlonGui_window_t *win, vlonGui_drawWindowCb_t func);
 

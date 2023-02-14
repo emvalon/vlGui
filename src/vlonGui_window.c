@@ -68,6 +68,7 @@ vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
     win->win_height = height;
 
     win->type = VLGUI_WIN_TYPE_BASE;
+    win->refresh = 1;
     
     if(parent) {
         brother = parent->child;
@@ -160,9 +161,13 @@ void vlonGui_windowBokeh(struct vlonGui_window_t *win)
     }
 }
 
-void vlonGui_windowFresh(struct vlonGui_window_t *win)
+void 
+vlonGui_windowRefresh(struct vlonGui_window_t *win)
 {
+    win->refresh = 0;
+    
     vlonGui_checkAnimation(win);
+    vlonGui_engineRender(win->engines);
 
     if(win->pDrawWindow) {
         win->pDrawWindow(win, 0);
@@ -218,4 +223,16 @@ void vlonGui_windowScrollAnimation(struct  vlonGui_window_t *win, int16_t dx, in
     win->ani_ms     = ms;
     win->pAnimatinDone = cb;
     win->animatinDoneArg = arg;
+}
+
+void
+vlonGui_windowInitEngine(vlonGui_engine_t *engine)
+{
+    
+}
+
+void
+vlonGui_windowSetRefresh(struct vlonGui_window_t * win)
+{
+    win->refresh = 1;
 }

@@ -1,8 +1,0 @@
-digraph "/home/valon/develop/components/vlonGui/port" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  dir_651562d8bf6cfd3e81eff5b570d7df50 [shape=box, label="port", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_651562d8bf6cfd3e81eff5b570d7df50.html"];
-  dir_bfccd401955b95cf8c75461437045ac0 [shape=box label="inc" URL="dir_bfccd401955b95cf8c75461437045ac0.html"];
-  dir_651562d8bf6cfd3e81eff5b570d7df50->dir_bfccd401955b95cf8c75461437045ac0 [headlabel="1", labeldistance=1.5 headhref="dir_000001_000000.html"];
-}

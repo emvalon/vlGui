@@ -38,9 +38,9 @@ static void
 vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
 {
     uint16_t len;
-    char num[4];
+    char num[5];
     char *title;
-    struct vlonGui_font_t *font;
+    const struct vlonGui_font_t *font;
     struct vlonGui_progressBar_t *pbar;
 
     pbar = (struct vlonGui_progressBar_t *)win;

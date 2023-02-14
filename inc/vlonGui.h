@@ -39,7 +39,7 @@
 #define VLGUI_MAX(a,b)          (a > b ? a : b)
 
 
-typedef void (* displayInit_func_t)(void);
+typedef void (* displayInit_func_t)(uint8_t display);
 typedef void (* displayFresh_func_t)(void);
 typedef void (* drawBlock_func_t)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t color);
 typedef void (* drawPoint_func_t)(uint16_t x, uint16_t y, uint8_t color);
@@ -60,10 +60,10 @@ struct vlonGui_driver_t {
 };
 
 struct vlonGui_t {
-    uint8_t fresh;
+    uint8_t refresh;
     int16_t width;
     int16_t height;
-    struct vlonGui_font_t *curFont;
+    const struct vlonGui_font_t *curFont;
     struct vlonGui_driver_t *displayDriver;
     struct vlonGui_window_t *window;
 };
@@ -76,7 +76,11 @@ int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height)
 
 void vlonGui_register_driver(struct vlonGui_t *screen, struct vlonGui_driver_t *driver);
 
+void vlonGui_turnOnOff(struct vlonGui_t *screen, uint8_t display);
+
 struct vlonGui_window_t * vlinGui_getMainWindow(struct vlonGui_t *screen);
+
+void vlonGui_lock(uint8_t en);
 
 void vlonGui_refresh(void);
 

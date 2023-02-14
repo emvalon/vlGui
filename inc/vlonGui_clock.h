@@ -1,9 +1,9 @@
 /**
- * @file vlonGui_button.h
+ * @file vlonGui_clock.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2022-08-28
  * 
  * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
@@ -20,27 +20,42 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_BUTTON_H_
-#define _VLONGUI_BUTTON_H_
+#ifndef _VLONGUI_CLOCK_H_
+#define _VLONGUI_CLOCK_H_
 
 #include <stdint.h>
 #include "vlonGui_window.h"
 #include "vlonGui_input.h"
-#include "vlonGui_fonts.h"
 
-struct vlonGui_button_t {
+struct vlonGui_clock_date_t
+{
+    uint16_t year;
+    uint8_t mon;
+    uint8_t day;
+};
+
+struct vlonGui_clock_time_t
+{
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+};
+
+struct vlonGui_clock_t {
     struct vlonGui_window_t win;
-
-    uint8_t pressed;
-    char *text;
+    struct vlonGui_clock_date_t date;
+    struct vlonGui_clock_time_t time;
     const struct vlonGui_font_t *font;
 };
 
-struct vlonGui_button_t * vlonGui_buttonCreate(struct vlonGui_window_t *parent, int16_t x, 
-                                               int16_t y, int16_t width, uint16_t height);
 
-void vlonGui_buttonSetText(struct vlonGui_button_t *btn, char *text);
+int vlonGui_clockProcessKey(struct vlonGui_window_t *win, uint8_t key);
 
-void vloonGui_buttonSetFont(struct vlonGui_button_t *btn, const struct vlonGui_font_t *font);
+struct vlonGui_clock_t * vlonGui_clockCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
+                                           int16_t width, uint16_t height);
 
-#endif
+
+
+
+
+#endif // _VLONGUI_CLOCK_H_

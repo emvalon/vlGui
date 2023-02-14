@@ -72,7 +72,7 @@ vlonGui_drawSelector(struct vlonGui_window_t *win, void *arg)
 {
     struct vlonGui_selector_t *sel;
     struct vlonGui_selectorEntry_t *entry;
-    struct vlonGui_font_t *font;
+    const struct vlonGui_font_t *font;
     int16_t h, y;
     uint8_t index;
     int16_t ax, ay;

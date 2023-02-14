@@ -30,8 +30,8 @@
 struct vlonGui_selector_t {
     struct vlonGui_window_t win;
 
-    struct vlonGui_font_t *bigFont;
-    struct vlonGui_font_t *smallFont;
+    const struct vlonGui_font_t *bigFont;
+    const struct vlonGui_font_t *smallFont;
     void *entry;
     uint8_t index;
     uint8_t temp_index;

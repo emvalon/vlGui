@@ -33,7 +33,15 @@ uint32_t vlonGui_getTime(void);
 
 void vlonGui_delay(uint32_t ms);
 
-void vlonGui_portInit(void);
+void *vlonGui_protSemphrCreate(void);
+
+void vlonGui_protSemphrDestroy(void *semphr);
+
+void vlonGui_portSemphrTake(void *semphr, uint32_t delay_time);
+
+void vlonGui_portSemphrGive(void *semphr);
+
+void vlonGui_portInit(uint8_t dispaly);
 
 void vlonGui_portDrawPixel(uint16_t x, uint16_t y, vlonGui_color color);
 

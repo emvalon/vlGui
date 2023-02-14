@@ -38,4 +38,6 @@ void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y, int1
 void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t color);
 
 void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x, int16_t y, char *str, uint8_t color);
+
+void vlonGui_drawCircle(struct vlonGui_window_t *win, int16_t x0, int16_t y0, uint8_t rad);
 #endif

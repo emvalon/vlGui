@@ -99,7 +99,7 @@ vlonGui_buttonSetText(struct vlonGui_button_t *btn, char *text)
 }
 
 void
-vloonGui_buttonSetFont(struct vlonGui_button_t *btn, struct vlonGui_font_t *font)
+vloonGui_buttonSetFont(struct vlonGui_button_t *btn, const struct vlonGui_font_t *font)
 {
     btn->font = font;
 }

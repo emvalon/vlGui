@@ -57,6 +57,6 @@ extern struct vlonGui_font_t vlonGui_font11x18;
 
 extern struct vlonGui_font_t vlonGui_font16x26;
 
-extern const struct vlonGui_font_t *vlonGui_wenquan_9pt;
+extern const struct vlonGui_font_t * const vlonGui_wenquan_9pt;
 
 #endif

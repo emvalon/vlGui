@@ -161,7 +161,7 @@ guiMain(void)
 }
 
 void
-vlonGui_portInit() 
+vlonGui_portInit(uint8_t display) 
 {
     gtk_init(NULL, NULL);
     window  =  gtk_window_new(GTK_WINDOW_TOPLEVEL);

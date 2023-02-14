@@ -101,7 +101,7 @@ SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len)
 #define SSD1306_MIRROR_VERT 1
 
 // Initialize the oled screen
-void ssd1306_Init(void) 
+void ssd1306_Init(uint8_t display) 
 {
     i2c_dev = device_get_binding(DISP_DEV);
 	if (!i2c_dev) {

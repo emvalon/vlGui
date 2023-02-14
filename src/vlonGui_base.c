@@ -23,6 +23,7 @@
 #include "vlonGui.h"
 #include "vlonGui_base.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
  * 
@@ -48,7 +49,6 @@ void vlonGui_drawBlock(struct vlonGui_window_t *win, int16_t x, int16_t y,
                 vlonGui_drawPoint(win, x + r, y + l, color);
             }
         }
-
         return;
     }
 
@@ -327,14 +327,14 @@ void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y,
 
 static void
 vlonGui_drawGlyph(struct vlonGui_window_t *win, int16_t x, int16_t y,  
-                  uint16_t glyph, struct vlonGui_font_t *font, vlonGui_color color)
+                  uint16_t glyph, const struct vlonGui_font_t *font, vlonGui_color color)
 {
     int16_t dx;
     uint8_t pos;
     uint8_t width;
     uint8_t *charAddr;
     uint16_t segIndex;
-    struct vlonGui_font_table_item_t *item;
+    const struct vlonGui_font_table_item_t *item;
 
     /* Search for correct segment */
     for (segIndex = 0; segIndex < font->tableLen; segIndex++) {
@@ -402,6 +402,8 @@ vlonGui_getGlyphCode(char **str, uint8_t coding)
     } else if (coding == VLGUI_FONT_ENCOIDING_UTF8) {
         glyph = addr[0];
         *str = *str + 1;
+    } else {
+        glyph = 0;
     }
 
     return glyph;
@@ -412,12 +414,75 @@ void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x,
 {
     int16_t offset;
     uint16_t glyph;
-    struct vlonGui_font_t *font;
+    const struct vlonGui_font_t *font;
 
     offset = 0;
     font = vlonGui_cur_screen->curFont;
-    while(glyph = vlonGui_getGlyphCode(&str, font->encoding)) {
+    while(1) {
+        glyph = vlonGui_getGlyphCode(&str, font->encoding);
+        if (!glyph) {
+            break;
+        }
         vlonGui_drawGlyph(win, x + offset, y, glyph, font, color);
         offset += font->fontWidth;
+    }
+}
+
+
+static void 
+vlonGui_drawCircleSection(struct vlonGui_window_t *win, int16_t x, int16_t y, 
+                          int16_t x0, int16_t y0)
+{
+    /* upper right */
+    vlonGui_drawPoint(win, x0 + x, y0 - y, VLGUI_COLOR_WHITE);
+    vlonGui_drawPoint(win, x0 + y, y0 - x, VLGUI_COLOR_WHITE);
+    
+    /* upper left */
+    vlonGui_drawPoint(win, x0 - x, y0 - y, VLGUI_COLOR_WHITE);
+    vlonGui_drawPoint(win, x0 - y, y0 - x, VLGUI_COLOR_WHITE);
+    
+    /* lower right */
+    vlonGui_drawPoint(win, x0 + x, y0 + y, VLGUI_COLOR_WHITE);
+    vlonGui_drawPoint(win, x0 + y, y0 + x, VLGUI_COLOR_WHITE);
+    
+    /* lower left */
+    vlonGui_drawPoint(win, x0 - x, y0 + y, VLGUI_COLOR_WHITE);
+    vlonGui_drawPoint(win, x0 - y, y0 + x, VLGUI_COLOR_WHITE);
+}
+
+void 
+vlonGui_drawCircle(struct vlonGui_window_t *win, int16_t x0, int16_t y0, 
+                   uint8_t rad)
+{
+    int16_t f;
+    int16_t ddF_x;
+    int16_t ddF_y;
+    int16_t x;
+    int16_t y;
+
+    f = 1;
+    f -= rad;
+    ddF_x = 1;
+    ddF_y = 0;
+    ddF_y -= rad;
+    ddF_y *= 2;
+    x = 0;
+    y = rad;
+
+    vlonGui_drawCircleSection(win, x, y, x0, y0);
+    
+    while ( x < y )
+    {
+        if (f >= 0) 
+        {
+          y--;
+          ddF_y += 2;
+          f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+
+        vlonGui_drawCircleSection(win, x, y, x0, y0);
     }
 }
