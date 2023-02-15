@@ -1,4 +1,4 @@
-# vlonGui
+# vlGui
 An easy Gui for embeded device
 # 1. Getting start
 ##   For Ubuntu

@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_fonts.h
+ * @file vlGui_fonts.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,22 +20,22 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_FONTS_H_
-#define _VLONGUI_FONTS_H_
+#ifndef _VLGUI_FONTS_H_
+#define _VLGUI_FONTS_H_
 
-#include "vlonGui.h"
+#include "vlGui.h"
 
 #define VLGUI_FONT_ENCOIDING_UTF8           (0)
 #define VLGUI_FONT_ENCODING_GB2312          (1)
 
-struct vlonGui_font_table_item_t
+struct vlGui_font_table_item_t
 {
     uint16_t start;
     uint16_t end;
     uint32_t offset;
 };
 
-struct vlonGui_font_t
+struct vlGui_font_t
 {
     uint8_t version;
     uint8_t encoding;
@@ -46,17 +46,17 @@ struct vlonGui_font_t
     uint8_t resv0;
     uint16_t tableLen;
 
-    struct vlonGui_font_table_item_t table[0];
+    struct vlGui_font_table_item_t table[0];
 };
 
-extern struct vlonGui_font_t vlonGui_font6x8;
+extern struct vlGui_font_t vlGui_font6x8;
 
-extern struct vlonGui_font_t vlonGui_font7x10;
+extern struct vlGui_font_t vlGui_font7x10;
 
-extern struct vlonGui_font_t vlonGui_font11x18;
+extern struct vlGui_font_t vlGui_font11x18;
 
-extern struct vlonGui_font_t vlonGui_font16x26;
+extern struct vlGui_font_t vlGui_font16x26;
 
-extern const struct vlonGui_font_t * const vlonGui_wenquan_9pt;
+extern const struct vlGui_font_t * const vlGui_wenquan_9pt;
 
 #endif

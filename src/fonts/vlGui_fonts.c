@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_fonts.c
+ * @file vlGui_fonts.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,7 +20,7 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui_fonts.h"
+#include "vlGui_fonts.h"
 
 // static const uint16_t font7x10 [] = {
 // 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,  // sp
@@ -414,13 +414,13 @@
 // 0x4000, 0xa800, 0x1000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,  // ~
 // };
 
-struct vlonGui_font_t vlonGui_font6x8;
+struct vlGui_font_t vlGui_font6x8;
 
-struct vlonGui_font_t vlonGui_font7x10;
+struct vlGui_font_t vlGui_font7x10;
 
-struct vlonGui_font_t vlonGui_font11x18;
+struct vlGui_font_t vlGui_font11x18;
 
-struct vlonGui_font_t vlonGui_font16x26;
+struct vlGui_font_t vlGui_font16x26;
 
-extern const unsigned char __vlonGui_wenquan_9pt[];
-const struct vlonGui_font_t * const vlonGui_wenquan_9pt = (const struct vlonGui_font_t *)__vlonGui_wenquan_9pt;
+extern const unsigned char __vlGui_wenquan_9pt[];
+const struct vlGui_font_t * const vlGui_wenquan_9pt = (const struct vlGui_font_t *)__vlGui_wenquan_9pt;

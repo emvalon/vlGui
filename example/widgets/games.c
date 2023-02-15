@@ -23,12 +23,12 @@
 #include <stdio.h>
 #include "games.h"
 #include "games_glatSnake.h"
-#include "vlonGui_selector.h"
+#include "vlGui_selector.h"
 
-struct vlonGui_selector_t *sel;
+struct vlGui_selector_t *sel;
 
 static int 
-gameSelectorKeyCb(struct vlonGui_window_t *win, uint8_t key)
+gameSelectorKeyCb(struct vlGui_window_t *win, uint8_t key)
 {
     if (key == VLGUI_KEY_OK) {
         switch (sel->index) {
@@ -39,21 +39,21 @@ gameSelectorKeyCb(struct vlonGui_window_t *win, uint8_t key)
             break;
         }
     } else {
-        vlonGui_selectorProcessKey(win, key);
+        vlGui_selectorProcessKey(win, key);
     }
 }
 
 void 
-games_createSelector(struct vlonGui_window_t *win) 
+games_createSelector(struct vlGui_window_t *win) 
 {
-    sel = vlonGui_selectorCreate(win);
+    sel = vlGui_selectorCreate(win);
 
-    vlonGui_selectorAddEntry(sel, "GlutSnake");
-    vlonGui_selectorAddEntry(sel, "Shen Weilong");
-    vlonGui_selectorAddEntry(sel, "Valon Shen");
-    vlonGui_selectorAddEntry(sel, "Ma Suhong");
-    vlonGui_selectorAddEntry(sel, "Suhon Ma");
-    vlonGui_selectorAddEntry(sel, "VlonGui"); 
+    vlGui_selectorAddEntry(sel, "GlutSnake");
+    vlGui_selectorAddEntry(sel, "Shen Weilong");
+    vlGui_selectorAddEntry(sel, "Valon Shen");
+    vlGui_selectorAddEntry(sel, "Ma Suhong");
+    vlGui_selectorAddEntry(sel, "Suhon Ma");
+    vlGui_selectorAddEntry(sel, "VlonGui"); 
 
-    vlonGui_windowSetKeyCb((struct vlonGui_window_t *)sel, gameSelectorKeyCb);
+    vlGui_windowSetKeyCb((struct vlGui_window_t *)sel, gameSelectorKeyCb);
 }

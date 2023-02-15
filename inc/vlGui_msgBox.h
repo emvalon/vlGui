@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_msgBox.h
+ * @file vlGui_msgBox.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,25 +20,25 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_MSGBOX_H_
-#define _VLONGUI_MSGBOX_H_
+#ifndef _VLGUI_MSGBOX_H_
+#define _VLGUI_MSGBOX_H_
 
-#include "vlonGui_window.h"
+#include "vlGui_window.h"
 
 typedef void (* processCb_func_t)(uint8_t ok);
 
-struct vlonGui_msgBox_t {
-    struct vlonGui_window_t win;
+struct vlGui_msgBox_t {
+    struct vlGui_window_t win;
 
     char *title;
     char *text;
     processCb_func_t pProcessCb;
 };
 
-struct vlonGui_msgBox_t * vlonGui_msgBoxCreate(struct vlonGui_window_t *parent);
+struct vlGui_msgBox_t * vlGui_msgBoxCreate(struct vlGui_window_t *parent);
 
-void vlonGui_msgBoxSetTitle(struct vlonGui_msgBox_t *msgbox, char *str);
+void vlGui_msgBoxSetTitle(struct vlGui_msgBox_t *msgbox, char *str);
 
-void vlonGui_msgBoxSetText(struct vlonGui_msgBox_t *msgbox, char *str);
+void vlGui_msgBoxSetText(struct vlGui_msgBox_t *msgbox, char *str);
 
 #endif

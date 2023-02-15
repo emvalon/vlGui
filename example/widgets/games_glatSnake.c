@@ -22,8 +22,8 @@
  */
 #include <stdio.h>
 #include "games_glatSnake.h"
-#include "vlonGui_input.h"
-#include "vlonGui_base.h"
+#include "vlGui_input.h"
+#include "vlGui_base.h"
 
 #define GAMES_GLUTSNAKE_BASE_X      1
 #define GAMES_GLUTSNAKE_BASE_Y      1
@@ -90,7 +90,7 @@ games_updateGame(struct game_glutSnake_t* game) {
 
 
 static int 
-games_glutSnakeKeyCb(struct vlonGui_window_t *win, uint8_t key)
+games_glutSnakeKeyCb(struct vlGui_window_t *win, uint8_t key)
 {
     struct game_Snake_t *player;
 
@@ -116,31 +116,31 @@ games_glutSnakeKeyCb(struct vlonGui_window_t *win, uint8_t key)
 
 
 static void 
-games_bkgDrawCb(struct vlonGui_window_t *win, void *arg)
+games_bkgDrawCb(struct vlGui_window_t *win, void *arg)
 {
     char score[4];
     char level[2];
 
     if (g_game_drawBkg) {
-        vlonGui_windowClear(win);
-        vlonGui_drawRectangle(win, 0, 1, GAMES_SCREEN_WIDTH * 3 + 2, GAMES_SCREEN_HEIGTH * 3 + 2, 1);
-        vlonGui_setFont(&vlonGui_font6x8);
-        vlonGui_drawString(win, 95, 10, "Score", 1);
-        vlonGui_drawString(win, 95, 40, "level", 1);
+        vlGui_windowClear(win);
+        vlGui_drawRectangle(win, 0, 1, GAMES_SCREEN_WIDTH * 3 + 2, GAMES_SCREEN_HEIGTH * 3 + 2, 1);
+        vlGui_setFont(&vlGui_font6x8);
+        vlGui_drawString(win, 95, 10, "Score", 1);
+        vlGui_drawString(win, 95, 40, "level", 1);
         g_game_drawBkg = false;
     } else {
-        vlonGui_drawBlock(win, 107, 20, 18, 8, 0);
-        vlonGui_drawBlock(win, 119, 50, 6, 8, 0);
+        vlGui_drawBlock(win, 107, 20, 18, 8, 0);
+        vlGui_drawBlock(win, 119, 50, 6, 8, 0);
     }
 
     snprintf(score, sizeof(score), "%03d", g_game_glutSnake.player.lenght - 1);
-    vlonGui_drawString(win, 107, 20, score, 1);
+    vlGui_drawString(win, 107, 20, score, 1);
     snprintf(level, sizeof(level), "%01d", g_game_glutSnake.level);
-    vlonGui_drawString(win, 119, 50, level, 1);
+    vlGui_drawString(win, 119, 50, level, 1);
 }
 
 static void 
-games_glutSnakeDrawCb(struct vlonGui_window_t *win, void *arg)
+games_glutSnakeDrawCb(struct vlGui_window_t *win, void *arg)
 {
     static uint8_t cnt = 0;
     struct game_glutSnake_t *game;
@@ -150,33 +150,33 @@ games_glutSnakeDrawCb(struct vlonGui_window_t *win, void *arg)
 
         game = &g_game_glutSnake;
 
-        vlonGui_windowClear(win);
+        vlGui_windowClear(win);
 
         for(int i = 0; i < (game->player.lenght); i++){
-            vlonGui_drawBlock(win, game->player.tailPos[i][0] * 3, game->player.tailPos[i][1] * 3, 3, 3, 1);
+            vlGui_drawBlock(win, game->player.tailPos[i][0] * 3, game->player.tailPos[i][1] * 3, 3, 3, 1);
         }
 
-        vlonGui_drawRectangle(win, game->apple_pos[0] * 3, game->apple_pos[1] * 3, 3, 3, 1);
+        vlGui_drawRectangle(win, game->apple_pos[0] * 3, game->apple_pos[1] * 3, 3, 3, 1);
 
         games_updateGame(game);
     }
 }
 
 int
-games_gultSnakeCreate(struct vlonGui_window_t *win)
+games_gultSnakeCreate(struct vlGui_window_t *win)
 {
-    struct vlonGui_window_t *main_win;
-    struct vlonGui_window_t *game_win;
+    struct vlGui_window_t *main_win;
+    struct vlGui_window_t *game_win;
 
 
-    main_win = vlonGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);
+    main_win = vlGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);
     if (main_win == NULL) {
         return -1;
     }
 
-    game_win = vlonGui_windowCreate(win, 1, 2,  GAMES_SCREEN_WIDTH * 3, GAMES_SCREEN_HEIGTH * 3, 0);
+    game_win = vlGui_windowCreate(win, 1, 2,  GAMES_SCREEN_WIDTH * 3, GAMES_SCREEN_HEIGTH * 3, 0);
     if (game_win == NULL) {
-        vlonGui_windowDeleteChildren(win);
+        vlGui_windowDeleteChildren(win);
         return -1;
     }
 
@@ -184,10 +184,10 @@ games_gultSnakeCreate(struct vlonGui_window_t *win)
 	games_init(&g_game_glutSnake);
     g_game_drawBkg = true;
 
-    vlonGui_windowSetDrawCb(main_win, games_bkgDrawCb);
-    vlonGui_windowSetKeyCb(main_win, games_glutSnakeKeyCb);
+    vlGui_windowSetDrawCb(main_win, games_bkgDrawCb);
+    vlGui_windowSetKeyCb(main_win, games_glutSnakeKeyCb);
 
-    vlonGui_windowSetDrawCb(game_win, games_glutSnakeDrawCb);
+    vlGui_windowSetDrawCb(game_win, games_glutSnakeDrawCb);
 
     return 0;
 }

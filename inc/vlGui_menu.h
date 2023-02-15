@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_menu.h
+ * @file vlGui_menu.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,38 +20,38 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_MENU_H_
-#define _VLONGUI_MENU_H_
+#ifndef _VLGUI_MENU_H_
+#define _VLGUI_MENU_H_
 
 #include <stdint.h>
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
+#include "vlGui_window.h"
+#include "vlGui_input.h"
 
-struct vlonGui_menu_t {
-    struct vlonGui_window_t win;
-    const struct vlonGui_font_t *font;
+struct vlGui_menu_t {
+    struct vlGui_window_t win;
+    const struct vlGui_font_t *font;
     void *entries;
     void *selEntry;
     uint16_t num;
     int16_t selectedRectOffset;
     int16_t menuOffset;
-    vlonGui_engine_t engine;
+    vlGui_engine_t engine;
 };
 
 
-int vlonGui_menuProcessKey(struct vlonGui_window_t *win, uint8_t key);
+int vlGui_menuProcessKey(struct vlGui_window_t *win, uint8_t key);
 
-struct vlonGui_menu_t * vlonGui_menuCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
+struct vlGui_menu_t * vlGui_menuCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
 
-int vlonGui_menuAddEntry(struct vlonGui_menu_t *menu, uint16_t index, uint8_t level, char *name);
+int vlGui_menuAddEntry(struct vlGui_menu_t *menu, uint16_t index, uint8_t level, char *name);
 
 
-void vlonGui_menuSetFont(struct vlonGui_menu_t *menu, const struct vlonGui_font_t *font);
+void vlGui_menuSetFont(struct vlGui_menu_t *menu, const struct vlGui_font_t *font);
 
 
-char *vlonGui_menuGetSelectedEntry(struct vlonGui_menu_t *menu);
+char *vlGui_menuGetSelectedEntry(struct vlGui_menu_t *menu);
 
-#endif // _VLONGUI_MENU_H_
+#endif // _VLGUI_MENU_H_
 

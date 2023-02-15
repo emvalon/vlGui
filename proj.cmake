@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.5)
 
-project(vlonGui C)
+project(vlGui C)
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
@@ -17,7 +17,7 @@ AUX_SOURCE_DIRECTORY(${ROOT_PAT}/src DIR_SRCS)
 
 list(APPEND SRC
     ${DIR_SRCS}
-    ${ROOT_PAT}/port/vlonGui_port.c
-    ${ROOT_PAT}/src/fonts/vlonGui_fonts.c
-    ${ROOT_PAT}/src/fonts/vlonGui_wenquan_9pt.c
+    ${ROOT_PAT}/port/vlGui_port.c
+    ${ROOT_PAT}/src/fonts/vlGui_fonts.c
+    ${ROOT_PAT}/src/fonts/vlGui_wenquan_9pt.c
 )

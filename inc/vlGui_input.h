@@ -1,9 +1,9 @@
 /**
- * @file vlonGui_config.h
+ * @file vlGui_input.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-07-08
+ * @date 2022-04-21
  * 
  * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
@@ -20,34 +20,28 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_CONFIG_H_
-#define _VLONGUI_CONFIG_H_
+#ifndef _VLGUI_INPUT_H_
+#define _VLGUI_INPUT_H_
 
 #include <stdint.h>
 
-/*
- * Config Macro
- */
 
-/* Enable animation feature for window */
-#define LVGUI_ANIMATION                 (1)
 
-/* The number of key can be enqueued */
-#define LVGUI_KEY_MAX_NUM               (10)
+#define VLGUI_KEY_ESC               (0xf0)
 
-/* The size of bokeh mask */
-#define VLGUI_BOKEH_SIZE                (1)
+#define VLGUI_KEY_OK                (0xf9)
+#define VLGUI_KEY_CANCEL            (0xfa)
+#define VLGUI_KEY_LETF              (0xfb)
+#define VLGUI_KEY_RIGHT             (0xfc)
+#define VLGUI_KEY_UP                (0xfd)
+#define VLGUI_KEY_DOWN              (0xfe)
+#define VLGUI_KEY_NONE              (0xff)
 
-/* Indicates the unicode is formed in big-endian */
-#define VLGUI_UNICODE_BIGEND            (1)
 
-/* 
- * Declaration 
- */ 
-#ifndef NULL
-#define NULL    ((void *)0)
+void vlGui_inputEnqueueKey(uint8_t key);
+
+uint8_t vlGui_inputGetKey(void);
+
+void vlGui_inputInit(void);
+
 #endif
-
-typedef uint8_t     vlonGui_color;
-
-#endif // _VLONGUI_CONFIG_H_

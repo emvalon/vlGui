@@ -1,9 +1,9 @@
 /**
- * @file vlonGui_progressBar.h
+ * @file vlGui_port.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-22
+ * @date 2022-04-21
  * 
  * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
@@ -20,25 +20,33 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_PROGRESSBAR_H_
-#define _VLONGUI_PROGRESSBAR_H_
+#ifndef _VLGUI_PORT_H_
+#define _VLGUI_PORT_H_
 
-#include <stdint.h>
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
+#include "vlGui_config.h"
 
+void * vlGui_malloc(uint32_t size);
 
-struct vlonGui_progressBar_t {
-    struct vlonGui_window_t win;
-    uint8_t value;
-    char *title;
-};
+void vlGui_free(void *addr);
 
-struct vlonGui_progressBar_t * vlonGui_progressBarCreate(struct vlonGui_window_t *parent, 
-                                    int16_t x, int16_t y, int16_t width, uint16_t height);
+uint32_t vlGui_getTime(void);
 
-void vlonGui_progressBarSetValue(struct vlonGui_progressBar_t * pbar, uint8_t value);
+void vlGui_delay(uint32_t ms);
 
-void vlonGui_progressBarSetTitle(struct vlonGui_progressBar_t * pbar, char *title);
+void *vlGui_protSemphrCreate(void);
 
-#endif // _VLONGUI_PROGRESSBAR_H_
+void vlGui_protSemphrDestroy(void *semphr);
+
+void vlGui_portSemphrTake(void *semphr, uint32_t delay_time);
+
+void vlGui_portSemphrGive(void *semphr);
+
+void vlGui_portInit(uint8_t dispaly);
+
+void vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color);
+
+vlGui_color vlGui_portGetPixelColor(uint16_t x, uint16_t y);
+
+void vlGui_portRefresh(void);
+
+#endif 

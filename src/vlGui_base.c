@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_base.c
+ * @file vlGui_base.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,8 +20,8 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui.h"
-#include "vlonGui_base.h"
+#include "vlGui.h"
+#include "vlGui_base.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -35,18 +35,18 @@
  * @param width 
  * @param height 
  */
-void vlonGui_drawBlock(struct vlonGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawBlock(struct vlGui_window_t *win, int16_t x, int16_t y, 
                        int16_t width, int16_t height, uint8_t color)
 {
     drawBlock_func_t func;
     int16_t actualX1,actualY1;
     int16_t actualX2,actualY2;
 
-    func = vlonGui_cur_screen->displayDriver->pDrawBlock;
+    func = vlGui_cur_screen->displayDriver->pDrawBlock;
     if(!func) {
         for(int16_t l = 0; l < height; l++) {
             for(int16_t r = 0; r < width; r++) {
-                vlonGui_drawPoint(win, x + r, y + l, color);
+                vlGui_drawPoint(win, x + r, y + l, color);
             }
         }
         return;
@@ -94,13 +94,13 @@ void vlonGui_drawBlock(struct vlonGui_window_t *win, int16_t x, int16_t y,
     func(actualX1, actualY1, actualX2 - actualX1 + 1, actualY2 - actualY1 + 1, color);
 }
 
-void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8_t color)
+void vlGui_drawPoint(struct vlGui_window_t *win, int16_t x, int16_t y, uint8_t color)
 {
     int16_t actualX,actualY;
-    vlonGui_color actualColor;
-    struct vlonGui_driver_t *driver;
+    vlGui_color actualColor;
+    struct vlGui_driver_t *driver;
 
-    driver = vlonGui_cur_screen->displayDriver;
+    driver = vlGui_cur_screen->displayDriver;
     VLGUI_ASSERT(driver->pDrawPoint);
     VLGUI_ASSERT(driver->pGetPointColor);
 
@@ -128,7 +128,7 @@ void vlonGui_drawPoint(struct vlonGui_window_t *win, int16_t x, int16_t y, uint8
     driver->pDrawPoint(actualX, actualY, actualColor);
 }
 
-static void drawLineByPixel(struct vlonGui_window_t *win, int16_t x1, int16_t y1, 
+static void drawLineByPixel(struct vlGui_window_t *win, int16_t x1, int16_t y1, 
                             int16_t x2, int16_t y2, uint8_t color)
 {
     int16_t deltaX = abs(x2 - x1);
@@ -138,9 +138,9 @@ static void drawLineByPixel(struct vlonGui_window_t *win, int16_t x1, int16_t y1
     int16_t error = deltaX - deltaY;
     int16_t error2;
     
-    vlonGui_drawPoint(win, x2, y2, color);
+    vlGui_drawPoint(win, x2, y2, color);
     while((x1 != x2) || (y1 != y2)) {
-        vlonGui_drawPoint(win, x1, y1, color);
+        vlGui_drawPoint(win, x1, y1, color);
         error2 = error * 2;
         if(error2 > -deltaY) {
             error -= deltaY;
@@ -158,16 +158,16 @@ static void drawLineByPixel(struct vlonGui_window_t *win, int16_t x1, int16_t y1
     }
 }
 
-void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
+void vlGui_drawLine(struct vlGui_window_t *win, int16_t x1, int16_t y1,
                       int16_t x2, int16_t y2, int16_t width, uint8_t color)
 {
-    struct vlonGui_driver_t *display;
+    struct vlGui_driver_t *display;
     int16_t actualX1,actualY1;
     int16_t actualX2,actualY2;
     int16_t min, max;
 
     VLGUI_ASSERT(width);
-    display = vlonGui_cur_screen->displayDriver;
+    display = vlGui_cur_screen->displayDriver;
 
     /* TODO: check if this line is in given window */
 
@@ -200,7 +200,7 @@ void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
 
         display->pDrawLineV(actualX1, min, actualX1 , max, color);
         if(width > 1) {
-            vlonGui_drawLine(win, x1 + 1, y1, x2 + 1, y2, width - 1, color);
+            vlGui_drawLine(win, x1 + 1, y1, x2 + 1, y2, width - 1, color);
         }
         return;
         
@@ -234,7 +234,7 @@ void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
 
         display->pDrawLineH(min, actualY1, max, actualY2, color);
         if(width > 1) {
-            vlonGui_drawLine(win, x1, y1 + 1, x2, y2 + 1, width - 1, color);
+            vlGui_drawLine(win, x1, y1 + 1, x2, y2 + 1, width - 1, color);
         }
         return;
     }
@@ -246,13 +246,13 @@ void vlonGui_drawLine(struct vlonGui_window_t *win, int16_t x1, int16_t y1,
     }
 
     if(x1 == x2) {
-        vlonGui_drawLine(win, x1 + 1, y1, x2 + 1, y2, width - 1, color);
+        vlGui_drawLine(win, x1 + 1, y1, x2 + 1, y2, width - 1, color);
     } else if(y2 == y1) {
-        vlonGui_drawLine(win, x1, y1 + 1, x2, y2 + 1, width - 1, color);
+        vlGui_drawLine(win, x1, y1 + 1, x2, y2 + 1, width - 1, color);
     }
 }
 
-void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawBitmap(struct vlGui_window_t *win, int16_t x, int16_t y, 
                         int16_t width, int16_t height, const uint8_t *bitmap)
 {
     uint16_t l,r;
@@ -266,7 +266,7 @@ void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y,
         r = 0;
         while (1) {
             if(v & 0x01) {
-                vlonGui_drawPoint(win, x + r, y + l, 1);
+                vlGui_drawPoint(win, x + r, y + l, 1);
             }
 
             ++r;
@@ -283,30 +283,30 @@ void vlonGui_drawBitmap(struct vlonGui_window_t *win, int16_t x, int16_t y,
     }
 }
 
-void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawRectangle(struct vlGui_window_t *win, int16_t x, int16_t y, 
                           int16_t width, int16_t height, uint8_t color)
 {
     int16_t x2, y2;
 
     x2 = x + width - 1;
     y2 = y + height -1;
-    vlonGui_drawLine(win, x, y, x, y2, 1,color);
-    vlonGui_drawLine(win, x2, y, x2, y2, 1, color);
-    vlonGui_drawLine(win, x, y, x2, y, 1, color);
-    vlonGui_drawLine(win, x, y2, x2 ,y2, 1, color);
+    vlGui_drawLine(win, x, y, x, y2, 1,color);
+    vlGui_drawLine(win, x2, y, x2, y2, 1, color);
+    vlGui_drawLine(win, x, y, x2, y, 1, color);
+    vlGui_drawLine(win, x, y2, x2 ,y2, 1, color);
 }
 
-// static char vlonGui_drawChar(struct vlonGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
+// static char vlGui_drawChar(struct vlGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
 // {
 //     uint32_t i, b, j;
-//     struct vlonGui_font_t *font;
+//     struct vlGui_font_t *font;
     
 //     // Check if character is valid
 //     if (ch < 32 || ch > 126) {
 //         return 0;
 //     }
     
-//     font = vlonGui_cur_screen->curFont;
+//     font = vlGui_cur_screen->curFont;
     
 //     // Use the font to write
 //     for(i = 0; i < font->fontHeight; i++)
@@ -316,7 +316,7 @@ void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y,
 //         {
 //             if((b << j) & 0x8000)
 //             {
-//                 vlonGui_drawPoint(win, x + j, y + i, color);
+//                 vlGui_drawPoint(win, x + j, y + i, color);
 //             }
 //         }
 //     }
@@ -326,15 +326,15 @@ void vlonGui_drawRectangle(struct vlonGui_window_t *win, int16_t x, int16_t y,
 // }
 
 static void
-vlonGui_drawGlyph(struct vlonGui_window_t *win, int16_t x, int16_t y,  
-                  uint16_t glyph, const struct vlonGui_font_t *font, vlonGui_color color)
+vlGui_drawGlyph(struct vlGui_window_t *win, int16_t x, int16_t y,  
+                  uint16_t glyph, const struct vlGui_font_t *font, vlGui_color color)
 {
     int16_t dx;
     uint8_t pos;
     uint8_t width;
     uint8_t *charAddr;
     uint16_t segIndex;
-    const struct vlonGui_font_table_item_t *item;
+    const struct vlGui_font_table_item_t *item;
 
     /* Search for correct segment */
     for (segIndex = 0; segIndex < font->tableLen; segIndex++) {
@@ -366,7 +366,7 @@ vlonGui_drawGlyph(struct vlonGui_window_t *win, int16_t x, int16_t y,
     for (uint8_t col = 0; col < font->fontHeight; col++)
     for (uint8_t dx = 0; dx < width; dx++) {
         if (*charAddr & (1 << pos)) {
-            vlonGui_drawPoint(win, x + dx, y + col, color);
+            vlGui_drawPoint(win, x + dx, y + col, color);
         }
 
         if (pos > 0) {
@@ -379,7 +379,7 @@ vlonGui_drawGlyph(struct vlonGui_window_t *win, int16_t x, int16_t y,
 }
 
 static uint16_t
-vlonGui_getGlyphCode(char **str, uint8_t coding)
+vlGui_getGlyphCode(char **str, uint8_t coding)
 {
     char *addr;
     uint16_t glyph;
@@ -409,49 +409,49 @@ vlonGui_getGlyphCode(char **str, uint8_t coding)
     return glyph;
 }
 
-void vlonGui_drawString(struct vlonGui_window_t *win, int16_t x, 
+void vlGui_drawString(struct vlGui_window_t *win, int16_t x, 
                         int16_t y, char *str, uint8_t color)
 {
     int16_t offset;
     uint16_t glyph;
-    const struct vlonGui_font_t *font;
+    const struct vlGui_font_t *font;
 
     offset = 0;
-    font = vlonGui_cur_screen->curFont;
+    font = vlGui_cur_screen->curFont;
     while(1) {
-        glyph = vlonGui_getGlyphCode(&str, font->encoding);
+        glyph = vlGui_getGlyphCode(&str, font->encoding);
         if (!glyph) {
             break;
         }
-        vlonGui_drawGlyph(win, x + offset, y, glyph, font, color);
+        vlGui_drawGlyph(win, x + offset, y, glyph, font, color);
         offset += font->fontWidth;
     }
 }
 
 
 static void 
-vlonGui_drawCircleSection(struct vlonGui_window_t *win, int16_t x, int16_t y, 
+vlGui_drawCircleSection(struct vlGui_window_t *win, int16_t x, int16_t y, 
                           int16_t x0, int16_t y0)
 {
     /* upper right */
-    vlonGui_drawPoint(win, x0 + x, y0 - y, VLGUI_COLOR_WHITE);
-    vlonGui_drawPoint(win, x0 + y, y0 - x, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 + x, y0 - y, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 + y, y0 - x, VLGUI_COLOR_WHITE);
     
     /* upper left */
-    vlonGui_drawPoint(win, x0 - x, y0 - y, VLGUI_COLOR_WHITE);
-    vlonGui_drawPoint(win, x0 - y, y0 - x, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 - x, y0 - y, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 - y, y0 - x, VLGUI_COLOR_WHITE);
     
     /* lower right */
-    vlonGui_drawPoint(win, x0 + x, y0 + y, VLGUI_COLOR_WHITE);
-    vlonGui_drawPoint(win, x0 + y, y0 + x, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 + x, y0 + y, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 + y, y0 + x, VLGUI_COLOR_WHITE);
     
     /* lower left */
-    vlonGui_drawPoint(win, x0 - x, y0 + y, VLGUI_COLOR_WHITE);
-    vlonGui_drawPoint(win, x0 - y, y0 + x, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 - x, y0 + y, VLGUI_COLOR_WHITE);
+    vlGui_drawPoint(win, x0 - y, y0 + x, VLGUI_COLOR_WHITE);
 }
 
 void 
-vlonGui_drawCircle(struct vlonGui_window_t *win, int16_t x0, int16_t y0, 
+vlGui_drawCircle(struct vlGui_window_t *win, int16_t x0, int16_t y0, 
                    uint8_t rad)
 {
     int16_t f;
@@ -469,7 +469,7 @@ vlonGui_drawCircle(struct vlonGui_window_t *win, int16_t x0, int16_t y0,
     x = 0;
     y = rad;
 
-    vlonGui_drawCircleSection(win, x, y, x0, y0);
+    vlGui_drawCircleSection(win, x, y, x0, y0);
     
     while ( x < y )
     {
@@ -483,6 +483,6 @@ vlonGui_drawCircle(struct vlonGui_window_t *win, int16_t x0, int16_t y0,
         ddF_x += 2;
         f += ddF_x;
 
-        vlonGui_drawCircleSection(win, x, y, x0, y0);
+        vlGui_drawCircleSection(win, x, y, x0, y0);
     }
 }

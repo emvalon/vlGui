@@ -1,9 +1,9 @@
-#include "vlonGui.h"
-#include "vlonGui_msgBox.h"
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
-#include "vlonGui_button.h"
-#include "vlonGui_selector.h"
+#include "vlGui.h"
+#include "vlGui_msgBox.h"
+#include "vlGui_window.h"
+#include "vlGui_input.h"
+#include "vlGui_button.h"
+#include "vlGui_selector.h"
 #include "bitmap.h"
 
 #include <zephyr.h>
@@ -11,34 +11,34 @@
 #include <drivers/gpio.h>
 #include "devicetree.h"
 
-struct vlonGui_t oled;
-struct vlonGui_msgBox_t *msgbox;
-struct vlonGui_window_t *win, *topWin;
-struct vlonGui_button_t *btn;
-struct vlonGui_selector_t *sel;
+struct vlGui_t oled;
+struct vlGui_msgBox_t *msgbox;
+struct vlGui_window_t *win, *topWin;
+struct vlGui_button_t *btn;
+struct vlGui_selector_t *sel;
 
 static bool showIconName = true;
 
 volatile int8_t pos = 0;
 
-static void mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
+static void mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
 {
     int16_t x;
 
-    vlonGui_windowClear(win);
+    vlGui_windowClear(win);
     x = 12;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_game);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_game);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_setting);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_setting);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_connect);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_connect);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_info);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_info);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_media);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_media);
 }
 
-static void topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
+static void topWindowDrawCb(struct vlGui_window_t *win, void *arg)
 {
     uint8_t w,h;
     int16_t x;
@@ -51,19 +51,19 @@ static void topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
 
     for(uint8_t i = 0; i < 5; i++) {
         if(i == pos) {  
-            vlonGui_drawBlock(win, x + i * w, 64 - h, w, h, 1);
+            vlGui_drawBlock(win, x + i * w, 64 - h, w, h, 1);
         } else {
-            vlonGui_drawRectangle(win, x + i * w, 64 - h, w, h, 1);
+            vlGui_drawRectangle(win, x + i * w, 64 - h, w, h, 1);
         }
     }
 
-    vlonGui_drawLine(win, 63, 4, 63, 44, 2, 1);
+    vlGui_drawLine(win, 63, 4, 63, 44, 2, 1);
 
     if(!showIconName) {
         return;
     }
 
-    vlonGui_setFont(&vlonGui_font11x18);
+    vlGui_setFont(&vlGui_font11x18);
     switch (pos)
     {
     case 0:
@@ -85,9 +85,9 @@ static void topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
         break;
     }
 
-    x = 96 - ((strlen(str) * vlonGui_font11x18.fontWidth) >> 1);
+    x = 96 - ((strlen(str) * vlGui_font11x18.fontWidth) >> 1);
 
-    vlonGui_drawString(win, x, 20, str, 1);
+    vlGui_drawString(win, x, 20, str, 1);
 }
 
 static void drawIconName(void)
@@ -95,7 +95,7 @@ static void drawIconName(void)
    showIconName = true;
 }
 
-int mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
+int mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
 {
     switch (key)
     {
@@ -103,32 +103,32 @@ int mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if(pos) {
             --pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, 128, 0, 500, drawIconName);
+            vlGui_windowScrollAnimation(win, 128, 0, 500, drawIconName);
         }
         break;
     case VLGUI_KEY_RIGHT:
         if(pos < 4) {
             ++pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, -128, 0, 500, drawIconName);
+            vlGui_windowScrollAnimation(win, -128, 0, 500, drawIconName);
         }
         break;
     case VLGUI_KEY_OK:
         switch (pos)
         {
         case 0: 
-            msgbox = vlonGui_msgBoxCreate(win);
+            msgbox = vlGui_msgBoxCreate(win);
             break;
         case 1:
-            btn = vlonGui_buttonCreate(win, 40, 20, 30, 16);
+            btn = vlGui_buttonCreate(win, 40, 20, 30, 16);
             break;
         case 2:
-            sel = vlonGui_selectorCreate(win);
-            vlonGui_selectorAddEntry(sel, "Shen Weilong");
-            vlonGui_selectorAddEntry(sel, "Valon Shen");
-            vlonGui_selectorAddEntry(sel, "Ma Suhong");
-            vlonGui_selectorAddEntry(sel, "Suhon Ma");
-            vlonGui_selectorAddEntry(sel, "VlonGui");
+            sel = vlGui_selectorCreate(win);
+            vlGui_selectorAddEntry(sel, "Shen Weilong");
+            vlGui_selectorAddEntry(sel, "Valon Shen");
+            vlGui_selectorAddEntry(sel, "Ma Suhong");
+            vlGui_selectorAddEntry(sel, "Suhon Ma");
+            vlGui_selectorAddEntry(sel, "VlonGui");
             break;
         default:
             break;
@@ -140,23 +140,23 @@ int mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
     return 0;
 }
 
-void vlonGui_example(void)
+void vlGui_example(void)
 {
     memset(&oled, 0, sizeof(oled));
 
-    vlonGui_screen_init(&oled, 128, 64);
-    vlonGui_register_driver(&oled, vlonGui_portGetDriver());
+    vlGui_screen_init(&oled, 128, 64);
+    vlGui_register_driver(&oled, vlGui_portGetDriver());
 
     win = vlinGui_getMainWindow(&oled);
-    vlonGui_windowSetDrawCb(win, mainWindowDrawCb);
-    vlonGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
+    vlGui_windowSetDrawCb(win, mainWindowDrawCb);
+    vlGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
 
-    topWin = vlonGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);
-    vlonGui_windowSetDrawCb(topWin, topWindowDrawCb);
+    topWin = vlGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);
+    vlGui_windowSetDrawCb(topWin, topWindowDrawCb);
 
     while (1)
     {
-        vlonGui_refresh();
+        vlGui_refresh();
         k_msleep(10);
     }
     
@@ -261,7 +261,7 @@ static void keyTask(void)
             if(keyState[i].cnt == 0) {
                 keyState[i].state = ret;
                 if(ret) {
-                    vlonGui_inputEnqueueKey(keyConfig[i].key);
+                    vlGui_inputEnqueueKey(keyConfig[i].key);
                 }
             }
             

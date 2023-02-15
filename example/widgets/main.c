@@ -1,6 +1,6 @@
 
 /**
- * @file vlonGui_fonts.h
+ * @file vlGui_fonts.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -25,22 +25,22 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "vlonGui.h"
-#include "vlonGui_msgBox.h"
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
-#include "vlonGui_button.h"
-#include "vlonGui_selector.h"
-#include "vlonGui_progressBar.h"
+#include "vlGui.h"
+#include "vlGui_msgBox.h"
+#include "vlGui_window.h"
+#include "vlGui_input.h"
+#include "vlGui_button.h"
+#include "vlGui_selector.h"
+#include "vlGui_progressBar.h"
 #include "bitmap.h"
 #include "games.h"
 
-struct vlonGui_t screen;
-struct vlonGui_msgBox_t *msgbox;
-struct vlonGui_window_t *mainWin, *win, *topWin;
-struct vlonGui_button_t *btn;
-struct vlonGui_selector_t *sel;
-struct vlonGui_progressBar_t *progBar;
+struct vlGui_t screen;
+struct vlGui_msgBox_t *msgbox;
+struct vlGui_window_t *mainWin, *win, *topWin;
+struct vlGui_button_t *btn;
+struct vlGui_selector_t *sel;
+struct vlGui_progressBar_t *progBar;
 
 static bool showIconName = true;
 volatile int8_t pos = 0;
@@ -49,25 +49,25 @@ volatile int8_t pos = 0;
 static uint8_t presskey = VLGUI_KEY_RIGHT;
 
 static void 
-mainWindowDrawCb(struct vlonGui_window_t *win, void *arg)
+mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
 {
     int16_t x;
     
-    vlonGui_windowClear(win);
+    vlGui_windowClear(win);
     x = 12;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_game);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_game);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_setting);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_setting);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_connect);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_connect);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_info);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_info);
     x += 128;
-    vlonGui_drawBitmap(win, x, 4, 40, 40, bitmap_media);
+    vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_media);
 }
 
 static void 
-topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
+topWindowDrawCb(struct vlGui_window_t *win, void *arg)
 {
     uint8_t w,h;
     int16_t x;
@@ -79,19 +79,19 @@ topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
 
     for(uint8_t i = 0; i < 5; i++) {
         if(i == pos) {  
-            vlonGui_drawBlock(win, x + i * w, 64 - h, w, h, 1);
+            vlGui_drawBlock(win, x + i * w, 64 - h, w, h, 1);
         } else {
-            vlonGui_drawRectangle(win, x + i * w, 64 - h, w, h, 1);
+            vlGui_drawRectangle(win, x + i * w, 64 - h, w, h, 1);
         }
     }
 
-    vlonGui_drawLine(win, 63, 4, 63, 44, 2, 1);
+    vlGui_drawLine(win, 63, 4, 63, 44, 2, 1);
 
     if(!showIconName) {
         return;
     }
 
-    vlonGui_setFont(&vlonGui_font11x18);
+    vlGui_setFont(&vlGui_font11x18);
     switch (pos)
     {
     case 0:
@@ -113,9 +113,9 @@ topWindowDrawCb(struct vlonGui_window_t *win, void *arg)
         break;
     }
 
-    x = 96 - ((strlen(str) * vlonGui_font11x18.fontWidth) >> 1);
+    x = 96 - ((strlen(str) * vlGui_font11x18.fontWidth) >> 1);
 
-    vlonGui_drawString(win, x, 20, str, 1);
+    vlGui_drawString(win, x, 20, str, 1);
 }
 
 static void 
@@ -125,7 +125,7 @@ drawIconName(void *arg)
 }
 
 int 
-mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
+mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
 {
     switch (key)
     {
@@ -133,7 +133,7 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if(pos) {
             --pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, 128, 0, 500, drawIconName, NULL);
+            vlGui_windowScrollAnimation(win, 128, 0, 500, drawIconName, NULL);
         } else {
             presskey = VLGUI_KEY_RIGHT;
         }
@@ -143,7 +143,7 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
         if(pos < 4) {
             ++pos;
             showIconName = false;
-            vlonGui_windowScrollAnimation(win, -128, 0, 500, drawIconName, NULL);
+            vlGui_windowScrollAnimation(win, -128, 0, 500, drawIconName, NULL);
         } else {
             presskey = VLGUI_KEY_LETF;
         }
@@ -156,21 +156,21 @@ mainWindowProcessKeyCb(struct vlonGui_window_t *win, uint8_t key)
 
             break;
         case 1:
-            btn = vlonGui_buttonCreate(win, 40, 20, 30, 16);
+            btn = vlGui_buttonCreate(win, 40, 20, 30, 16);
             break;
         case 2:
-            // sel = vlonGui_selectorCreate(win);
-            // vlonGui_selectorAddEntry(sel, "Shen Weilong");
-            // vlonGui_selectorAddEntry(sel, "Valon Shen");
-            // vlonGui_selectorAddEntry(sel, "Ma Suhong");
-            // vlonGui_selectorAddEntry(sel, "Suhon Ma");
-            // vlonGui_selectorAddEntry(sel, "VlonGui");
-            msgbox = vlonGui_msgBoxCreate(win);
+            // sel = vlGui_selectorCreate(win);
+            // vlGui_selectorAddEntry(sel, "Shen Weilong");
+            // vlGui_selectorAddEntry(sel, "Valon Shen");
+            // vlGui_selectorAddEntry(sel, "Ma Suhong");
+            // vlGui_selectorAddEntry(sel, "Suhon Ma");
+            // vlGui_selectorAddEntry(sel, "VlonGui");
+            msgbox = vlGui_msgBoxCreate(win);
             break;
         case 3:
-            progBar = vlonGui_progressBarCreate(win, 10, 15, 108, 34);
-            vlonGui_progressBarSetValue(progBar, 60);
-            vlonGui_progressBarSetTitle(progBar, "ProgressBar");
+            progBar = vlGui_progressBarCreate(win, 10, 15, 108, 34);
+            vlGui_progressBarSetValue(progBar, 60);
+            vlGui_progressBarSetTitle(progBar, "ProgressBar");
         default:
             break;
         }
@@ -186,26 +186,26 @@ main(void)
 {
     memset(&screen, 0, sizeof(screen));
 
-    vlonGui_inputInit();
+    vlGui_inputInit();
 
-    vlonGui_screen_init(&screen, 128, 64);
-    vlonGui_register_driver(&screen, vlonGui_portGetDriver());
+    vlGui_screen_init(&screen, 128, 64);
+    vlGui_register_driver(&screen, vlGui_portGetDriver());
 
     mainWin = vlinGui_getMainWindow(&screen);
 
-    win = vlonGui_windowCreate(mainWin, 0, 0, mainWin->win_width, mainWin->win_height, 0);
-    vlonGui_windowSetDrawCb(win, mainWindowDrawCb);
-    vlonGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
+    win = vlGui_windowCreate(mainWin, 0, 0, mainWin->win_width, mainWin->win_height, 0);
+    vlGui_windowSetDrawCb(win, mainWindowDrawCb);
+    vlGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
 
-    topWin = vlonGui_windowCreate(mainWin, 0, 0, win->win_width, win->win_height, 0);
-    vlonGui_windowSetDrawCb(topWin, topWindowDrawCb);
+    topWin = vlGui_windowCreate(mainWin, 0, 0, win->win_width, win->win_height, 0);
+    vlGui_windowSetDrawCb(topWin, topWindowDrawCb);
 
-    // msgbox = vlonGui_msgBoxCreate(vlinGui_getMainWindow(&screen));
-    // vlonGui_msgBoxSetTitle(msgbox, "TestTitle");
-    // vlonGui_msgBoxSetText(msgbox, "Warning: test");
+    // msgbox = vlGui_msgBoxCreate(vlinGui_getMainWindow(&screen));
+    // vlGui_msgBoxSetTitle(msgbox, "TestTitle");
+    // vlGui_msgBoxSetText(msgbox, "Warning: test");
 
     while (1) {
-        vlonGui_refresh();
-        vlonGui_delay(20);
+        vlGui_refresh();
+        vlGui_delay(20);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_selector.h
+ * @file vlGui_selector.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,18 +20,18 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_SELECTOR_H_
-#define _VLONGUI_SELECTOR_H_
+#ifndef _VLGUI_SELECTOR_H_
+#define _VLGUI_SELECTOR_H_
 
 #include <stdint.h>
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
+#include "vlGui_window.h"
+#include "vlGui_input.h"
 
-struct vlonGui_selector_t {
-    struct vlonGui_window_t win;
+struct vlGui_selector_t {
+    struct vlGui_window_t win;
 
-    const struct vlonGui_font_t *bigFont;
-    const struct vlonGui_font_t *smallFont;
+    const struct vlGui_font_t *bigFont;
+    const struct vlGui_font_t *smallFont;
     void *entry;
     uint8_t index;
     uint8_t temp_index;
@@ -39,11 +39,11 @@ struct vlonGui_selector_t {
 };
 
 
-int vlonGui_selectorProcessKey(struct vlonGui_window_t *win, uint8_t key);
+int vlGui_selectorProcessKey(struct vlGui_window_t *win, uint8_t key);
 
-struct vlonGui_selector_t * vlonGui_selectorCreate(struct vlonGui_window_t *parent);
+struct vlGui_selector_t * vlGui_selectorCreate(struct vlGui_window_t *parent);
 
-int vlonGui_selectorAddEntry(struct vlonGui_selector_t *sel, char *str);
+int vlGui_selectorAddEntry(struct vlGui_selector_t *sel, char *str);
 
-void vlonGui_selectorDelete(struct vlonGui_selector_t *sel);
+void vlGui_selectorDelete(struct vlGui_selector_t *sel);
 #endif

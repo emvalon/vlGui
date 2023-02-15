@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_input.c
+ * @file vlGui_input.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,8 +20,8 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui.h"
-#include "vlonGui_input.h"
+#include "vlGui.h"
+#include "vlGui_input.h"
 
 #if LVGUI_KEY_MAX_NUM < 2
     #error "LVGUI_KEY_MAX_NUM must >= 2"
@@ -30,17 +30,17 @@
 /* 'out' should only be modified by Gui main task and 'in' should 
  * only be changed by input task. It doesn't matter even if one operation
  * is interrupted by an other. Therefore, don't need to enter critial
- * area in vlonGui_inputEnqueueKey() and vlonGui_inputGetKey().
+ * area in vlGui_inputEnqueueKey() and vlGui_inputGetKey().
  */
-struct vlonGui_keyBuffer {
+struct vlGui_keyBuffer {
     uint8_t in, out;
     uint8_t buf[LVGUI_KEY_MAX_NUM];
 };
 
-static struct vlonGui_keyBuffer keyBuffer = {0};
+static struct vlGui_keyBuffer keyBuffer = {0};
 
 void 
-vlonGui_inputEnqueueKey(uint8_t key)
+vlGui_inputEnqueueKey(uint8_t key)
 {
     uint8_t in, out;
 
@@ -61,7 +61,7 @@ vlonGui_inputEnqueueKey(uint8_t key)
 }
 
 uint8_t 
-vlonGui_inputGetKey(void)
+vlGui_inputGetKey(void)
 {
     uint8_t key, in, out;
 
@@ -85,7 +85,7 @@ vlonGui_inputGetKey(void)
 }
 
 void
-vlonGui_inputInit(void) 
+vlGui_inputInit(void) 
 {
     keyBuffer.in  = 1;
     keyBuffer.out = 0;

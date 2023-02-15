@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_clock.h
+ * @file vlGui_clock.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,42 +20,42 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_CLOCK_H_
-#define _VLONGUI_CLOCK_H_
+#ifndef _VLGUI_CLOCK_H_
+#define _VLGUI_CLOCK_H_
 
 #include <stdint.h>
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
+#include "vlGui_window.h"
+#include "vlGui_input.h"
 
-struct vlonGui_clock_date_t
+struct vlGui_clock_date_t
 {
     uint16_t year;
     uint8_t mon;
     uint8_t day;
 };
 
-struct vlonGui_clock_time_t
+struct vlGui_clock_time_t
 {
     uint8_t hour;
     uint8_t min;
     uint8_t sec;
 };
 
-struct vlonGui_clock_t {
-    struct vlonGui_window_t win;
-    struct vlonGui_clock_date_t date;
-    struct vlonGui_clock_time_t time;
-    const struct vlonGui_font_t *font;
+struct vlGui_clock_t {
+    struct vlGui_window_t win;
+    struct vlGui_clock_date_t date;
+    struct vlGui_clock_time_t time;
+    const struct vlGui_font_t *font;
 };
 
 
-int vlonGui_clockProcessKey(struct vlonGui_window_t *win, uint8_t key);
+int vlGui_clockProcessKey(struct vlGui_window_t *win, uint8_t key);
 
-struct vlonGui_clock_t * vlonGui_clockCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,     
+struct vlGui_clock_t * vlGui_clockCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
 
 
 
 
-#endif // _VLONGUI_CLOCK_H_
+#endif // _VLGUI_CLOCK_H_

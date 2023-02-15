@@ -1,9 +1,9 @@
 /**
- * @file vlonGui_input.h
+ * @file vlGui_progressBar.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2022-04-22
  * 
  * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
@@ -20,28 +20,25 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_INPUT_H_
-#define _VLONGUI_INPUT_H_
+#ifndef _VLGUI_PROGRESSBAR_H_
+#define _VLGUI_PROGRESSBAR_H_
 
 #include <stdint.h>
+#include "vlGui_window.h"
+#include "vlGui_input.h"
 
 
+struct vlGui_progressBar_t {
+    struct vlGui_window_t win;
+    uint8_t value;
+    char *title;
+};
 
-#define VLGUI_KEY_ESC               (0xf0)
+struct vlGui_progressBar_t * vlGui_progressBarCreate(struct vlGui_window_t *parent, 
+                                    int16_t x, int16_t y, int16_t width, uint16_t height);
 
-#define VLGUI_KEY_OK                (0xf9)
-#define VLGUI_KEY_CANCEL            (0xfa)
-#define VLGUI_KEY_LETF              (0xfb)
-#define VLGUI_KEY_RIGHT             (0xfc)
-#define VLGUI_KEY_UP                (0xfd)
-#define VLGUI_KEY_DOWN              (0xfe)
-#define VLGUI_KEY_NONE              (0xff)
+void vlGui_progressBarSetValue(struct vlGui_progressBar_t * pbar, uint8_t value);
 
+void vlGui_progressBarSetTitle(struct vlGui_progressBar_t * pbar, char *title);
 
-void vlonGui_inputEnqueueKey(uint8_t key);
-
-uint8_t vlonGui_inputGetKey(void);
-
-void vlonGui_inputInit(void);
-
-#endif
+#endif // _VLGUI_PROGRESSBAR_H_

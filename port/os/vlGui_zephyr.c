@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_button.h
+ * @file vlGui_zephyr.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,27 +20,35 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_BUTTON_H_
-#define _VLONGUI_BUTTON_H_
+#include "vlGui.h"
+#include <zephyr.h>
+#include "vlGui_ssd1306.h"
 
-#include <stdint.h>
-#include "vlonGui_window.h"
-#include "vlonGui_input.h"
-#include "vlonGui_fonts.h"
 
-struct vlonGui_button_t {
-    struct vlonGui_window_t win;
+struct vlGui_driver_t vlGui_driver;
 
-    uint8_t pressed;
-    char *text;
-    const struct vlonGui_font_t *font;
-};
 
-struct vlonGui_button_t * vlonGui_buttonCreate(struct vlonGui_window_t *parent, int16_t x, 
-                                               int16_t y, int16_t width, uint16_t height);
+void * vlGui_malloc(uint32_t size)
+{
+    return k_malloc(size);
+}
 
-void vlonGui_buttonSetText(struct vlonGui_button_t *btn, char *text);
+uint32_t vlGui_getTime(void)
+{
+    return k_uptime_get_32();
+}
 
-void vloonGui_buttonSetFont(struct vlonGui_button_t *btn, const struct vlonGui_font_t *font);
+static void vlGui_portDrawPixel(uint16_t x, uint16_t y, uint8_t color)
+{
+    ssd1306_DrawPixel(x, y, color);
+}
 
-#endif
+
+struct vlGui_driver_t * vlGui_portGetDriver(void)
+{
+    vlGui_driver.pInit = ssd1306_Init;
+    vlGui_driver.pDrawPoint = vlGui_portDrawPixel;
+    vlGui_driver.pFresh = ssd1306_UpdateScreen;
+
+    return &vlGui_driver;
+}

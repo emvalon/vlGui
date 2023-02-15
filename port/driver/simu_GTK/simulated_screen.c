@@ -21,8 +21,8 @@
  * 
  */
 #include  <gtk/gtk.h>
-#include "vlonGui.h"
-#include "vlonGui_input.h"
+#include "vlGui.h"
+#include "vlGui_input.h"
 
 
 #define SIMU_SCREEN_WIDTH       128
@@ -34,17 +34,17 @@ uint8_t closed = 0;
 /* Global variables declaration */
 GtkWidget  *window;
 GtkWidget *draware;
-vlonGui_color pixMap[SIMU_SCREEN_WIDTH][SIMU_SCREEN_HEIGHT];
+vlGui_color pixMap[SIMU_SCREEN_WIDTH][SIMU_SCREEN_HEIGHT];
 
 
 void 
-vlonGui_portDrawPixel(uint16_t x, uint16_t y, vlonGui_color color)
+vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color)
 {
     pixMap[x][y] = color;
 }
 
-vlonGui_color
-vlonGui_portGetPixelColor(uint16_t x, uint16_t y)
+vlGui_color
+vlGui_portGetPixelColor(uint16_t x, uint16_t y)
 {
     if (pixMap[x][y]) {
         return VLGUI_COLOR_WHITE;
@@ -54,7 +54,7 @@ vlonGui_portGetPixelColor(uint16_t x, uint16_t y)
 }
 
 void
-vlonGui_portRefresh(void)
+vlGui_portRefresh(void)
 {
 
     if (closed) {
@@ -127,22 +127,22 @@ keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
     switch (keyvalue)
     {
     case 0xff1b:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_ESC);
+        vlGui_inputEnqueueKey(VLGUI_KEY_ESC);
         break;
     case 0xff51:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_LETF);
+        vlGui_inputEnqueueKey(VLGUI_KEY_LETF);
         break;
     case 0xff52:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_UP);
+        vlGui_inputEnqueueKey(VLGUI_KEY_UP);
         break;
     case 0xff53:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_RIGHT);
+        vlGui_inputEnqueueKey(VLGUI_KEY_RIGHT);
         break;
     case 0xff54:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_DOWN);
+        vlGui_inputEnqueueKey(VLGUI_KEY_DOWN);
         break;
     case 0xff0d:
-        vlonGui_inputEnqueueKey(VLGUI_KEY_OK);
+        vlGui_inputEnqueueKey(VLGUI_KEY_OK);
         break;
     
     default:
@@ -161,11 +161,11 @@ guiMain(void)
 }
 
 void
-vlonGui_portInit(uint8_t display) 
+vlGui_portInit(uint8_t display) 
 {
     gtk_init(NULL, NULL);
     window  =  gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(window),  "vlonGui Simulater" );
+    gtk_window_set_title(GTK_WINDOW(window),  "vlGui Simulater" );
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
     gtk_window_set_default_size(GTK_WINDOW(window),  

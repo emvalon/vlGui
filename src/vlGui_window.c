@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_window.c
+ * @file vlGui_window.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,9 +20,9 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui.h"
-#include "vlonGui_window.h"
-#include "vlonGui_base.h"
+#include "vlGui.h"
+#include "vlGui_window.h"
+#include "vlGui_base.h"
 #include <string.h>
 
 /**
@@ -36,16 +36,16 @@
  * @param width 
  * @param height 
  * @param userDataLen 
- * @return struct vlonGui_window_t* 
+ * @return struct vlGui_window_t* 
  */
-struct vlonGui_window_t *
-vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
+struct vlGui_window_t *
+vlGui_windowCreate(struct vlGui_window_t *parent, int16_t x, int16_t y, 
                      int16_t width, int16_t height, uint8_t userDataLen)
 {
-    struct vlonGui_window_t *win;
-    struct vlonGui_window_t *brother;
+    struct vlGui_window_t *win;
+    struct vlGui_window_t *brother;
 
-    win = vlonGui_malloc(sizeof(*win) + userDataLen);
+    win = vlGui_malloc(sizeof(*win) + userDataLen);
     if(!win) {
         return win;
     }
@@ -84,40 +84,40 @@ vlonGui_windowCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
 }
 
 void
-vlonGui_windowDelete(struct vlonGui_window_t *win)
+vlGui_windowDelete(struct vlGui_window_t *win)
 {
-    struct vlonGui_window_t *child;
-    struct vlonGui_window_t *next;
+    struct vlGui_window_t *child;
+    struct vlGui_window_t *next;
 
     child = win->child;
 
     while (child) {
         next = child->next;
-        vlonGui_windowDelete(child);
+        vlGui_windowDelete(child);
         child = next;
     }
     
-    vlonGui_free(win);
+    vlGui_free(win);
 }
 
 void
-vlonGui_windowDeleteChildren(struct vlonGui_window_t *win)
+vlGui_windowDeleteChildren(struct vlGui_window_t *win)
 {
-    struct vlonGui_window_t *child;
-    struct vlonGui_window_t *next;
+    struct vlGui_window_t *child;
+    struct vlGui_window_t *next;
 
     child = win->child;
     
     while (child) {
         next = child->next;
-        vlonGui_windowDelete(child);
+        vlGui_windowDelete(child);
         child = next;
     }
     
     win->child = NULL;
 }
 
-static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
+static void vlGui_checkAnimation(struct vlGui_window_t *win)
 {
     int16_t dx, dy;
     uint16_t dt;
@@ -127,7 +127,7 @@ static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
         return;
     }
 
-    now = vlonGui_getTime();
+    now = vlGui_getTime();
 
     if(now >= (win->start_time + win->ani_ms)) {
         win->x_offset = win->ori_x_offset + win->ani_dx;
@@ -147,7 +147,7 @@ static void vlonGui_checkAnimation(struct vlonGui_window_t *win)
     win->y_offset = win->ori_y_offset + dy;
 } 
 
-void vlonGui_windowBokeh(struct vlonGui_window_t *win)
+void vlGui_windowBokeh(struct vlGui_window_t *win)
 {
     int pos;
 
@@ -155,59 +155,59 @@ void vlonGui_windowBokeh(struct vlonGui_window_t *win)
     for (int16_t y = 0; y < win->win_height; y+=VLGUI_BOKEH_SIZE) {
         pos = pos ? 0 : VLGUI_BOKEH_SIZE;
         for (int x = pos; x < win->win_width; x+=(VLGUI_BOKEH_SIZE * 2)) {
-            vlonGui_drawBlock(win, x - win->y_offset, y - win->x_offset, 
+            vlGui_drawBlock(win, x - win->y_offset, y - win->x_offset, 
                               VLGUI_BOKEH_SIZE, VLGUI_BOKEH_SIZE, 0);
         }
     }
 }
 
 void 
-vlonGui_windowRefresh(struct vlonGui_window_t *win)
+vlGui_windowRefresh(struct vlGui_window_t *win)
 {
     win->refresh = 0;
     
-    vlonGui_checkAnimation(win);
-    vlonGui_engineRender(win->engines);
+    vlGui_checkAnimation(win);
+    vlGui_engineRender(win->engines, (void *)win);
 
     if(win->pDrawWindow) {
         win->pDrawWindow(win, 0);
     }
 }
 
-void vlonGui_windowSetDrawCb(struct vlonGui_window_t *win, vlonGui_drawWindowCb_t func)
+void vlGui_windowSetDrawCb(struct vlGui_window_t *win, vlGui_drawWindowCb_t func)
 {
     win->pDrawWindow = func;
 }
 
-void vlonGui_windowMove(struct vlonGui_window_t *win, int16_t dx, int16_t dy)
+void vlGui_windowMove(struct vlGui_window_t *win, int16_t dx, int16_t dy)
 {
     win->x1 += dx;
     win->y1 += dy;
 }
 
-void vlonGui_windowClear(struct vlonGui_window_t *win)
+void vlGui_windowClear(struct vlGui_window_t *win)
 {
     int16_t x, y;
 
     x = -win->x_offset;
     y = -win->y_offset;
 
-    vlonGui_drawBlock(win, x, y, win->win_width, win->win_height, 0);
+    vlGui_drawBlock(win, x, y, win->win_width, win->win_height, 0);
 }
 
-void vlonGui_windowScroll(struct vlonGui_window_t *win, int16_t dx, int16_t dy)
+void vlGui_windowScroll(struct vlGui_window_t *win, int16_t dx, int16_t dy)
 {
     win->x_offset += dx;
     win->y_offset += dy;
 }
 
-void vlonGui_windowSetKeyCb(struct vlonGui_window_t *win, vlonGui_processKeyCb_t func)
+void vlGui_windowSetKeyCb(struct vlGui_window_t *win, vlGui_processKeyCb_t func)
 {
     win->pProcessKey = func;
 }
 
-void vlonGui_windowScrollAnimation(struct  vlonGui_window_t *win, int16_t dx, int16_t dy, 
-                                   uint16_t ms, vlonGui_animationDoneCb cb, void *arg)
+void vlGui_windowScrollAnimation(struct  vlGui_window_t *win, int16_t dx, int16_t dy, 
+                                   uint16_t ms, vlGui_animationDoneCb cb, void *arg)
 {
     if(win->animation) {
         win->ani_dx = win->ori_x_offset + win->ani_dx + dx - win->x_offset;
@@ -219,20 +219,20 @@ void vlonGui_windowScrollAnimation(struct  vlonGui_window_t *win, int16_t dx, in
     }
     win->ori_x_offset = win->x_offset;
     win->ori_y_offset = win->y_offset;
-    win->start_time = vlonGui_getTime();
+    win->start_time = vlGui_getTime();
     win->ani_ms     = ms;
     win->pAnimatinDone = cb;
     win->animatinDoneArg = arg;
 }
 
 void
-vlonGui_windowInitEngine(vlonGui_engine_t *engine)
+vlGui_windowInitEngine(vlGui_engine_t *engine)
 {
     
 }
 
 void
-vlonGui_windowSetRefresh(struct vlonGui_window_t * win)
+vlGui_windowSetRefresh(struct vlGui_window_t * win)
 {
     win->refresh = 1;
 }

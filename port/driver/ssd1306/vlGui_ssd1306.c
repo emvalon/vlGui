@@ -13,7 +13,7 @@
 #include <zephyr.h>
 #include <drivers/i2c.h>
 #include <math.h>
-#include "vlonGui_ssd1306.h"
+#include "vlGui_ssd1306.h"
 // #include "ssd1306.h"
 
 #define DISP_DEV DT_LABEL(DT_NODELABEL(i2c1))

@@ -1,9 +1,9 @@
 /**
- * @file vlonGui_port.h
+ * @file vlGui_config.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2022-07-08
  * 
  * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
  * 
@@ -20,33 +20,34 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_PORT_H_
-#define _VLONGUI_PORT_H_
+#ifndef _VLGUI_CONFIG_H_
+#define _VLGUI_CONFIG_H_
 
-#include "vlonGui_config.h"
+#include <stdint.h>
 
-void * vlonGui_malloc(uint32_t size);
+/*
+ * Config Macro
+ */
 
-void vlonGui_free(void *addr);
+/* Enable animation feature for window */
+#define LVGUI_ANIMATION                 (1)
 
-uint32_t vlonGui_getTime(void);
+/* The number of key can be enqueued */
+#define LVGUI_KEY_MAX_NUM               (10)
 
-void vlonGui_delay(uint32_t ms);
+/* The size of bokeh mask */
+#define VLGUI_BOKEH_SIZE                (1)
 
-void *vlonGui_protSemphrCreate(void);
+/* Indicates the unicode is formed in big-endian */
+#define VLGUI_UNICODE_BIGEND            (1)
 
-void vlonGui_protSemphrDestroy(void *semphr);
+/* 
+ * Declaration 
+ */ 
+#ifndef NULL
+#define NULL    ((void *)0)
+#endif
 
-void vlonGui_portSemphrTake(void *semphr, uint32_t delay_time);
+typedef uint8_t     vlGui_color;
 
-void vlonGui_portSemphrGive(void *semphr);
-
-void vlonGui_portInit(uint8_t dispaly);
-
-void vlonGui_portDrawPixel(uint16_t x, uint16_t y, vlonGui_color color);
-
-vlonGui_color vlonGui_portGetPixelColor(uint16_t x, uint16_t y);
-
-void vlonGui_portRefresh(void);
-
-#endif 
+#endif // _VLGUI_CONFIG_H_

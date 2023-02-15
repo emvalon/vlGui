@@ -1,5 +1,5 @@
 /**
- * @file vlonGui.c
+ * @file vlGui.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,86 +20,86 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui.h"
-#include "vlonGui_input.h"
+#include "vlGui.h"
+#include "vlGui_input.h"
 #include <string.h>
 
-struct vlonGui_t *vlonGui_cur_screen;
-static void *g_vlonGui_semphr = NULL;
+struct vlGui_t *vlGui_cur_screen;
+static void *g_vlGui_semphr = NULL;
 
-int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height)
+int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height)
 {
-    struct vlonGui_window_t *win;
+    struct vlGui_window_t *win;
 
     memset(screen, 0, sizeof(*screen));
     screen->refresh = 1;
     screen->width   = width;
     screen->height  = height;
-    vlonGui_cur_screen = screen;
+    vlGui_cur_screen = screen;
 
-    win = vlonGui_windowCreate(NULL, 0, 0, width, height, 0);
+    win = vlGui_windowCreate(NULL, 0, 0, width, height, 0);
     if(!win) {
         return -1;
     }
 
-    vlonGui_cur_screen->window = win;
+    vlGui_cur_screen->window = win;
 
     return 0;
 }
 
 
-void vlonGui_register_driver(struct vlonGui_t *screen, struct vlonGui_driver_t *driver)
+void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver)
 {
     screen->displayDriver = driver;
     driver->pInit(1);
 }
 
-static void vlonGui_refreshAllChildren(struct vlonGui_window_t *win)
+static void vlGui_refreshAllChildren(struct vlGui_window_t *win)
 {
-    struct vlonGui_window_t *child;
+    struct vlGui_window_t *child;
 
     child = win->child;
 
     while (child) {
-        vlonGui_windowRefresh(child);
-        vlonGui_refreshAllChildren(child);
+        vlGui_windowRefresh(child);
+        vlGui_refreshAllChildren(child);
         child = child->next;
     }
 }
 
-static void vlonGui_refreshAllBrothers(struct vlonGui_window_t *win)
+static void vlGui_refreshAllBrothers(struct vlGui_window_t *win)
 {
-    struct vlonGui_window_t *next;
+    struct vlGui_window_t *next;
 
     next = win->next;
 
     while (next) {
         if (next->refresh) {
-            vlonGui_windowRefresh(next);
+            vlGui_windowRefresh(next);
         }
         next = next->next;
     }
 }
 
-void vlonGui_refresh(void)
+void vlGui_refresh(void)
 {
     uint8_t key;
-    struct vlonGui_window_t *win;
-    struct vlonGui_window_t *drawWin;
-    struct vlonGui_window_t *parent;
+    struct vlGui_window_t *win;
+    struct vlGui_window_t *drawWin;
+    struct vlGui_window_t *parent;
 
     parent = NULL;
 
     /* Process all of keys enqueued */
     while(1) {
         /* Get the top layer of dispaly window */
-        for(win = vlonGui_cur_screen->window; win->child; parent = win, win = win->child);
-        key = vlonGui_inputGetKey();
+        for(win = vlGui_cur_screen->window; win->child; parent = win, win = win->child);
+        key = vlGui_inputGetKey();
 
         if(key == VLGUI_KEY_NONE) {
             break;
         } else if (key == VLGUI_KEY_ESC) {
-            vlonGui_windowDeleteChildren(parent);
+            vlGui_windowDeleteChildren(parent);
         } else if (win->pProcessKey) {
             win->pProcessKey(win, key);
         }
@@ -110,45 +110,45 @@ void vlonGui_refresh(void)
     /* Check if this screen need to be refreshed.
      * Traverse all of windows that created on this screen.
      */
-    if(vlonGui_cur_screen->refresh) {
-        // vlonGui_cur_screen->refresh = 0;        
-        drawWin = vlonGui_cur_screen->window;
+    if(vlGui_cur_screen->refresh) {
+        // vlGui_cur_screen->refresh = 0;        
+        drawWin = vlGui_cur_screen->window;
         while (drawWin) {
             /* If this is the top layer, check if need bokeh */
             if ((drawWin == win) &&
-                (win->win_height != vlonGui_cur_screen->height) && 
-                (win->win_width != vlonGui_cur_screen->width)) {
-                vlonGui_windowBokeh(vlonGui_cur_screen->window);
+                (win->win_height != vlGui_cur_screen->height) && 
+                (win->win_width != vlGui_cur_screen->width)) {
+                vlGui_windowBokeh(vlGui_cur_screen->window);
             }
 
             /* According to refresh flag, draw coresponding window */
             if (drawWin->refresh) {
-                vlonGui_windowRefresh(drawWin);
+                vlGui_windowRefresh(drawWin);
             }
-            vlonGui_refreshAllBrothers(drawWin);   
+            vlGui_refreshAllBrothers(drawWin);   
             drawWin = drawWin->child;
         }
-        vlonGui_cur_screen->displayDriver->pFresh();
+        vlGui_cur_screen->displayDriver->pFresh();
     }
 }
 
-struct vlonGui_window_t * vlinGui_getMainWindow(struct vlonGui_t *screen)
+struct vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen)
 {
     return screen->window;
 }
 
-void vlonGui_setFont(const struct vlonGui_font_t *font)
+void vlGui_setFont(const struct vlGui_font_t *font)
 {
-    vlonGui_cur_screen->curFont = font;
+    vlGui_cur_screen->curFont = font;
 }
 
-void vlonGui_turnOnOff(struct vlonGui_t *screen, uint8_t display)
+void vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display)
 {
     screen->displayDriver->pInit(display);
 }
 
 void
-vlonGui_lock(uint8_t en)
+vlGui_lock(uint8_t en)
 {
 
 }

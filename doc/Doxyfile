@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "vlonGui"
+PROJECT_NAME           = "vlGui"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          = "A sample embeded GUI"
 PROJECT_LOGO           =

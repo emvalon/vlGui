@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_port.c
+ * @file vlGui_port.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,49 +20,49 @@
  * limitations under the License.
  * 
  */
-#include "vlonGui.h"
-#include "vlonGui_port.h"
+#include "vlGui.h"
+#include "vlGui_port.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 #include <sys/times.h>
 
-struct vlonGui_driver_t vlonGui_driver;
+struct vlGui_driver_t vlGui_driver;
 uint8_t ms_per_tick;
 
-void * vlonGui_malloc(uint32_t size)
+void * vlGui_malloc(uint32_t size)
 {
     return malloc(size);
 }
 
-void vlonGui_free(void *addr)
+void vlGui_free(void *addr)
 {
     return free(addr);
 }
 
-uint32_t vlonGui_getTime(void)
+uint32_t vlGui_getTime(void)
 {
     return times(NULL) * ms_per_tick;
 }
 
-void vlonGui_delay(uint32_t ms)
+void vlGui_delay(uint32_t ms)
 {
     usleep(ms * 1000);
 }
 
-// static void vlonGui_portDrawPixel(uint16_t x, uint16_t y, uint8_t color)
+// static void vlGui_portDrawPixel(uint16_t x, uint16_t y, uint8_t color)
 // {
 //     ssd1306_DrawPixel(x, y, color);
 // }
 
-struct vlonGui_driver_t * vlonGui_portGetDriver(void)
+struct vlGui_driver_t * vlGui_portGetDriver(void)
 {
     ms_per_tick = 1000 / sysconf(_SC_CLK_TCK);
 
-    vlonGui_driver.pInit = vlonGui_portInit;
-    vlonGui_driver.pDrawPoint = vlonGui_portDrawPixel;
-    vlonGui_driver.pFresh = vlonGui_portRefresh;
-    vlonGui_driver.pGetPointColor = vlonGui_portGetPixelColor;
+    vlGui_driver.pInit = vlGui_portInit;
+    vlGui_driver.pDrawPoint = vlGui_portDrawPixel;
+    vlGui_driver.pFresh = vlGui_portRefresh;
+    vlGui_driver.pGetPointColor = vlGui_portGetPixelColor;
 
-    return &vlonGui_driver;
+    return &vlGui_driver;
 }

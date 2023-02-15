@@ -1,5 +1,5 @@
 /**
- * @file vlonGui.h
+ * @file vlGui.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -20,14 +20,14 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLONGUI_H_
-#define _VLONGUI_H_
+#ifndef _VLGUI_H_
+#define _VLGUI_H_
 
-#include "vlonGui_config.h"
-#include "vlonGui_window.h"
-#include "vlonGui_port.h"
-#include "vlonGui_base.h"
-#include "vlonGui_fonts.h"
+#include "vlGui_config.h"
+#include "vlGui_window.h"
+#include "vlGui_port.h"
+#include "vlGui_base.h"
+#include "vlGui_fonts.h"
 
 
 #define VLGUI_COLOR_BLACK       (0)
@@ -46,9 +46,9 @@ typedef void (* drawPoint_func_t)(uint16_t x, uint16_t y, uint8_t color);
 typedef void (* drawLineH_func_t)(uint16_t x, uint16_t y, uint16_t length, uint16_t width, uint8_t color);
 typedef void (* drawLineV_func_t)(uint16_t x, uint16_t y, uint16_t length, uint16_t width, uint8_t color);
 typedef void (* drawBitmap_func_t)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t *bitmap);
-typedef vlonGui_color (* getPointColor_func_t)(uint16_t x, uint16_t y);
+typedef vlGui_color (* getPointColor_func_t)(uint16_t x, uint16_t y);
 
-struct vlonGui_driver_t {
+struct vlGui_driver_t {
     displayInit_func_t  pInit;
     displayFresh_func_t pFresh;
     drawBlock_func_t    pDrawBlock;
@@ -59,32 +59,32 @@ struct vlonGui_driver_t {
     getPointColor_func_t pGetPointColor;
 };
 
-struct vlonGui_t {
+struct vlGui_t {
     uint8_t refresh;
     int16_t width;
     int16_t height;
-    const struct vlonGui_font_t *curFont;
-    struct vlonGui_driver_t *displayDriver;
-    struct vlonGui_window_t *window;
+    const struct vlGui_font_t *curFont;
+    struct vlGui_driver_t *displayDriver;
+    struct vlGui_window_t *window;
 };
 
 
-extern struct vlonGui_t *vlonGui_cur_screen;
+extern struct vlGui_t *vlGui_cur_screen;
 
 
-int vlonGui_screen_init(struct vlonGui_t *screen, int16_t width, int16_t height);
+int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height);
 
-void vlonGui_register_driver(struct vlonGui_t *screen, struct vlonGui_driver_t *driver);
+void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver);
 
-void vlonGui_turnOnOff(struct vlonGui_t *screen, uint8_t display);
+void vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display);
 
-struct vlonGui_window_t * vlinGui_getMainWindow(struct vlonGui_t *screen);
+struct vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen);
 
-void vlonGui_lock(uint8_t en);
+void vlGui_lock(uint8_t en);
 
-void vlonGui_refresh(void);
+void vlGui_refresh(void);
 
-struct vlonGui_driver_t * vlonGui_portGetDriver(void);
+struct vlGui_driver_t * vlGui_portGetDriver(void);
 
-void vlonGui_setFont(const struct vlonGui_font_t *font);
+void vlGui_setFont(const struct vlGui_font_t *font);
 #endif

@@ -23,7 +23,7 @@
 #ifndef _GAMES_GLUTSNAKE_H_
 #define _GAMES_GLUTSNAKE_H_
 
-#include "vlonGui.h"
+#include "vlGui.h"
 
 
 #include<stdbool.h>
@@ -51,6 +51,6 @@ struct game_glutSnake_t {
     uint8_t level;
 };
 
-int games_gultSnakeCreate(struct vlonGui_window_t *win);
+int games_gultSnakeCreate(struct vlGui_window_t *win);
 
 #endif // _GAMES_GLUTSNAKE_H_

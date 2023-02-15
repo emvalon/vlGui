@@ -1,5 +1,5 @@
 /**
- * @file vlonGui_progressBar.c
+ * @file vlGui_progressBar.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
@@ -22,10 +22,10 @@
  */
 #include <stdio.h>
 #include <string.h>
-#include "vlonGui.h"
-#include "vlonGui_base.h"
-#include "vlonGui_progressBar.h"
-#include "vlonGui_fonts.h"
+#include "vlGui.h"
+#include "vlGui_base.h"
+#include "vlGui_progressBar.h"
+#include "vlGui_fonts.h"
 
 /**
  * @brief Callback function for progress bar to draw this window.
@@ -35,30 +35,30 @@
  * @param arg 
  */
 static void 
-vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
+vlGui_drawProgressBar(struct vlGui_window_t *win, void *arg)
 {
     uint16_t len;
     char num[5];
     char *title;
-    const struct vlonGui_font_t *font;
-    struct vlonGui_progressBar_t *pbar;
+    const struct vlGui_font_t *font;
+    struct vlGui_progressBar_t *pbar;
 
-    pbar = (struct vlonGui_progressBar_t *)win;
-    font = &vlonGui_font6x8;
+    pbar = (struct vlGui_progressBar_t *)win;
+    font = &vlGui_font6x8;
 
-    vlonGui_setFont(font);
+    vlGui_setFont(font);
     /* Clear window */
-    vlonGui_windowClear(win);
+    vlGui_windowClear(win);
     /* Draw boundary of window */
-    vlonGui_drawRectangle(win, 1, 1, win->win_width - 2, win->win_height - 2, 1);
+    vlGui_drawRectangle(win, 1, 1, win->win_width - 2, win->win_height - 2, 1);
 
     /* Draw boundary of progress bar. Reserve space for percentage value */
-    vlonGui_drawRectangle(win, 5, (win->win_height >> 1) - 2, win->win_width - 10 - 25, 10, 1);
+    vlGui_drawRectangle(win, 5, (win->win_height >> 1) - 2, win->win_width - 10 - 25, 10, 1);
     /* Draw process bar with active color */
     len = (win->win_width - 14 - 25) * pbar->value / 100;
-    vlonGui_drawBlock(win, 7, (win->win_height >> 1), len, 6, 1);
+    vlGui_drawBlock(win, 7, (win->win_height >> 1), len, 6, 1);
 
-    vlonGui_setFont(&vlonGui_font6x8);
+    vlGui_setFont(&vlGui_font6x8);
 
     if (pbar->value > 99) {
         num[0] = 'O';
@@ -67,16 +67,16 @@ vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
     } else {
         snprintf(num, sizeof(num), "%02d", pbar->value);
     }
-    vlonGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
+    vlGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
     /* Draw title if has */
     title = pbar->title;
     if (title) {
         len = strlen(title) * font->fontWidth;
-        vlonGui_drawString(win, (win->win_width - len) >> 1, 3, pbar->title, 1);
+        vlGui_drawString(win, (win->win_width - len) >> 1, 3, pbar->title, 1);
     }
     /* Draw the value of percentage */
     snprintf(num, sizeof(num), "%02d%%", pbar->value);
-    vlonGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
+    vlGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
 }
 
 /**
@@ -87,17 +87,17 @@ vlonGui_drawProgressBar(struct vlonGui_window_t *win, void *arg)
  * @return int 
  */
 int 
-vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
+vlGui_progressBarProcessKey(struct vlGui_window_t *win, uint8_t key)
 {
-    // struct vlonGui_selector_t *sel;
+    // struct vlGui_selector_t *sel;
 
-    // sel = (struct vlonGui_selector_t *)win;
+    // sel = (struct vlGui_selector_t *)win;
     // if((key == VLGUI_KEY_UP) && (sel->temp_index > 0)) {
     //     --sel->temp_index;
-    //     vlonGui_windowScrollAnimation(win, 0, sel->bigFont->fontHeight + 4, 300, vlonGui_selectorScrollUpCb, sel);
+    //     vlGui_windowScrollAnimation(win, 0, sel->bigFont->fontHeight + 4, 300, vlGui_selectorScrollUpCb, sel);
     // } else if((key == VLGUI_KEY_DOWN) && (sel->temp_index < (sel->num - 1))) {
     //     ++sel->temp_index;
-    //     vlonGui_windowScrollAnimation(win, 0, -sel->bigFont->fontHeight - 4, 300, vlonGui_selectorScrollDownCb, sel);
+    //     vlGui_windowScrollAnimation(win, 0, -sel->bigFont->fontHeight - 4, 300, vlGui_selectorScrollDownCb, sel);
     // }
     return 0;
 }
@@ -109,7 +109,7 @@ vlonGui_progressBarProcessKey(struct vlonGui_window_t *win, uint8_t key)
  * @param value 
  */
 void
-vlonGui_progressBarSetValue(struct vlonGui_progressBar_t * pbar, uint8_t value)
+vlGui_progressBarSetValue(struct vlGui_progressBar_t * pbar, uint8_t value)
 {
     if (value > 100) {
         pbar->value = 100;
@@ -125,7 +125,7 @@ vlonGui_progressBarSetValue(struct vlonGui_progressBar_t * pbar, uint8_t value)
  * @param title 
  */
 void
-vlonGui_progressBarSetTitle(struct vlonGui_progressBar_t * pbar, char *title)
+vlGui_progressBarSetTitle(struct vlGui_progressBar_t * pbar, char *title)
 {
     pbar->title = title;
 }
@@ -138,24 +138,24 @@ vlonGui_progressBarSetTitle(struct vlonGui_progressBar_t * pbar, char *title)
  * @param y      Position of y axis
  * @param width  
  * @param height 
- * @return struct vlonGui_progressBar_t* 
+ * @return struct vlGui_progressBar_t* 
  */
-struct vlonGui_progressBar_t * 
-vlonGui_progressBarCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y, 
+struct vlGui_progressBar_t * 
+vlGui_progressBarCreate(struct vlGui_window_t *parent, int16_t x, int16_t y, 
                           int16_t width, uint16_t height)
 {
-    struct vlonGui_progressBar_t *pbar;
+    struct vlGui_progressBar_t *pbar;
     VLGUI_ASSERT(parent);
 
-    pbar = (struct vlonGui_progressBar_t *)vlonGui_windowCreate(parent, x, y, 
+    pbar = (struct vlGui_progressBar_t *)vlGui_windowCreate(parent, x, y, 
                                 width, height, sizeof(*pbar) - sizeof(*parent));
     if(!pbar) {
         return NULL;
     }
 
     pbar->win.type = VLGUI_WIN_TYPE_PROGBAR;
-    pbar->win.pDrawWindow = vlonGui_drawProgressBar;
-    pbar->win.pProcessKey = vlonGui_progressBarProcessKey;
+    pbar->win.pDrawWindow = vlGui_drawProgressBar;
+    pbar->win.pProcessKey = vlGui_progressBarProcessKey;
     pbar->value = 0;
     pbar->title = NULL;
 
@@ -163,7 +163,7 @@ vlonGui_progressBarCreate(struct vlonGui_window_t *parent, int16_t x, int16_t y,
 }
 
 void 
-vlonGui_progressBarDestroy(struct vlonGui_progressBar_t *pbar)
+vlGui_progressBarDestroy(struct vlGui_progressBar_t *pbar)
 {
-    vlonGui_windowDelete((struct vlonGui_window_t *)pbar);
+    vlGui_windowDelete((struct vlGui_window_t *)pbar);
 }
