@@ -51,6 +51,6 @@ struct game_glutSnake_t {
     uint8_t level;
 };
 
-int games_gultSnakeCreate(struct vlGui_window_t *win);
+int games_gultSnakeCreate(vlGui_window_t *win);
 
 #endif // _GAMES_GLUTSNAKE_H_

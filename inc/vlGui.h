@@ -22,7 +22,6 @@
  */
 #ifndef _VLGUI_H_
 #define _VLGUI_H_
-
 #include "vlGui_config.h"
 #include "vlGui_window.h"
 #include "vlGui_port.h"
@@ -37,6 +36,7 @@
 #define VLGUI_ASSERT(cons)  
 #define VLGUI_MIN(a,b)          (a > b ? b : a)
 #define VLGUI_MAX(a,b)          (a > b ? a : b)
+#define VLGUI_UNUSED(x)         (void)x;
 
 
 typedef void (* displayInit_func_t)(uint8_t display);
@@ -65,7 +65,7 @@ struct vlGui_t {
     int16_t height;
     const struct vlGui_font_t *curFont;
     struct vlGui_driver_t *displayDriver;
-    struct vlGui_window_t *window;
+    vlGui_window_t *window;
 };
 
 
@@ -78,9 +78,7 @@ void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver
 
 void vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display);
 
-struct vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen);
-
-void vlGui_lock(uint8_t en);
+vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen);
 
 void vlGui_refresh(void);
 

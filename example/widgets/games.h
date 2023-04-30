@@ -24,7 +24,7 @@
 #define _GAMES_H_
 #include "vlGui.h"
 
-void games_createSelector(struct vlGui_window_t *win);
+void games_createSelector(vlGui_window_t *win);
 
 
 #endif // _GAMES_H_

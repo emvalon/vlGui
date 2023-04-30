@@ -28,7 +28,7 @@
 #include "vlGui_input.h"
 
 struct vlGui_selector_t {
-    struct vlGui_window_t win;
+    vlGui_window_t win;
 
     const struct vlGui_font_t *bigFont;
     const struct vlGui_font_t *smallFont;
@@ -39,9 +39,9 @@ struct vlGui_selector_t {
 };
 
 
-int vlGui_selectorProcessKey(struct vlGui_window_t *win, uint8_t key);
+int vlGui_selectorProcessKey(vlGui_window_t *win, uint8_t key);
 
-struct vlGui_selector_t * vlGui_selectorCreate(struct vlGui_window_t *parent);
+struct vlGui_selector_t * vlGui_selectorCreate(vlGui_window_t *parent);
 
 int vlGui_selectorAddEntry(struct vlGui_selector_t *sel, char *str);
 

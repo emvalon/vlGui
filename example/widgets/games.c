@@ -28,7 +28,7 @@
 struct vlGui_selector_t *sel;
 
 static int 
-gameSelectorKeyCb(struct vlGui_window_t *win, uint8_t key)
+gameSelectorKeyCb(vlGui_window_t *win, uint8_t key)
 {
     if (key == VLGUI_KEY_OK) {
         switch (sel->index) {
@@ -44,7 +44,7 @@ gameSelectorKeyCb(struct vlGui_window_t *win, uint8_t key)
 }
 
 void 
-games_createSelector(struct vlGui_window_t *win) 
+games_createSelector(vlGui_window_t *win) 
 {
     sel = vlGui_selectorCreate(win);
 
@@ -55,5 +55,5 @@ games_createSelector(struct vlGui_window_t *win)
     vlGui_selectorAddEntry(sel, "Suhon Ma");
     vlGui_selectorAddEntry(sel, "VlonGui"); 
 
-    vlGui_windowSetKeyCb((struct vlGui_window_t *)sel, gameSelectorKeyCb);
+    vlGui_windowSetKeyCb((vlGui_window_t *)sel, gameSelectorKeyCb);
 }

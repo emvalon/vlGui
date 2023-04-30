@@ -27,21 +27,23 @@
 #include <string.h>
 
 
-static int vlGui_buttonProcessKey(struct vlGui_window_t *win, uint8_t key)
+static int vlGui_buttonProcessKey(vlGui_window_t *win, uint8_t key)
 {
     struct vlGui_button_t *btn;
 
+    VLGUI_UNUSED(key);
     btn = (struct vlGui_button_t *)win;
     btn->pressed ^= 1;
 
     return 0;
 }
 
-static void vlGui_drawButton(struct vlGui_window_t *win, void *arg)
+static void vlGui_drawButton(vlGui_window_t *win, void *arg)
 {
     struct vlGui_button_t *btn;
     int16_t w,h, sx, sy;
 
+    VLGUI_UNUSED(arg);
     btn = (struct vlGui_button_t *)win;
 
     w = win->win_width;
@@ -70,7 +72,7 @@ static void vlGui_drawButton(struct vlGui_window_t *win, void *arg)
 }
 
 struct vlGui_button_t *
-vlGui_buttonCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,     
+vlGui_buttonCreate(vlGui_window_t *parent, int16_t x, int16_t y,     
                      int16_t width, uint16_t height)
 {
     struct vlGui_button_t *btn;

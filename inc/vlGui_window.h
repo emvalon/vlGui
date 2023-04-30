@@ -33,7 +33,7 @@
 #define VLGUI_WIN_TYPE_PROGBAR      (4)
 #define VLGUI_WIN_TYPE_MENU         (5)
 
-struct vlGui_window_t {
+struct vlGui_window {
     uint8_t type:4;
     uint8_t animation:1;
     uint8_t refresh:1;
@@ -56,42 +56,43 @@ struct vlGui_window_t {
 
     vlGui_engine_t *engines;
 
-    struct vlGui_window_t *child;
-    struct vlGui_window_t *next;
+    struct vlGui_window *child;
+    struct vlGui_window *next;
 
-    void (* pDrawWindow)(struct vlGui_window_t *win, void *arg);
-    int (* pProcessKey)(struct vlGui_window_t *win, uint8_t key);
+    void (* pDrawWindow)(struct vlGui_window *win, void *arg);
+    int (* pProcessKey)(struct vlGui_window *win, uint8_t key);
 };
+typedef struct vlGui_window vlGui_window_t;
 
-typedef void (* vlGui_drawWindowCb_t)(struct vlGui_window_t *win, void *arg);
-typedef int (* vlGui_processKeyCb_t)(struct vlGui_window_t *win, uint8_t key);
+typedef void (* vlGui_drawWindowCb_t)(vlGui_window_t *win, void *arg);
+typedef int (* vlGui_processKeyCb_t)(vlGui_window_t *win, uint8_t key);
 typedef void (* vlGui_animationDoneCb)(void *arg);
 
-struct vlGui_window_t * vlGui_windowCreate(struct vlGui_window_t *parent, int16_t x, int16_t y, 
+vlGui_window_t * vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
                                                int16_t width, int16_t height, uint8_t userDataLen);
 
 
-void vlGui_windowDelete(struct vlGui_window_t *win);
+void vlGui_windowDelete(vlGui_window_t *win);
 
-void vlGui_windowDeleteChildren(struct vlGui_window_t *win);
+void vlGui_windowDeleteChildren(vlGui_window_t *win);
 
-void vlGui_windowBokeh(struct vlGui_window_t *win);
+void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor);
 
-void vlGui_windowRefresh(struct vlGui_window_t *win);
+void vlGui_windowRefresh(vlGui_window_t *win);
 
-void vlGui_windowSetRefresh(struct vlGui_window_t * win);
+void vlGui_windowSetRefresh(vlGui_window_t * win);
 
-void vlGui_windowSetDrawCb(struct vlGui_window_t *win, vlGui_drawWindowCb_t func);
+void vlGui_windowSetDrawCb(vlGui_window_t *win, vlGui_drawWindowCb_t func);
 
-void vlGui_windowMove(struct vlGui_window_t *win, int16_t dx, int16_t dy);
+void vlGui_windowMove(vlGui_window_t *win, int16_t dx, int16_t dy);
 
-void vlGui_windowClear(struct vlGui_window_t *win);
+void vlGui_windowClear(vlGui_window_t *win);
 
-void vlGui_windowScroll(struct vlGui_window_t *win, int16_t dx, int16_t dy);
+void vlGui_windowScroll(vlGui_window_t *win, int16_t dx, int16_t dy);
 
-void vlGui_windowSetKeyCb(struct vlGui_window_t *win, vlGui_processKeyCb_t func);
+void vlGui_windowSetKeyCb(vlGui_window_t *win, vlGui_processKeyCb_t func);
 
-void vlGui_windowScrollAnimation(struct  vlGui_window_t *win, int16_t dx, int16_t dy, 
+void vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy, 
                                    uint16_t ms, vlGui_animationDoneCb cb, void *arg);
 
 #endif

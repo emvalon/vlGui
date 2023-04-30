@@ -27,17 +27,25 @@
 #include "vlGui_window.h"
 
 
-void vlGui_drawBlock(struct vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t color);
+void vlGui_drawBlock(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, 
+                     int16_t height, uint8_t color);
 
-void vlGui_drawPoint(struct vlGui_window_t *win, int16_t x, int16_t y, uint8_t color);
+void vlGui_drawPoint(vlGui_window_t *win, int16_t x, int16_t y, uint8_t color);
 
-void vlGui_drawLine(struct vlGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t width, uint8_t color);
+void vlGui_drawLine(vlGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, 
+                    int16_t y2, int16_t width, uint8_t color);
 
-void vlGui_drawBitmap(struct vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t *bitmap);
+void vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, 
+                      int16_t height, const uint8_t *bitmap);
 
-void vlGui_drawRectangle(struct vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t color);
+void vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, 
+                         int16_t width, int16_t height, uint8_t color);
 
-void vlGui_drawString(struct vlGui_window_t *win, int16_t x, int16_t y, char *str, uint8_t color);
+void vlGui_drawString(vlGui_window_t *win, int16_t x, int16_t y, char *str, 
+                      uint8_t color);
 
-void vlGui_drawCircle(struct vlGui_window_t *win, int16_t x0, int16_t y0, uint8_t rad);
+void vlGui_drawCircle(vlGui_window_t *win, int16_t x0, int16_t y0, uint8_t rad);
+
+void vlGui_drawFilledCircle(vlGui_window_t *win, int16_t x0, int16_t y0, 
+                            uint8_t rad, vlGui_color color);
 #endif

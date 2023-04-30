@@ -35,7 +35,7 @@
  * @param width 
  * @param height 
  */
-void vlGui_drawBlock(struct vlGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawBlock(vlGui_window_t *win, int16_t x, int16_t y, 
                        int16_t width, int16_t height, uint8_t color)
 {
     drawBlock_func_t func;
@@ -94,7 +94,7 @@ void vlGui_drawBlock(struct vlGui_window_t *win, int16_t x, int16_t y,
     func(actualX1, actualY1, actualX2 - actualX1 + 1, actualY2 - actualY1 + 1, color);
 }
 
-void vlGui_drawPoint(struct vlGui_window_t *win, int16_t x, int16_t y, uint8_t color)
+void vlGui_drawPoint(vlGui_window_t *win, int16_t x, int16_t y, uint8_t color)
 {
     int16_t actualX,actualY;
     vlGui_color actualColor;
@@ -128,7 +128,7 @@ void vlGui_drawPoint(struct vlGui_window_t *win, int16_t x, int16_t y, uint8_t c
     driver->pDrawPoint(actualX, actualY, actualColor);
 }
 
-static void drawLineByPixel(struct vlGui_window_t *win, int16_t x1, int16_t y1, 
+static void drawLineByPixel(vlGui_window_t *win, int16_t x1, int16_t y1, 
                             int16_t x2, int16_t y2, uint8_t color)
 {
     int16_t deltaX = abs(x2 - x1);
@@ -158,7 +158,7 @@ static void drawLineByPixel(struct vlGui_window_t *win, int16_t x1, int16_t y1,
     }
 }
 
-void vlGui_drawLine(struct vlGui_window_t *win, int16_t x1, int16_t y1,
+void vlGui_drawLine(vlGui_window_t *win, int16_t x1, int16_t y1,
                       int16_t x2, int16_t y2, int16_t width, uint8_t color)
 {
     struct vlGui_driver_t *display;
@@ -252,7 +252,7 @@ void vlGui_drawLine(struct vlGui_window_t *win, int16_t x1, int16_t y1,
     }
 }
 
-void vlGui_drawBitmap(struct vlGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y, 
                         int16_t width, int16_t height, const uint8_t *bitmap)
 {
     uint16_t l,r;
@@ -283,7 +283,7 @@ void vlGui_drawBitmap(struct vlGui_window_t *win, int16_t x, int16_t y,
     }
 }
 
-void vlGui_drawRectangle(struct vlGui_window_t *win, int16_t x, int16_t y, 
+void vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, 
                           int16_t width, int16_t height, uint8_t color)
 {
     int16_t x2, y2;
@@ -296,7 +296,7 @@ void vlGui_drawRectangle(struct vlGui_window_t *win, int16_t x, int16_t y,
     vlGui_drawLine(win, x, y2, x2 ,y2, 1, color);
 }
 
-// static char vlGui_drawChar(struct vlGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
+// static char vlGui_drawChar(vlGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color) 
 // {
 //     uint32_t i, b, j;
 //     struct vlGui_font_t *font;
@@ -326,10 +326,9 @@ void vlGui_drawRectangle(struct vlGui_window_t *win, int16_t x, int16_t y,
 // }
 
 static void
-vlGui_drawGlyph(struct vlGui_window_t *win, int16_t x, int16_t y,  
+vlGui_drawGlyph(vlGui_window_t *win, int16_t x, int16_t y,  
                   uint16_t glyph, const struct vlGui_font_t *font, vlGui_color color)
 {
-    int16_t dx;
     uint8_t pos;
     uint8_t width;
     uint8_t *charAddr;
@@ -347,18 +346,14 @@ vlGui_drawGlyph(struct vlGui_window_t *win, int16_t x, int16_t y,
             break;
         }
     }
-    
+
     /* If doesn't contain this glyph, return */
     if (segIndex >= font->tableLen) {
         return;
     }
-        
+   
     charAddr = (void *)font + item->offset;
     charAddr += font->bytesPerChar * (glyph - item->start);
-
-    /* Draw this character */
-    dx = 0;
-    
     width = *charAddr;
     ++charAddr;
     pos = 7;
@@ -368,7 +363,6 @@ vlGui_drawGlyph(struct vlGui_window_t *win, int16_t x, int16_t y,
         if (*charAddr & (1 << pos)) {
             vlGui_drawPoint(win, x + dx, y + col, color);
         }
-
         if (pos > 0) {
             --pos;
         } else {
@@ -409,7 +403,7 @@ vlGui_getGlyphCode(char **str, uint8_t coding)
     return glyph;
 }
 
-void vlGui_drawString(struct vlGui_window_t *win, int16_t x, 
+void vlGui_drawString(vlGui_window_t *win, int16_t x, 
                         int16_t y, char *str, uint8_t color)
 {
     int16_t offset;
@@ -430,7 +424,7 @@ void vlGui_drawString(struct vlGui_window_t *win, int16_t x,
 
 
 static void 
-vlGui_drawCircleSection(struct vlGui_window_t *win, int16_t x, int16_t y, 
+vlGui_drawCircleSection(vlGui_window_t *win, int16_t x, int16_t y, 
                           int16_t x0, int16_t y0)
 {
     /* upper right */
@@ -451,7 +445,7 @@ vlGui_drawCircleSection(struct vlGui_window_t *win, int16_t x, int16_t y,
 }
 
 void 
-vlGui_drawCircle(struct vlGui_window_t *win, int16_t x0, int16_t y0, 
+vlGui_drawCircle(vlGui_window_t *win, int16_t x0, int16_t y0, 
                    uint8_t rad)
 {
     int16_t f;
@@ -485,4 +479,67 @@ vlGui_drawCircle(struct vlGui_window_t *win, int16_t x0, int16_t y0,
 
         vlGui_drawCircleSection(win, x, y, x0, y0);
     }
+}
+
+static void 
+vlGui_drawFilledCircleSection(vlGui_window_t *win, int16_t x, int16_t y,
+                              int16_t x0, int16_t y0, vlGui_color color)
+{
+    /* upper right */
+    vlGui_drawLine(win, x0+x, y0-y, x0+x, y+1+y0-y, 1, color);
+    vlGui_drawLine(win, x0+y, y0-x, x0+y, x+1+y0-x, 1, color);
+    
+    /* upper left */
+    vlGui_drawLine(win, x0-x, y0-y, x0-x, y+1+y0-y, 1, color);
+    vlGui_drawLine(win, x0-y, y0-x, x0-y, x+1+y0-x, 1, color);
+    // vlGui_drawLine(win, x0-x, y0-y, y+1);
+    // vlGui_drawLine(win, x0-y, y0-x, x+1);
+    
+    // /* lower right */
+    vlGui_drawLine(win, x0+x, y0, x0+x, y+1+y0, 1, color);
+    vlGui_drawLine(win, x0+y, y0, x0+y, x+1+y0, 1, color);
+    // vlGui_drawLine(win, x0+x, y0, y+1);
+    // vlGui_drawLine(win, x0+y, y0, x+1);
+    
+    // /* lower left */
+    vlGui_drawLine(win, x0-x, y0, x0-x, y+1+y0, 1, color);
+    vlGui_drawLine(win, x0-y, y0, x0-y, x+1+y0, 1, color);
+    // vlGui_drawLine(win, x0-x, y0, y+1);
+    // vlGui_drawLine(win, x0-y, y0, x+1);
+}
+
+void 
+vlGui_drawFilledCircle(vlGui_window_t *win, int16_t x0, int16_t y0, 
+                       uint8_t rad, vlGui_color color)
+{
+    int16_t f;
+    int16_t ddF_x;
+    int16_t ddF_y;
+    int16_t x;
+    int16_t y;
+
+    f = 1;
+    f -= rad;
+    ddF_x = 1;
+    ddF_y = 0;
+    ddF_y -= rad;
+    ddF_y *= 2;
+    x = 0;
+    y = rad;
+
+    vlGui_drawFilledCircleSection(win, x, y, x0, y0, color);
+    
+    while ( x < y )
+    {
+        if (f >= 0) 
+        {
+            y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+        vlGui_drawFilledCircleSection(win, x, y, x0, y0, color);
+  }
 }

@@ -42,16 +42,16 @@ struct vlGui_clock_time_t
 };
 
 struct vlGui_clock_t {
-    struct vlGui_window_t win;
+    vlGui_window_t win;
     struct vlGui_clock_date_t date;
     struct vlGui_clock_time_t time;
     const struct vlGui_font_t *font;
 };
 
 
-int vlGui_clockProcessKey(struct vlGui_window_t *win, uint8_t key);
+int vlGui_clockProcessKey(vlGui_window_t *win, uint8_t key);
 
-struct vlGui_clock_t * vlGui_clockCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,     
+struct vlGui_clock_t * vlGui_clockCreate(vlGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
 

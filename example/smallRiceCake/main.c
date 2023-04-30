@@ -39,7 +39,7 @@
 #include "btIcon.h"
 
 struct vlGui_t screen;
-struct vlGui_window_t *mainWin;
+vlGui_window_t *mainWin;
 
 const uint16_t bleSetStr[] = {0xb6c0, 0xc0d1, 0xe8c9, 0xc3d6, 0x0000};
 const uint16_t bleStr[] = {0xb6c0, 0xc0d1, 0xe8c9, 0xc3d6, 0x0000};
@@ -49,8 +49,10 @@ const uint16_t offStr[] = {0xd8b9, 0xd5b1, 0x0000};
 
 
 static void
-menuBarDrawCb(struct vlGui_window_t *win, void *arg)
+menuBarDrawCb(vlGui_window_t *win, void *arg)
 {
+    VLGUI_UNUSED(arg);
+
     // vlGui_drawBlock(win, 0, 0, win->win_width, 10, VLGUI_COLOR_WHITE);
     vlGui_drawRectangle(win, 110, 1, 12, 7, VLGUI_COLOR_WHITE);
     vlGui_drawLine(win, 109, 3, 109, 5, 2, VLGUI_COLOR_WHITE);
@@ -65,11 +67,26 @@ menuBarDrawCb(struct vlGui_window_t *win, void *arg)
                          100 + (i * 2), 7 - (i * 2), 
                          1, VLGUI_COLOR_WHITE);
     }
+
+    vlGui_setFont(vlGui_asc11x18);
+    vlGui_drawString(win, 7, 17, "23:20", VLGUI_COLOR_WHITE);
+    vlGui_setFont(vlGui_wenquan_9pt);
+    vlGui_drawString(win, 7, 38, "星期三", VLGUI_COLOR_WHITE);
+
+    vlGui_drawString(win, 49, 38, "晴", VLGUI_COLOR_WHITE);
+
+    vlGui_drawLine(win, 69, 18, 69, 52, 2, VLGUI_COLOR_WHITE);
+
+    vlGui_drawString(win, 76, 21, "平安喜乐", VLGUI_COLOR_WHITE);
+    vlGui_drawString(win, 76, 38, "幸福相随", VLGUI_COLOR_WHITE);
+
 }
 
 static void 
-mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
+mainWindowDrawCb(vlGui_window_t *win, void *arg)
 {
+    VLGUI_UNUSED(arg);
+
     vlGui_windowClear(win);
 
     vlGui_drawBitmap(win, 0, 10, 20, 30, leftArrow);
@@ -81,11 +98,11 @@ mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
 }
 
 static int 
-btSettingProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
+btSettingProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
-    struct vlGui_menu_t *menu;
+    vlGui_menu_t *menu;
 
-    menu = (struct vlGui_menu_t *)win;
+    menu = (vlGui_menu_t *)win;
     vlGui_menuProcessKey(&menu->win, key);
     if (strcmp(vlGui_menuGetSelectedEntry(menu), "ON") == 0) {
         if (key == VLGUI_KEY_OK) {
@@ -97,13 +114,18 @@ btSettingProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
             vlGui_menuSetFont(menu, &vlGui_font7x10);
         }
     }
+    return 0;
 }
 
 
 int 
-mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
+mainWindowProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
-    struct vlGui_menu_t *menu;
+    vlGui_menu_t *menu;
+    vlGui_menuEntry_t *entry;
+    vlGui_menuEntry_t *childEntry;
+    vlGui_menuEntry_t *boxEntry;
+
 
     switch (key)
     {
@@ -114,13 +136,48 @@ mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
         }
         vlGui_windowSetKeyCb(&menu->win, btSettingProcessKeyCb);
 
+
         vlGui_menuSetFont(menu, vlGui_wenquan_9pt);
-        vlGui_menuAddEntry(menu, 0, 0, (char *)bleStr);
-        vlGui_menuAddEntry(menu, 1, 1, (char *)onStr);
-        vlGui_menuAddEntry(menu, 2, 1, (char *)offStr);
-        vlGui_menuAddEntry(menu, 3, 0, (char *)smartSpeakerStr);
-        vlGui_menuAddEntry(menu, 4, 1, (char *)onStr);
-        vlGui_menuAddEntry(menu, 5, 1, (char *)offStr);
+
+        entry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, NULL, entry, (char *)bleStr);
+        
+        childEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, entry, childEntry, (char *)offStr);
+        //box
+        boxEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, childEntry, boxEntry, (char *)offStr);
+        vlGui_menuSetEntryAsCheckbox(boxEntry);
+
+        boxEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, childEntry, boxEntry, (char *)onStr);
+        vlGui_menuSetEntryAsCheckbox(boxEntry);
+
+
+        boxEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, childEntry, boxEntry, (char *)onStr);
+        vlGui_menuSetEntryAsRadioButton(boxEntry);
+
+
+        boxEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, childEntry, boxEntry, (char *)onStr);
+        vlGui_menuSetEntryAsRadioButton(boxEntry);
+
+
+        childEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, entry, childEntry, (char *)onStr);
+
+        entry = childEntry;
+        childEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, entry, childEntry, (char *)smartSpeakerStr);
+
+        entry = childEntry;
+        childEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+
+        vlGui_menuAddEntry(menu, entry, childEntry, (char *)onStr);
+
+        childEntry = vlGui_malloc(sizeof(vlGui_menuEntry_t));
+        vlGui_menuAddEntry(menu, entry, childEntry, (char *)offStr);
         break;
     
     default:
@@ -129,10 +186,10 @@ mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
     return 0;
 }
 
-void 
+int 
 main(void)
 {
-    struct vlGui_window_t *win;
+    // vlGui_window_t *win;
 
     memset(&screen, 0, sizeof(screen));
 
@@ -146,14 +203,17 @@ main(void)
 
     // vlGui_clockCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10);
 
-    // vlGui_menuCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10);
+    // win = vlGui_windowCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10, 0);
 
-    win = vlGui_windowCreate(mainWin, 0, 10, mainWin->win_width, mainWin->win_height - 10, 0);
-    vlGui_windowSetDrawCb(win, mainWindowDrawCb);
-    vlGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
+    // vlGui_windowSetDrawCb(win, mainWindowDrawCb);
+    // vlGui_windowSetKeyCb(win, mainWindowProcessKeyCb);
+
+    // vlGui_menuCreate(win, 0, 10, mainWin->win_width, mainWin->win_height - 10);
+    // vlGui_windowCreate(win, 0, 0, 1, win->win_height, 0);
 
     while (1) {
         vlGui_refresh();
-        vlGui_delay(20);
+        vlGui_delay(30);
     }
+    return 0;
 }

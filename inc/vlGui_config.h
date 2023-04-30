@@ -22,7 +22,7 @@
  */
 #ifndef _VLGUI_CONFIG_H_
 #define _VLGUI_CONFIG_H_
-
+#include <stdbool.h>
 #include <stdint.h>
 
 /*

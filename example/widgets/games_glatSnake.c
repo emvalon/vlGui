@@ -90,7 +90,7 @@ games_updateGame(struct game_glutSnake_t* game) {
 
 
 static int 
-games_glutSnakeKeyCb(struct vlGui_window_t *win, uint8_t key)
+games_glutSnakeKeyCb(vlGui_window_t *win, uint8_t key)
 {
     struct game_Snake_t *player;
 
@@ -116,7 +116,7 @@ games_glutSnakeKeyCb(struct vlGui_window_t *win, uint8_t key)
 
 
 static void 
-games_bkgDrawCb(struct vlGui_window_t *win, void *arg)
+games_bkgDrawCb(vlGui_window_t *win, void *arg)
 {
     char score[4];
     char level[2];
@@ -140,7 +140,7 @@ games_bkgDrawCb(struct vlGui_window_t *win, void *arg)
 }
 
 static void 
-games_glutSnakeDrawCb(struct vlGui_window_t *win, void *arg)
+games_glutSnakeDrawCb(vlGui_window_t *win, void *arg)
 {
     static uint8_t cnt = 0;
     struct game_glutSnake_t *game;
@@ -163,10 +163,10 @@ games_glutSnakeDrawCb(struct vlGui_window_t *win, void *arg)
 }
 
 int
-games_gultSnakeCreate(struct vlGui_window_t *win)
+games_gultSnakeCreate(vlGui_window_t *win)
 {
-    struct vlGui_window_t *main_win;
-    struct vlGui_window_t *game_win;
+    vlGui_window_t *main_win;
+    vlGui_window_t *game_win;
 
 
     main_win = vlGui_windowCreate(win, 0, 0, win->win_width, win->win_height, 0);

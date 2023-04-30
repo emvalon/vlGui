@@ -25,11 +25,12 @@
 #include <string.h>
 
 struct vlGui_t *vlGui_cur_screen;
-static void *g_vlGui_semphr = NULL;
+//TODO
+// static void *g_vlGui_semphr = NULL;
 
 int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height)
 {
-    struct vlGui_window_t *win;
+    vlGui_window_t *win;
 
     memset(screen, 0, sizeof(*screen));
     screen->refresh = 1;
@@ -54,9 +55,9 @@ void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver
     driver->pInit(1);
 }
 
-static void vlGui_refreshAllChildren(struct vlGui_window_t *win)
+static void vlGui_refreshAllChildren(vlGui_window_t *win)
 {
-    struct vlGui_window_t *child;
+    vlGui_window_t *child;
 
     child = win->child;
 
@@ -67,9 +68,9 @@ static void vlGui_refreshAllChildren(struct vlGui_window_t *win)
     }
 }
 
-static void vlGui_refreshAllBrothers(struct vlGui_window_t *win)
+static void vlGui_refreshAllBrothers(vlGui_window_t *win)
 {
-    struct vlGui_window_t *next;
+    vlGui_window_t *next;
 
     next = win->next;
 
@@ -84,9 +85,9 @@ static void vlGui_refreshAllBrothers(struct vlGui_window_t *win)
 void vlGui_refresh(void)
 {
     uint8_t key;
-    struct vlGui_window_t *win;
-    struct vlGui_window_t *drawWin;
-    struct vlGui_window_t *parent;
+    vlGui_window_t *win;
+    vlGui_window_t *drawWin;
+    vlGui_window_t *parent;
 
     parent = NULL;
 
@@ -114,14 +115,14 @@ void vlGui_refresh(void)
         // vlGui_cur_screen->refresh = 0;        
         drawWin = vlGui_cur_screen->window;
         while (drawWin) {
-            /* If this is the top layer, check if need bokeh */
+            /* If this is the top layer, check if need blur */
             if ((drawWin == win) &&
                 (win->win_height != vlGui_cur_screen->height) && 
                 (win->win_width != vlGui_cur_screen->width)) {
-                vlGui_windowBokeh(vlGui_cur_screen->window);
+                vlGui_windowBlur(vlGui_cur_screen->window, 3);
             }
 
-            /* According to refresh flag, draw coresponding window */
+            /* According to refresh flag, draw corresponding window */
             if (drawWin->refresh) {
                 vlGui_windowRefresh(drawWin);
             }
@@ -132,7 +133,7 @@ void vlGui_refresh(void)
     }
 }
 
-struct vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen)
+vlGui_window_t * vlinGui_getMainWindow(struct vlGui_t *screen)
 {
     return screen->window;
 }
@@ -145,10 +146,4 @@ void vlGui_setFont(const struct vlGui_font_t *font)
 void vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display)
 {
     screen->displayDriver->pInit(display);
-}
-
-void
-vlGui_lock(uint8_t en)
-{
-
 }

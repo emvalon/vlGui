@@ -26,12 +26,13 @@
 #include <string.h>
 
 static void
-vlGui_drawMsgBox(struct vlGui_window_t *win, void *arg)
+vlGui_drawMsgBox(vlGui_window_t *win, void *arg)
 {
     int16_t bw, bh;
     int16_t x, y;
     struct vlGui_msgBox_t * msgbox;
 
+    VLGUI_UNUSED(arg);
     msgbox = (struct vlGui_msgBox_t *)win;
 
     // 设置按钮大小
@@ -69,7 +70,7 @@ vlGui_drawMsgBox(struct vlGui_window_t *win, void *arg)
 }
 
 struct vlGui_msgBox_t *
-vlGui_msgBoxCreate(struct vlGui_window_t *parent)
+vlGui_msgBoxCreate(vlGui_window_t *parent)
 {
     uint16_t w,h;
     struct vlGui_msgBox_t * msgbox;

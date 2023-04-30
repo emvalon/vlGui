@@ -21,26 +21,30 @@
 import argparse
 import os.path
 import datetime
+import fontforge
 
 VERSION = 0X01
 
 parse = argparse.ArgumentParser()
-parse.add_argument("-e", "--encode", default='utf-8', choices=['utf-8', 'gb2312'], help="Select encoding format")
+parse.add_argument("-e", "--encode", default='utf-8', choices=['utf-8', 'gb2312'],
+                   help="Select encoding format")
 parse.add_argument("-c", "--config", default="None", help="configure file name")
-parse.add_argument("-f", "--font", default="None", help="select font")
-parse.add_argument("-o", "--out", default="vlGui_font.c", help="output file name")
+parse.add_argument("-f", "--font", default="None", 
+                   help="select font file (.ttf, .pcf, .bdf)")
+parse.add_argument("-o", "--out", default="vlGui_font.c", 
+                   help="output file name")
 
-codeRange = ['a3a1-a3fe',
-             'b0a1-b0fe', 'b1a1-b1fe', 'b2a1-b2fe', 'b3a1-b3fe', 'b4a1-b4fe', 'b5a1-b5fe', 'b6a1-b6fe', 'b7a1-b7fe',
-             'b8a1-b8fe', 'b9a1-b9fe',
-             'baa1-bafe', 'bba1-bbfe', 'bca1-bcfe', 'bda1-bdfe', 'bea1-befe', 'bfa1-bffe', 'c0a1-c0fe', 'c1a1-c1fe',
-             'c2a1-c2fe', 'c3a1-c3fe',
-             'c4a1-c4fe', 'c5a1-c5fe', 'c6a1-c6fe', 'c7a1-c7fe', 'c8a1-c8fe', 'c9a1-c9fe', 'caa1-cafe', 'cba1-cbfe',
-             'cca1-ccfe', 'cda1-cdfe',
-             'cea1-cefe', 'cfa1-cffe', 'd0a1-d0fe', 'd1a1-d1fe', 'd2a1-d2fe', 'd3a1-d3fe', 'd4a1-d4fe', 'd5a1-d5fe',
-             'd6a1-d6fe', 'd7a1-d7f9',
-             ]
-
+# codeRange = ['a3a1-a3fe',
+#              'b0a1-b0fe', 'b1a1-b1fe', 'b2a1-b2fe', 'b3a1-b3fe', 'b4a1-b4fe', 'b5a1-b5fe', 'b6a1-b6fe', 'b7a1-b7fe',
+#              'b8a1-b8fe', 'b9a1-b9fe',
+#              'baa1-bafe', 'bba1-bbfe', 'bca1-bcfe', 'bda1-bdfe', 'bea1-befe', 'bfa1-bffe', 'c0a1-c0fe', 'c1a1-c1fe',
+#              'c2a1-c2fe', 'c3a1-c3fe',
+#              'c4a1-c4fe', 'c5a1-c5fe', 'c6a1-c6fe', 'c7a1-c7fe', 'c8a1-c8fe', 'c9a1-c9fe', 'caa1-cafe', 'cba1-cbfe',
+#              'cca1-ccfe', 'cda1-cdfe',
+#              'cea1-cefe', 'cfa1-cffe', 'd0a1-d0fe', 'd1a1-d1fe', 'd2a1-d2fe', 'd3a1-d3fe', 'd4a1-d4fe', 'd5a1-d5fe',
+#              'd6a1-d6fe', 'd7a1-d7f9',
+#              ]
+codeRange = ['0021-0070']
 
 class GlyphContainer:
     def __init__(self):
@@ -116,6 +120,7 @@ class GlyphContainer:
         print('font width: ' + str(self.width))
         print('font height: ' + str(self.height))
         print('total:' + str(self.num))
+        # print(self.container)
 
     def mapToArray(self, bmp, width):
         array = [width]
@@ -162,7 +167,7 @@ class GlyphContainer:
 
             f.writelines("#ifndef " + inc_define + "\n")
             f.writelines("#define " + inc_define + "\n\n")
-            f.writelines("const unsigned char " + filename.split('.')[0] + "[] = {\n")
+            f.writelines("const unsigned char __" + filename.split('.')[0] + "[] = {\n")
 
             f.write(hex(VERSION) + ',\t/** Tool version */\n')
             f.write(hex(self.type) + ',\t/** File type */\n')
@@ -175,10 +180,20 @@ class GlyphContainer:
 
             offset = 8 + len(characters_table) * 8
             for characters in characters_table:
-                f.write(hex(characters[0].encode(format)[1]) + ', ')
-                f.write(hex(characters[0].encode(format)[0]) + ', ')
-                f.write(hex(characters[-1].encode(format)[1]) + ', ')
-                f.write(hex(characters[-1].encode(format)[0]) + ', ')
+                code_num = characters[0].encode(format)
+                if len(code_num) > 1:
+                    f.write(hex(code_num[1]) + ', ')
+                else:
+                    f.write('0x00, ')
+                f.write(hex(code_num[0]) + ', ')
+
+                
+                code_num = characters[-1].encode(format)
+                if len(code_num) > 1:
+                    f.write(hex(code_num[1]) + ', ')
+                else:
+                    f.write('0x00, ')
+                f.write(hex(code_num[0]) + ', ')
                 f.write('\t/** The start and end of this segment. */\n')
 
                 f.write(hex(offset & 0xff) + ', ')
@@ -189,11 +204,17 @@ class GlyphContainer:
 
             for characters in characters_table:
                 for glyph in characters:
+                    print(glyph)
                     for v in self.mapToArray(self.container[ord(glyph)]['bmp'], self.container[ord(glyph)]['width']):
                         f.write(hex(v) + ', ')
                     f.write('\n')
+            
+            f.writelines("};\n")
+            f.writelines("const struct vlGui_font_t * const" + filename.split('.')[0] + 
+                         " = (const struct vlGui_font_t *) __" + filename.split('.')[0] +
+                         ";")
+            f.writelines("\n\n#endif // " + inc_define)
 
-            f.writelines("};\n\n#endif // " + inc_define)
 
 
 if __name__ == '__main__':
@@ -208,6 +229,22 @@ if __name__ == '__main__':
     if not os.path.exists(args.font):
         print("font doesn't exist")
         exit(-1)
+
+    # # 读取TTF字体文件
+    # font = fontforge.open(args.font)
+
+    # # 设置字体大小
+    # # font.selection.all()
+    # # font.em = 16 * font.units_per_em // font.upem
+    # # # font.setPixelSize(args.size)
+
+    # # # 转换为BDF字体格式
+    # # font.generate("result.bdf")
+
+    # # 关闭字体文件
+    # font.close()
+    # # exit()
+    
 
     # Read .bdf file and parse all glyphs
     with open(args.font, mode='r') as f:
@@ -229,10 +266,12 @@ if __name__ == '__main__':
         item = []
         for value in range(min_v, max_v + 1):
             # Convert to string with input encoding format
-            code = value.to_bytes(2, 'big')
+            code = value.to_bytes(1, 'big')
             character = code.decode(args.encode)
             item.append(character)
+            print(character)
         characters_table.append(item)
+        print(characters_table)
 
     # Generate vlGui fonts file
     container.save(args.out, characters_table, args.encode)

@@ -28,14 +28,14 @@
 typedef void (* processCb_func_t)(uint8_t ok);
 
 struct vlGui_msgBox_t {
-    struct vlGui_window_t win;
+    vlGui_window_t win;
 
     char *title;
     char *text;
     processCb_func_t pProcessCb;
 };
 
-struct vlGui_msgBox_t * vlGui_msgBoxCreate(struct vlGui_window_t *parent);
+struct vlGui_msgBox_t * vlGui_msgBoxCreate(vlGui_window_t *parent);
 
 void vlGui_msgBoxSetTitle(struct vlGui_msgBox_t *msgbox, char *str);
 

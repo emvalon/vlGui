@@ -1,8 +1,37 @@
+/**
+ * @file vlGui_engine.c
+ * @author Weilong Shen (valonshen@foxmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-02-19
+ * 
+ * Copyright © 2021 - 2023 Weilong Shen (valonshen@foxmail.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
 #include "vlGui.h"
 #include "vlGui_engine.h"
+
+float 
+vlGui_engineCurveNone(float x)
+{
+    VLGUI_UNUSED(x);
+    return 1;
+}
 
 float 
 vlGui_engineCurveOutBack(float x)
@@ -46,24 +75,18 @@ vlGui_engineCurveOutBounce(float x)
     if (x < 1 / d1) {
         return n1 * x * x;
     } else if (x < 2 / d1) {
-        return n1 * (x -= 1.5 / d1) * x + 0.75;
+        x -= 1.5 / d1;
+        return n1 * x * x + 0.75;
     } else if (x < 2.5 / d1) {
-        return n1 * (x -= 2.25 / d1) * x + 0.9375;
+        x -= 2.25 / d1;
+        return n1 * x * x + 0.9375;
     } else {
-        return n1 * (x -= 2.625 / d1) * x + 0.984375;
+        x -= 2.625 / d1;
+        return n1 * x * x + 0.984375;
     }
 }
 
-void
-vlGui_engineInit(vlGui_engine_t *engine, vlGui_engineCurve_t curve,
-                 vlGui_engineProcessCb_t cb)
-{
-    memset(engine, 0, sizeof(vlGui_engine_t));
-    engine->curveFunc = curve;
-    engine->processCb = cb;
-}
-
-int16_t 
+static int16_t 
 vlGui_engineGetResult(vlGui_engine_t *engine)
 {
     int16_t delta;
@@ -84,8 +107,12 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
     }
 
     x = (now - engine->startTime) / (float)engine->duration;
-    result = engine->curveFunc(x);
-    expected = (int16_t)(result * engine->distance);
+    result = engine->curveFunc(x) * engine->distance;
+    if (result >= 0) {
+        expected = (int16_t)(result + 0.5);
+    } else {
+        expected = (int16_t)(result - 0.5);
+    }
 
     if (expected != engine->currentDistance) {
         delta = expected - engine->currentDistance;
@@ -99,15 +126,48 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
 }
 
 void
-vlGui_engineRender(vlGui_engine_t *engines, void *param)
+vlGui_engineInit(vlGui_engine_t *engine, vlGui_engineCurve_t curve,
+                 vlGui_engineProcessCb_t cb, void *param)
+{
+    memset(engine, 0, sizeof(vlGui_engine_t));
+    engine->curveFunc = curve;
+    engine->processCb = cb;
+    engine->param = param;
+}
+
+int
+vlGui_engineSetCurve(vlGui_engine_t *engine, vlGui_engineCurve_t curve)
+{
+    if (vlGui_engineIsRunning(engine)) {
+        return -1;
+    } else {
+        engine->curveFunc = curve;
+        return 0;
+    }
+}
+
+void
+vlGui_engineAppend(vlGui_engine_t *prev, vlGui_engine_t *next)
+{
+    prev->next = next;
+}
+
+void
+vlGui_engineRender(vlGui_engine_t *engines)
 {
     for (; engines; engines = engines->next) {
         if (!engines->enabled) {
             continue;
         }
-        engines->processCb(param, vlGui_engineGetResult(engines));
+        engines->processCb(engines->param, vlGui_engineGetResult(engines));
     }
 }   
+
+bool 
+vlGui_engineIsRunning(vlGui_engine_t *engine)
+{
+    return engine->enabled;
+}
 
 void
 vlGui_engineStart(vlGui_engine_t *engine, int16_t distance, 
@@ -123,4 +183,15 @@ vlGui_engineStart(vlGui_engine_t *engine, int16_t distance,
     engine->currentDistance = 0;
     engine->duration = durationMs;
     engine->startTime = vlGui_getTime();
+}
+
+void
+vlGui_engineStop(vlGui_engine_t *engine)
+{
+    if (!engine->enabled) {
+        return;
+    }
+
+    engine->enabled = 0;
+    engine->processCb(engine->param, engine->distance - engine->currentDistance);
 }

@@ -29,12 +29,12 @@
 
 
 struct vlGui_progressBar_t {
-    struct vlGui_window_t win;
+    vlGui_window_t win;
     uint8_t value;
     char *title;
 };
 
-struct vlGui_progressBar_t * vlGui_progressBarCreate(struct vlGui_window_t *parent, 
+struct vlGui_progressBar_t * vlGui_progressBarCreate(vlGui_window_t *parent, 
                                     int16_t x, int16_t y, int16_t width, uint16_t height);
 
 void vlGui_progressBarSetValue(struct vlGui_progressBar_t * pbar, uint8_t value);

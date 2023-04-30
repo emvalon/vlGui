@@ -35,7 +35,7 @@
  * @param arg 
  */
 static void 
-vlGui_drawProgressBar(struct vlGui_window_t *win, void *arg)
+vlGui_drawProgressBar(vlGui_window_t *win, void *arg)
 {
     uint16_t len;
     char num[5];
@@ -43,6 +43,7 @@ vlGui_drawProgressBar(struct vlGui_window_t *win, void *arg)
     const struct vlGui_font_t *font;
     struct vlGui_progressBar_t *pbar;
 
+    VLGUI_UNUSED(arg);
     pbar = (struct vlGui_progressBar_t *)win;
     font = &vlGui_font6x8;
 
@@ -87,8 +88,11 @@ vlGui_drawProgressBar(struct vlGui_window_t *win, void *arg)
  * @return int 
  */
 int 
-vlGui_progressBarProcessKey(struct vlGui_window_t *win, uint8_t key)
+vlGui_progressBarProcessKey(vlGui_window_t *win, uint8_t key)
 {
+    VLGUI_UNUSED(win);
+    VLGUI_UNUSED(key);
+
     // struct vlGui_selector_t *sel;
 
     // sel = (struct vlGui_selector_t *)win;
@@ -141,7 +145,7 @@ vlGui_progressBarSetTitle(struct vlGui_progressBar_t * pbar, char *title)
  * @return struct vlGui_progressBar_t* 
  */
 struct vlGui_progressBar_t * 
-vlGui_progressBarCreate(struct vlGui_window_t *parent, int16_t x, int16_t y, 
+vlGui_progressBarCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
                           int16_t width, uint16_t height)
 {
     struct vlGui_progressBar_t *pbar;
@@ -165,5 +169,5 @@ vlGui_progressBarCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,
 void 
 vlGui_progressBarDestroy(struct vlGui_progressBar_t *pbar)
 {
-    vlGui_windowDelete((struct vlGui_window_t *)pbar);
+    vlGui_windowDelete((vlGui_window_t *)pbar);
 }

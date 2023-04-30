@@ -31,7 +31,6 @@ typedef float (*vlGui_engineCurve_t)(float x);
  * @brief The engine is used to implement animation and help to give a more 
  * vivid vision. It can has a variety of dynamic effects via using different
  * physical curve.
- * 
  */
 struct vlGui_engine
 {
@@ -40,12 +39,21 @@ struct vlGui_engine
     int16_t currentDistance;    /**< How long we have moved                 */
     uint16_t duration;          /**< The duration this engine will spend    */
     uint32_t startTime;         /**< The absolute start time                */
-    vlGui_engineCurve_t curveFunc;
+    void *param;                /**< The parameter of processCb             */
     vlGui_engineProcessCb_t processCb;
+    vlGui_engineCurve_t curveFunc;
     struct vlGui_engine *next;
 };
 typedef struct vlGui_engine vlGui_engine_t;
 
+/**
+ * @brief The animation curve used by engine. Can be set as parameter of 
+ * vlGui_engineInit() and vlGui_engineSetCurve().
+ * 
+ * @param x 
+ * @return float 
+ */
+float vlGui_engineCurveNone(float x);
 float vlGui_engineCurveInOutQuart(float x);
 float vlGui_engineCurveOutQuint(float x);
 float vlGui_engineCurveOutBack(float x);
@@ -58,18 +66,46 @@ float vlGui_engineCurveOutBounce(float x);
  * @param engine 
  * @param curve Ease curve for animation
  * @param cb Callback to do the actual animation
+ * @param param The parameter of process callback
  */
 void vlGui_engineInit(vlGui_engine_t *engine, vlGui_engineCurve_t curve,
-                      vlGui_engineProcessCb_t cb);
+                      vlGui_engineProcessCb_t cb, void *param);
+
+/**
+ * @brief Change the animation curve for this given engine.
+ * 
+ * @param engine 
+ * @param curve 
+ * @return int 
+ *  0: Succeeded;
+ * -1: Failed due to the engine is running.
+ */
+int vlGui_engineSetCurve(vlGui_engine_t *engine, vlGui_engineCurve_t curve);
+
+/**
+ * @brief Append a new engine after the given prev.
+ * 
+ * @param prev 
+ * @param next 
+ */
+void vlGui_engineAppend(vlGui_engine_t *prev, vlGui_engine_t *next);
 
 /**
  * @brief Render all of views by the given engines. The engines can be a 
  * linked list.
  * 
  * @param engines 
- * @param param
  */
-void vlGui_engineRender(vlGui_engine_t *engines, void *param);
+void vlGui_engineRender(vlGui_engine_t *engines);
+
+/**
+ * @brief Check if the given engine is running.
+ * 
+ * @param engine 
+ * @return true 
+ * @return false 
+ */
+bool vlGui_engineIsRunning(vlGui_engine_t *engine);
 
 /**
  * @brief Start an engine. Set the duration and the destination which will help
@@ -81,5 +117,13 @@ void vlGui_engineRender(vlGui_engine_t *engines, void *param);
  */
 void vlGui_engineStart(vlGui_engine_t *engine, int16_t destination, 
                          uint16_t durationMs);
+
+/**
+ * @brief Stop the engine immediately and will move to the expected distance.
+ * It means the corresponding animation will be canceled.
+ * 
+ * @param engine 
+ */
+void vlGui_engineStop(vlGui_engine_t *engine);
 
 #endif // _VLGUI_ENGIN_H_

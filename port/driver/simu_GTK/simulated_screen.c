@@ -27,7 +27,7 @@
 
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
-#define SIMU_SCREEN_MULTIPLE    2
+#define SIMU_SCREEN_MULTIPLE    4
 
 uint8_t closed = 0;
 
@@ -69,6 +69,9 @@ vlGui_portRefresh(void)
 static void
 closeWin(GtkWidget  * window, gpointer data) 
 {
+    VLGUI_UNUSED(window);
+    VLGUI_UNUSED(data);
+
     closed = 1;
     gtk_main_quit();
 }
@@ -81,6 +84,8 @@ refreshCb(GtkWidget *da, GdkEventExpose *event, gpointer data)
     GdkColor color;
     GdkPoint ps[4];
 
+    VLGUI_UNUSED(event);
+    VLGUI_UNUSED(data);
     gc = gdk_gc_new(da->window);
     ax = 0;
 
@@ -122,6 +127,8 @@ refreshCb(GtkWidget *da, GdkEventExpose *event, gpointer data)
 static gboolean 
 keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
+    VLGUI_UNUSED(widget);
+    VLGUI_UNUSED(data);
     guint keyvalue = event->keyval;
 
     switch (keyvalue)
@@ -163,6 +170,7 @@ guiMain(void)
 void
 vlGui_portInit(uint8_t display) 
 {
+    VLGUI_UNUSED(display);
     gtk_init(NULL, NULL);
     window  =  gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window),  "vlGui Simulater" );

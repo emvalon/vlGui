@@ -58,5 +58,8 @@ extern struct vlGui_font_t vlGui_font11x18;
 extern struct vlGui_font_t vlGui_font16x26;
 
 extern const struct vlGui_font_t * const vlGui_wenquan_9pt;
-
+extern const struct vlGui_font_t * const vlGui_asc6x8;
+extern const struct vlGui_font_t * const vlGui_asc7x10;
+extern const struct vlGui_font_t * const vlGui_asc11x18;
+extern const struct vlGui_font_t * const vlGui_asc16x26;
 #endif

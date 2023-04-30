@@ -37,7 +37,7 @@
 
 struct vlGui_t screen;
 struct vlGui_msgBox_t *msgbox;
-struct vlGui_window_t *mainWin, *win, *topWin;
+vlGui_window_t *mainWin, *win, *topWin;
 struct vlGui_button_t *btn;
 struct vlGui_selector_t *sel;
 struct vlGui_progressBar_t *progBar;
@@ -49,7 +49,7 @@ volatile int8_t pos = 0;
 static uint8_t presskey = VLGUI_KEY_RIGHT;
 
 static void 
-mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
+mainWindowDrawCb(vlGui_window_t *win, void *arg)
 {
     int16_t x;
     
@@ -67,7 +67,7 @@ mainWindowDrawCb(struct vlGui_window_t *win, void *arg)
 }
 
 static void 
-topWindowDrawCb(struct vlGui_window_t *win, void *arg)
+topWindowDrawCb(vlGui_window_t *win, void *arg)
 {
     uint8_t w,h;
     int16_t x;
@@ -125,7 +125,7 @@ drawIconName(void *arg)
 }
 
 int 
-mainWindowProcessKeyCb(struct vlGui_window_t *win, uint8_t key)
+mainWindowProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
     switch (key)
     {

@@ -51,7 +51,7 @@ vlGui_selectorScrollDownCb(void *arg)
 }
 
 int 
-vlGui_selectorProcessKey(struct vlGui_window_t *win, uint8_t key)
+vlGui_selectorProcessKey(vlGui_window_t *win, uint8_t key)
 {
     struct vlGui_selector_t *sel;
 
@@ -68,7 +68,7 @@ vlGui_selectorProcessKey(struct vlGui_window_t *win, uint8_t key)
 }
 
 static void 
-vlGui_drawSelector(struct vlGui_window_t *win, void *arg)
+vlGui_drawSelector(vlGui_window_t *win, void *arg)
 {
     struct vlGui_selector_t *sel;
     struct vlGui_selectorEntry_t *entry;
@@ -77,6 +77,7 @@ vlGui_drawSelector(struct vlGui_window_t *win, void *arg)
     uint8_t index;
     int16_t ax, ay;
 
+    VLGUI_UNUSED(arg);
     sel = (struct vlGui_selector_t *)win;
 
     index = sel->index;
@@ -111,7 +112,7 @@ vlGui_drawSelector(struct vlGui_window_t *win, void *arg)
 }
 
 struct vlGui_selector_t *
-vlGui_selectorCreate(struct vlGui_window_t *parent)
+vlGui_selectorCreate(vlGui_window_t *parent)
 {
     struct vlGui_selector_t *sel;
     VLGUI_ASSERT(parent);
@@ -153,7 +154,7 @@ vlGui_selectorAddEntry(struct vlGui_selector_t *sel, char *str)
     entry->next  = NULL;
     ++sel->num;
 
-    // struct vlGui_window_t 
+    // vlGui_window_t 
     if (sel->entry) {
         for (last = sel->entry; last->next; last = last->next);
         last->next = entry;
@@ -167,5 +168,5 @@ vlGui_selectorAddEntry(struct vlGui_selector_t *sel, char *str)
 void
 vlGui_selectorDelete(struct vlGui_selector_t *sel)
 {
-
+    VLGUI_UNUSED(sel);
 }

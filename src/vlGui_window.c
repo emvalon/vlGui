@@ -36,14 +36,14 @@
  * @param width 
  * @param height 
  * @param userDataLen 
- * @return struct vlGui_window_t* 
+ * @return vlGui_window_t* 
  */
-struct vlGui_window_t *
-vlGui_windowCreate(struct vlGui_window_t *parent, int16_t x, int16_t y, 
+vlGui_window_t *
+vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
                      int16_t width, int16_t height, uint8_t userDataLen)
 {
-    struct vlGui_window_t *win;
-    struct vlGui_window_t *brother;
+    vlGui_window_t *win;
+    vlGui_window_t *brother;
 
     win = vlGui_malloc(sizeof(*win) + userDataLen);
     if(!win) {
@@ -84,10 +84,10 @@ vlGui_windowCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,
 }
 
 void
-vlGui_windowDelete(struct vlGui_window_t *win)
+vlGui_windowDelete(vlGui_window_t *win)
 {
-    struct vlGui_window_t *child;
-    struct vlGui_window_t *next;
+    vlGui_window_t *child;
+    vlGui_window_t *next;
 
     child = win->child;
 
@@ -101,10 +101,10 @@ vlGui_windowDelete(struct vlGui_window_t *win)
 }
 
 void
-vlGui_windowDeleteChildren(struct vlGui_window_t *win)
+vlGui_windowDeleteChildren(vlGui_window_t *win)
 {
-    struct vlGui_window_t *child;
-    struct vlGui_window_t *next;
+    vlGui_window_t *child;
+    vlGui_window_t *next;
 
     child = win->child;
     
@@ -117,7 +117,7 @@ vlGui_windowDeleteChildren(struct vlGui_window_t *win)
     win->child = NULL;
 }
 
-static void vlGui_checkAnimation(struct vlGui_window_t *win)
+static void vlGui_checkAnimation(vlGui_window_t *win)
 {
     int16_t dx, dy;
     uint16_t dt;
@@ -147,45 +147,47 @@ static void vlGui_checkAnimation(struct vlGui_window_t *win)
     win->y_offset = win->ori_y_offset + dy;
 } 
 
-void vlGui_windowBokeh(struct vlGui_window_t *win)
+void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor)
 {
-    int pos;
+    if (factor > 3) {
+        factor = 3;
+    }
 
-    pos = 0;
-    for (int16_t y = 0; y < win->win_height; y+=VLGUI_BOKEH_SIZE) {
-        pos = pos ? 0 : VLGUI_BOKEH_SIZE;
-        for (int x = pos; x < win->win_width; x+=(VLGUI_BOKEH_SIZE * 2)) {
-            vlGui_drawBlock(win, x - win->y_offset, y - win->x_offset, 
-                              VLGUI_BOKEH_SIZE, VLGUI_BOKEH_SIZE, 0);
+	for (uint16_t i = 0; i < factor; i++)
+	for (uint16_t y = 0; y < win->win_height; y++)
+    for (uint16_t x = 0; x < win->win_width; x++) {
+        if (!(x & 0x0001) && !(y & 0x0001)) {
+            vlGui_drawPoint(win, x + (i > 0 && i < 3), y + (i > 1), 
+                            VLGUI_COLOR_BLACK);
         }
     }
 }
 
 void 
-vlGui_windowRefresh(struct vlGui_window_t *win)
+vlGui_windowRefresh(vlGui_window_t *win)
 {
     win->refresh = 0;
     
     vlGui_checkAnimation(win);
-    vlGui_engineRender(win->engines, (void *)win);
+    vlGui_engineRender(win->engines);
 
     if(win->pDrawWindow) {
         win->pDrawWindow(win, 0);
     }
 }
 
-void vlGui_windowSetDrawCb(struct vlGui_window_t *win, vlGui_drawWindowCb_t func)
+void vlGui_windowSetDrawCb(vlGui_window_t *win, vlGui_drawWindowCb_t func)
 {
     win->pDrawWindow = func;
 }
 
-void vlGui_windowMove(struct vlGui_window_t *win, int16_t dx, int16_t dy)
+void vlGui_windowMove(vlGui_window_t *win, int16_t dx, int16_t dy)
 {
     win->x1 += dx;
     win->y1 += dy;
 }
 
-void vlGui_windowClear(struct vlGui_window_t *win)
+void vlGui_windowClear(vlGui_window_t *win)
 {
     int16_t x, y;
 
@@ -195,18 +197,18 @@ void vlGui_windowClear(struct vlGui_window_t *win)
     vlGui_drawBlock(win, x, y, win->win_width, win->win_height, 0);
 }
 
-void vlGui_windowScroll(struct vlGui_window_t *win, int16_t dx, int16_t dy)
+void vlGui_windowScroll(vlGui_window_t *win, int16_t dx, int16_t dy)
 {
     win->x_offset += dx;
     win->y_offset += dy;
 }
 
-void vlGui_windowSetKeyCb(struct vlGui_window_t *win, vlGui_processKeyCb_t func)
+void vlGui_windowSetKeyCb(vlGui_window_t *win, vlGui_processKeyCb_t func)
 {
     win->pProcessKey = func;
 }
 
-void vlGui_windowScrollAnimation(struct  vlGui_window_t *win, int16_t dx, int16_t dy, 
+void vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy, 
                                    uint16_t ms, vlGui_animationDoneCb cb, void *arg)
 {
     if(win->animation) {
@@ -226,13 +228,7 @@ void vlGui_windowScrollAnimation(struct  vlGui_window_t *win, int16_t dx, int16_
 }
 
 void
-vlGui_windowInitEngine(vlGui_engine_t *engine)
-{
-    
-}
-
-void
-vlGui_windowSetRefresh(struct vlGui_window_t * win)
+vlGui_windowSetRefresh(vlGui_window_t * win)
 {
     win->refresh = 1;
 }

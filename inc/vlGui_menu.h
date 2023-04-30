@@ -27,31 +27,62 @@
 #include "vlGui_window.h"
 #include "vlGui_input.h"
 
-struct vlGui_menu_t {
-    struct vlGui_window_t win;
+
+struct vlGui_menuEntry {
+    uint8_t show:1;
+    uint8_t checkbox:1;
+    uint8_t isChecked:1;
+    uint8_t boxAnimation:1;
+    uint8_t radioButton:1;
+
+    int8_t level;
+    uint8_t folded;
+    uint8_t childrenNum;
+    struct vlGui_menuEntry *next;
+    struct vlGui_menuEntry *prev;
+    char * str;
+};
+typedef struct vlGui_menuEntry vlGui_menuEntry_t;
+
+struct vlGui_menu {
+    vlGui_window_t win;
+    vlGui_engine_t mainEngine;
+    vlGui_engine_t auxEngine;
     const struct vlGui_font_t *font;
-    void *entries;
-    void *selEntry;
+    vlGui_menuEntry_t *entries;
+    vlGui_menuEntry_t *selEntry;
     uint16_t num;
     int16_t selectedRectOffset;
     int16_t menuOffset;
-    vlGui_engine_t engine;
+    union
+    {
+        int16_t childOffset;
+        int16_t boxRatio;
+    };
+    
+    int16_t selectedRectRetract;
+    uint16_t flags;
+    uint8_t lineHight;
 };
+typedef struct vlGui_menu vlGui_menu_t;
 
 
-int vlGui_menuProcessKey(struct vlGui_window_t *win, uint8_t key);
+int vlGui_menuProcessKey(vlGui_window_t *win, uint8_t key);
 
-struct vlGui_menu_t * vlGui_menuCreate(struct vlGui_window_t *parent, int16_t x, int16_t y,     
+vlGui_menu_t * vlGui_menuCreate(vlGui_window_t *parent, int16_t x, int16_t y,     
                                            int16_t width, uint16_t height);
 
+void vlGui_menuAddEntry(vlGui_menu_t *menu, vlGui_menuEntry_t *parent,
+                        vlGui_menuEntry_t *new, char *text);
 
-int vlGui_menuAddEntry(struct vlGui_menu_t *menu, uint16_t index, uint8_t level, char *name);
+void vlGui_menuSetEntryAsCheckbox(vlGui_menuEntry_t *entry);
+
+void vlGui_menuSetEntryAsRadioButton(vlGui_menuEntry_t *entry);
+
+void vlGui_menuSetFont(vlGui_menu_t *menu, const struct vlGui_font_t *font);
 
 
-void vlGui_menuSetFont(struct vlGui_menu_t *menu, const struct vlGui_font_t *font);
-
-
-char *vlGui_menuGetSelectedEntry(struct vlGui_menu_t *menu);
+char *vlGui_menuGetSelectedEntry(vlGui_menu_t *menu);
 
 #endif // _VLGUI_MENU_H_
 

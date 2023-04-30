@@ -29,14 +29,14 @@
 #include "vlGui_fonts.h"
 
 struct vlGui_button_t {
-    struct vlGui_window_t win;
+    vlGui_window_t win;
 
     uint8_t pressed;
     char *text;
     const struct vlGui_font_t *font;
 };
 
-struct vlGui_button_t * vlGui_buttonCreate(struct vlGui_window_t *parent, int16_t x, 
+struct vlGui_button_t * vlGui_buttonCreate(vlGui_window_t *parent, int16_t x, 
                                                int16_t y, int16_t width, uint16_t height);
 
 void vlGui_buttonSetText(struct vlGui_button_t *btn, char *text);
