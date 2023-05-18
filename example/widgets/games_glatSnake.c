@@ -104,7 +104,7 @@ games_glutSnakeKeyCb(vlGui_window_t *win, uint8_t key)
 		player->x_dir = 0;
 		player->y_dir = 1;
 	}
-	else if((key == VLGUI_KEY_LETF) && (player->x_dir == 0)) {
+	else if((key == VLGUI_KEY_LEFT) && (player->x_dir == 0)) {
 		player->x_dir = -1;
 		player->y_dir = 0;
 	}
@@ -116,7 +116,7 @@ games_glutSnakeKeyCb(vlGui_window_t *win, uint8_t key)
 
 
 static void 
-games_bkgDrawCb(vlGui_window_t *win, void *arg)
+games_bkgDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     char score[4];
     char level[2];
@@ -140,7 +140,7 @@ games_bkgDrawCb(vlGui_window_t *win, void *arg)
 }
 
 static void 
-games_glutSnakeDrawCb(vlGui_window_t *win, void *arg)
+games_glutSnakeDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     static uint8_t cnt = 0;
     struct game_glutSnake_t *game;

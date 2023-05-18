@@ -27,7 +27,7 @@
 
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
-#define SIMU_SCREEN_MULTIPLE    4
+#define SIMU_SCREEN_MULTIPLE    2
 
 uint8_t closed = 0;
 
@@ -137,7 +137,7 @@ keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
         vlGui_inputEnqueueKey(VLGUI_KEY_ESC);
         break;
     case 0xff51:
-        vlGui_inputEnqueueKey(VLGUI_KEY_LETF);
+        vlGui_inputEnqueueKey(VLGUI_KEY_LEFT);
         break;
     case 0xff52:
         vlGui_inputEnqueueKey(VLGUI_KEY_UP);

@@ -189,7 +189,7 @@ vlGui_menuDrawRadioButton(vlGui_menu_t *menu, int16_t y, vlGui_menuEntry_t *entr
 }
 
 static void 
-vlGui_menuDraw(vlGui_window_t *win, void *arg)
+vlGui_menuDraw(vlGui_window_t *win, uint8_t flag)
 {
     int16_t x, y, dy, ySelected;
     int16_t lineHight;
@@ -199,7 +199,8 @@ vlGui_menuDraw(vlGui_window_t *win, void *arg)
     vlGui_menuEntry_t *entrySelected;
     const struct vlGui_font_t *font;
     
-    VLGUI_UNUSED(arg);
+    VLGUI_UNUSED(flag);
+    ySelected = 0;
     menu = (vlGui_menu_t *)win;
     entrySelected = menu->selEntry;
 
@@ -606,7 +607,7 @@ vlGui_menuProcessKey(vlGui_window_t *win, uint8_t key)
     switch (key)
     {
     case VLGUI_KEY_UP:
-    case VLGUI_KEY_LETF:
+    case VLGUI_KEY_LEFT:
         ret = vlGui_menuProcessKeyMoveSelect(menu, false);
         break;
     case VLGUI_KEY_DOWN:

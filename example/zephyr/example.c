@@ -21,7 +21,7 @@ static bool showIconName = true;
 
 volatile int8_t pos = 0;
 
-static void mainWindowDrawCb(vlGui_window_t *win, void *arg)
+static void mainWindowDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     int16_t x;
 
@@ -38,7 +38,7 @@ static void mainWindowDrawCb(vlGui_window_t *win, void *arg)
     vlGui_drawBitmap(win, x, 4, 40, 40, bitmap_media);
 }
 
-static void topWindowDrawCb(vlGui_window_t *win, void *arg)
+static void topWindowDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     uint8_t w,h;
     int16_t x;
@@ -99,7 +99,7 @@ int mainWindowProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
     switch (key)
     {
-    case VLGUI_KEY_LETF:
+    case VLGUI_KEY_LEFT:
         if(pos) {
             --pos;
             showIconName = false;
@@ -187,7 +187,7 @@ struct KeyState_t
 
 static const struct KeyConfig_t keyConfig[6] = {
     {
-        VLGUI_KEY_LETF,
+        VLGUI_KEY_LEFT,
         DT_GPIO_PIN(LEFT_KEY, gpios),
         DT_GPIO_FLAGS(LEFT_KEY, gpios),
         DT_GPIO_LABEL(LEFT_KEY, gpios),

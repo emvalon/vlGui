@@ -68,6 +68,7 @@ vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y,
     win->win_height = height;
 
     win->type = VLGUI_WIN_TYPE_BASE;
+    win->drawFlag = VLGUI_WIN_DRAW_INIT;
     win->refresh = 1;
     
     if(parent) {
@@ -164,15 +165,23 @@ void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor)
 }
 
 void 
-vlGui_windowRefresh(vlGui_window_t *win)
+vlGui_windowRefresh(vlGui_window_t *win, bool bgUpdate)
 {
+    uint8_t update;
+
     win->refresh = 0;
     
     vlGui_checkAnimation(win);
     vlGui_engineRender(win->engines);
 
     if(win->pDrawWindow) {
-        win->pDrawWindow(win, 0);
+        if (bgUpdate) {
+            update = VLGUI_WIN_DRAW_BACKGROUND;
+        } else {
+            update = win->drawFlag;
+            win->drawFlag = VLGUI_WIN_DRAW_REFRESH;
+        }
+        win->pDrawWindow(win, update);
     }
 }
 
@@ -232,3 +241,16 @@ vlGui_windowSetRefresh(vlGui_window_t * win)
 {
     win->refresh = 1;
 }
+
+void
+vlGui_windowBlurEnable(vlGui_window_t * win, bool enable)
+{
+    win->blur = enable;
+}
+
+void
+vlGui_windowBackgroundUpdate(vlGui_window_t * win, bool enable)
+{
+    win->backgroundUpdate = enable;
+}
+

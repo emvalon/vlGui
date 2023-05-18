@@ -257,11 +257,11 @@ void vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y,
 {
     uint16_t l,r;
     uint8_t v;
-
+    
     //宽度按8的倍数向上取整
     width = ((width + 7) / 8) * 8;
-
     v = *bitmap;
+
     for(l = 0; l < height; l++) {
         r = 0;
         while (1) {

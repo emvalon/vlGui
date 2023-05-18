@@ -28,6 +28,11 @@
 #define VLGUI_FONT_ENCOIDING_UTF8           (0)
 #define VLGUI_FONT_ENCODING_GB2312          (1)
 
+#define VLGUI_FONT_STR_DEF(name, language)                      \
+    extern const unsigned char str_##name##_##language[];       \
+    const unsigned char *str_##name = str_##name##_##language;  \
+    const unsigned char str_##name##_##language[]
+
 struct vlGui_font_table_item_t
 {
     uint16_t start;

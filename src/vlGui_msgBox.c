@@ -26,13 +26,13 @@
 #include <string.h>
 
 static void
-vlGui_drawMsgBox(vlGui_window_t *win, void *arg)
+vlGui_drawMsgBox(vlGui_window_t *win, uint8_t flag)
 {
     int16_t bw, bh;
     int16_t x, y;
     struct vlGui_msgBox_t * msgbox;
 
-    VLGUI_UNUSED(arg);
+    VLGUI_UNUSED(flag);
     msgbox = (struct vlGui_msgBox_t *)win;
 
     // 设置按钮大小

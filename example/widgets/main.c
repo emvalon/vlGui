@@ -49,7 +49,7 @@ volatile int8_t pos = 0;
 static uint8_t presskey = VLGUI_KEY_RIGHT;
 
 static void 
-mainWindowDrawCb(vlGui_window_t *win, void *arg)
+mainWindowDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     int16_t x;
     
@@ -67,7 +67,7 @@ mainWindowDrawCb(vlGui_window_t *win, void *arg)
 }
 
 static void 
-topWindowDrawCb(vlGui_window_t *win, void *arg)
+topWindowDrawCb(vlGui_window_t *win, uint8_t flag)
 {
     uint8_t w,h;
     int16_t x;
@@ -119,7 +119,7 @@ topWindowDrawCb(vlGui_window_t *win, void *arg)
 }
 
 static void 
-drawIconName(void *arg)
+drawIconName(uint8_t flag)
 {
    showIconName = true;
 }
@@ -129,7 +129,7 @@ mainWindowProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
     switch (key)
     {
-    case VLGUI_KEY_LETF:
+    case VLGUI_KEY_LEFT:
         if(pos) {
             --pos;
             showIconName = false;
@@ -145,7 +145,7 @@ mainWindowProcessKeyCb(vlGui_window_t *win, uint8_t key)
             showIconName = false;
             vlGui_windowScrollAnimation(win, -128, 0, 500, drawIconName, NULL);
         } else {
-            presskey = VLGUI_KEY_LETF;
+            presskey = VLGUI_KEY_LEFT;
         }
         break;
     case VLGUI_KEY_OK:

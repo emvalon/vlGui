@@ -1,11 +1,11 @@
 /**
- * @file vlGui_input.h
+ * @file ui.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2023-05-09
  * 
- * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
+ * Copyright 2021 - 2023 Weilong Shen (valonshen@foxmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,28 +20,13 @@
  * limitations under the License.
  * 
  */
-#ifndef _VLGUI_INPUT_H_
-#define _VLGUI_INPUT_H_
+#ifndef _UI_H_
+#define _UI_H_
+#include "vlGui_window.h"
 
-#include <stdint.h>
+void ui_homeWinCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
+                      int16_t width, int16_t height);
+void ui_menuWinCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
+                      int16_t width, int16_t height);
 
-
-
-#define VLGUI_KEY_ESC               (0xf0)
-
-#define VLGUI_KEY_OK                (0xf9)
-#define VLGUI_KEY_CANCEL            (0xfa)
-#define VLGUI_KEY_LEFT              (0xfb)
-#define VLGUI_KEY_RIGHT             (0xfc)
-#define VLGUI_KEY_UP                (0xfd)
-#define VLGUI_KEY_DOWN              (0xfe)
-#define VLGUI_KEY_NONE              (0xff)
-
-
-void vlGui_inputEnqueueKey(uint8_t key);
-
-uint8_t vlGui_inputGetKey(void);
-
-void vlGui_inputInit(void);
-
-#endif
+#endif // _UI_H_

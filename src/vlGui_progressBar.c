@@ -35,7 +35,7 @@
  * @param arg 
  */
 static void 
-vlGui_drawProgressBar(vlGui_window_t *win, void *arg)
+vlGui_drawProgressBar(vlGui_window_t *win, uint8_t flag)
 {
     uint16_t len;
     char num[5];
@@ -43,7 +43,7 @@ vlGui_drawProgressBar(vlGui_window_t *win, void *arg)
     const struct vlGui_font_t *font;
     struct vlGui_progressBar_t *pbar;
 
-    VLGUI_UNUSED(arg);
+    VLGUI_UNUSED(flag);
     pbar = (struct vlGui_progressBar_t *)win;
     font = &vlGui_font6x8;
 

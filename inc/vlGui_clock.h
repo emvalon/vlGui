@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include "vlGui_window.h"
 #include "vlGui_input.h"
+#include "vlGui_fonts.h"
 
 struct vlGui_clock_date_t
 {
@@ -45,17 +46,29 @@ struct vlGui_clock_t {
     vlGui_window_t win;
     struct vlGui_clock_date_t date;
     struct vlGui_clock_time_t time;
-    const struct vlGui_font_t *font;
+    const struct vlGui_font_t *clockFont;
+    const struct vlGui_font_t *strFont;
+    uint32_t nextSecPoint;
+    uint8_t week;
+    uint8_t weather;
+    union
+    {
+        struct {
+            uint8_t showSeparator:1;
+        };
+        uint8_t flags;
+    };
+    
 };
 
 
 int vlGui_clockProcessKey(vlGui_window_t *win, uint8_t key);
 
-struct vlGui_clock_t * vlGui_clockCreate(vlGui_window_t *parent, int16_t x, int16_t y,     
-                                           int16_t width, uint16_t height);
+struct vlGui_clock_t * vlGui_clockCreate(vlGui_window_t *parent, int16_t x,
+                                    int16_t y, int16_t width, uint16_t height);
 
-
-
+void vlGui_clockSetTime(struct vlGui_clock_t *clk, 
+                        struct vlGui_clock_time_t *time);
 
 
 #endif // _VLGUI_CLOCK_H_

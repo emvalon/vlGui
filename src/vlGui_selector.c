@@ -68,7 +68,7 @@ vlGui_selectorProcessKey(vlGui_window_t *win, uint8_t key)
 }
 
 static void 
-vlGui_drawSelector(vlGui_window_t *win, void *arg)
+vlGui_drawSelector(vlGui_window_t *win, uint8_t flag)
 {
     struct vlGui_selector_t *sel;
     struct vlGui_selectorEntry_t *entry;
@@ -77,7 +77,7 @@ vlGui_drawSelector(vlGui_window_t *win, void *arg)
     uint8_t index;
     int16_t ax, ay;
 
-    VLGUI_UNUSED(arg);
+    VLGUI_UNUSED(flag);
     sel = (struct vlGui_selector_t *)win;
 
     index = sel->index;

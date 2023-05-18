@@ -34,9 +34,18 @@
 #define VLGUI_COLOR_CONVERT     (2)
 
 #define VLGUI_ASSERT(cons)  
+#define VLGUI_TIME_GET(a, b)    ((int)(a - b) >= 0)
+#define VLGUI_TIME_LET(a, b)    ((int)(a - b) <= 0)
+#define VLGUI_TIME_GT(a, b)     ((int)(a - b) > 0)
+#define VLGUI_TIME_LT(a, b)     ((int)(a - b) < 0)
+
 #define VLGUI_MIN(a,b)          (a > b ? b : a)
 #define VLGUI_MAX(a,b)          (a > b ? a : b)
 #define VLGUI_UNUSED(x)         (void)x;
+#define VLGUI_STR_CENTER_X(width, font, num)                    \
+    ((width - (font->fontWidth * num)) >> 1)
+#define VLGUI_STR_CENTER_Y(height, font, num)                   \
+    ((height - (font->fontHeight * num)) >> 1)
 
 
 typedef void (* displayInit_func_t)(uint8_t display);

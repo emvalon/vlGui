@@ -39,7 +39,7 @@
 #define VLGUI_BOKEH_SIZE                (1)
 
 /* Indicates the unicode is formed in big-endian */
-#define VLGUI_UNICODE_BIGEND            (1)
+#define VLGUI_UNICODE_BIGEND            (0)
 
 /* 
  * Declaration 

@@ -33,11 +33,18 @@
 #define VLGUI_WIN_TYPE_PROGBAR      (4)
 #define VLGUI_WIN_TYPE_MENU         (5)
 
+#define VLGUI_WIN_DRAW_INIT         (0)
+#define VLGUI_WIN_DRAW_REFRESH      (1)
+#define VLGUI_WIN_DRAW_BACKGROUND   (2)
+
 struct vlGui_window {
     uint8_t type:4;
     uint8_t animation:1;
     uint8_t refresh:1;
+    uint8_t backgroundUpdate:1;
+    uint8_t blur:1;
 
+    uint8_t drawFlag;
     int16_t x1, y1;
     int16_t x2, y2;
     int16_t win_width;
@@ -59,12 +66,12 @@ struct vlGui_window {
     struct vlGui_window *child;
     struct vlGui_window *next;
 
-    void (* pDrawWindow)(struct vlGui_window *win, void *arg);
+    void (* pDrawWindow)(struct vlGui_window *win, uint8_t arg);
     int (* pProcessKey)(struct vlGui_window *win, uint8_t key);
 };
 typedef struct vlGui_window vlGui_window_t;
 
-typedef void (* vlGui_drawWindowCb_t)(vlGui_window_t *win, void *arg);
+typedef void (* vlGui_drawWindowCb_t)(vlGui_window_t *win, uint8_t arg);
 typedef int (* vlGui_processKeyCb_t)(vlGui_window_t *win, uint8_t key);
 typedef void (* vlGui_animationDoneCb)(void *arg);
 
@@ -78,7 +85,7 @@ void vlGui_windowDeleteChildren(vlGui_window_t *win);
 
 void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor);
 
-void vlGui_windowRefresh(vlGui_window_t *win);
+void vlGui_windowRefresh(vlGui_window_t *win, bool bgUpdate);
 
 void vlGui_windowSetRefresh(vlGui_window_t * win);
 
@@ -94,5 +101,9 @@ void vlGui_windowSetKeyCb(vlGui_window_t *win, vlGui_processKeyCb_t func);
 
 void vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy, 
                                    uint16_t ms, vlGui_animationDoneCb cb, void *arg);
+
+void vlGui_windowBlurEnable(vlGui_window_t * win, bool enable);
+
+void vlGui_windowBackgroundUpdate(vlGui_window_t * win, bool enable);
 
 #endif

@@ -38,12 +38,12 @@ static int vlGui_buttonProcessKey(vlGui_window_t *win, uint8_t key)
     return 0;
 }
 
-static void vlGui_drawButton(vlGui_window_t *win, void *arg)
+static void vlGui_drawButton(vlGui_window_t *win, uint8_t flag)
 {
     struct vlGui_button_t *btn;
     int16_t w,h, sx, sy;
 
-    VLGUI_UNUSED(arg);
+    VLGUI_UNUSED(flag);
     btn = (struct vlGui_button_t *)win;
 
     w = win->win_width;

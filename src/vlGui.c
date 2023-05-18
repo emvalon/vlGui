@@ -55,28 +55,28 @@ void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver
     driver->pInit(1);
 }
 
-static void vlGui_refreshAllChildren(vlGui_window_t *win)
+static void vlGui_refreshAllChildren(vlGui_window_t *win, bool bgUpdate)
 {
     vlGui_window_t *child;
 
     child = win->child;
 
     while (child) {
-        vlGui_windowRefresh(child);
-        vlGui_refreshAllChildren(child);
+        vlGui_windowRefresh(child, bgUpdate);
+        vlGui_refreshAllChildren(child, bgUpdate);
         child = child->next;
     }
 }
 
-static void vlGui_refreshAllBrothers(vlGui_window_t *win)
+static void vlGui_refreshAllBrothers(vlGui_window_t *win, bool bgUpdate)
 {
     vlGui_window_t *next;
 
     next = win->next;
 
     while (next) {
-        if (next->refresh) {
-            vlGui_windowRefresh(next);
+        if (next->backgroundUpdate || next->refresh) {
+            vlGui_windowRefresh(next, bgUpdate);
         }
         next = next->next;
     }
@@ -84,6 +84,7 @@ static void vlGui_refreshAllBrothers(vlGui_window_t *win)
 
 void vlGui_refresh(void)
 {
+    bool background = true;
     uint8_t key;
     vlGui_window_t *win;
     vlGui_window_t *drawWin;
@@ -94,19 +95,27 @@ void vlGui_refresh(void)
     /* Process all of keys enqueued */
     while(1) {
         /* Get the top layer of dispaly window */
-        for(win = vlGui_cur_screen->window; win->child; parent = win, win = win->child);
+        for(win = vlGui_cur_screen->window; win->child; parent = win, 
+            win = win->child);
         key = vlGui_inputGetKey();
 
         if(key == VLGUI_KEY_NONE) {
             break;
         } else if (key == VLGUI_KEY_ESC) {
+            /* Delete all of children and free corresponding memory. */
             vlGui_windowDeleteChildren(parent);
+            /* Redraw the parent windows. */
+            do {
+               parent->drawFlag = VLGUI_WIN_DRAW_INIT;
+               vlGui_windowSetRefresh(parent);
+               parent = parent->next;
+            } while (parent);
         } else if (win->pProcessKey) {
             win->pProcessKey(win, key);
         }
     }
 
-    win->refresh = 1;
+    // win->refresh = 1;
 
     /* Check if this screen need to be refreshed.
      * Traverse all of windows that created on this screen.
@@ -116,17 +125,19 @@ void vlGui_refresh(void)
         drawWin = vlGui_cur_screen->window;
         while (drawWin) {
             /* If this is the top layer, check if need blur */
-            if ((drawWin == win) &&
-                (win->win_height != vlGui_cur_screen->height) && 
-                (win->win_width != vlGui_cur_screen->width)) {
-                vlGui_windowBlur(vlGui_cur_screen->window, 3);
+            if (drawWin == win){
+                background = false;
+                if ((drawWin->blur) &&
+                    (win->win_height != vlGui_cur_screen->height) && 
+                    (win->win_width != vlGui_cur_screen->width)) {
+                    vlGui_windowBlur(vlGui_cur_screen->window, 3);
+                }
             }
-
             /* According to refresh flag, draw corresponding window */
-            if (drawWin->refresh) {
-                vlGui_windowRefresh(drawWin);
+            if (drawWin->backgroundUpdate || drawWin->refresh) {
+                vlGui_windowRefresh(drawWin, background);
             }
-            vlGui_refreshAllBrothers(drawWin);   
+            vlGui_refreshAllBrothers(drawWin, background);   
             drawWin = drawWin->child;
         }
         vlGui_cur_screen->displayDriver->pFresh();
