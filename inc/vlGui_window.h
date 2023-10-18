@@ -63,6 +63,7 @@ struct vlGui_window {
 
     vlGui_engine_t *engines;
 
+    struct vlGui_window *parent;
     struct vlGui_window *child;
     struct vlGui_window *next;
 
@@ -78,14 +79,11 @@ typedef void (* vlGui_animationDoneCb)(void *arg);
 vlGui_window_t * vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y, 
                                                int16_t width, int16_t height, uint8_t userDataLen);
 
-
-void vlGui_windowDelete(vlGui_window_t *win);
-
 void vlGui_windowDeleteChildren(vlGui_window_t *win);
 
 void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor);
 
-void vlGui_windowRefresh(vlGui_window_t *win, bool bgUpdate);
+void vlGui_windowRefresh(vlGui_window_t *win, uint8_t drawFlags);
 
 void vlGui_windowSetRefresh(vlGui_window_t * win);
 

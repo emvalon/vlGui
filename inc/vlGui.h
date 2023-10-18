@@ -75,6 +75,7 @@ struct vlGui_t {
     const struct vlGui_font_t *curFont;
     struct vlGui_driver_t *displayDriver;
     vlGui_window_t *window;
+    vlGui_window_t *topWin;
 };
 
 

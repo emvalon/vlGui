@@ -123,9 +123,11 @@ vlGui_drawIconMenu(vlGui_window_t *win, uint8_t flag)
 int
 vlGui_iconMenuProcessKey(vlGui_window_t *win, uint8_t key)
 {
+    int rc;
     vlGui_iconMenu_t *menu;
     int16_t des;
 
+    rc = 0;
     menu = (vlGui_iconMenu_t *)win;
     
     switch (key)
@@ -156,11 +158,14 @@ vlGui_iconMenuProcessKey(vlGui_window_t *win, uint8_t key)
         vlGui_engineStart(&menu->strEngine, des, VLGUI_ICONMENU_MOVE_DUR >> 1);
         vlGui_windowSetRefresh(win);
         break;
+    case VLGUI_KEY_ESC:
+        rc = -1;
+        break;
     default:
         break;
     }
 
-    return 0;
+    return rc;
 }
 
 static void

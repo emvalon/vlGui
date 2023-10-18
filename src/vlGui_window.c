@@ -71,6 +71,7 @@ vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y,
     win->drawFlag = VLGUI_WIN_DRAW_INIT;
     win->refresh = 1;
     
+    win->parent = parent;
     if(parent) {
         brother = parent->child;
         if (brother) {
@@ -78,27 +79,11 @@ vlGui_windowCreate(vlGui_window_t *parent, int16_t x, int16_t y,
             brother->next = win;
         } else {
             parent->child = win;
+            vlGui_cur_screen->topWin = win;
         }
     }
 
     return win;
-}
-
-void
-vlGui_windowDelete(vlGui_window_t *win)
-{
-    vlGui_window_t *child;
-    vlGui_window_t *next;
-
-    child = win->child;
-
-    while (child) {
-        next = child->next;
-        vlGui_windowDelete(child);
-        child = next;
-    }
-    
-    vlGui_free(win);
 }
 
 void
@@ -109,13 +94,16 @@ vlGui_windowDeleteChildren(vlGui_window_t *win)
 
     child = win->child;
     
-    while (child) {
-        next = child->next;
-        vlGui_windowDelete(child);
-        child = next;
+    if (child) {
+        while (child) {
+            next = child->next;
+            vlGui_windowDeleteChildren(child);
+            vlGui_free(child);
+            child = next;
+        }
+        win->child = NULL;
     }
-    
-    win->child = NULL;
+    vlGui_cur_screen->topWin = win;
 }
 
 static void vlGui_checkAnimation(vlGui_window_t *win)
@@ -161,27 +149,6 @@ void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor)
             vlGui_drawPoint(win, x + (i > 0 && i < 3), y + (i > 1), 
                             VLGUI_COLOR_BLACK);
         }
-    }
-}
-
-void 
-vlGui_windowRefresh(vlGui_window_t *win, bool bgUpdate)
-{
-    uint8_t update;
-
-    win->refresh = 0;
-    
-    vlGui_checkAnimation(win);
-    vlGui_engineRender(win->engines);
-
-    if(win->pDrawWindow) {
-        if (bgUpdate) {
-            update = VLGUI_WIN_DRAW_BACKGROUND;
-        } else {
-            update = win->drawFlag;
-            win->drawFlag = VLGUI_WIN_DRAW_REFRESH;
-        }
-        win->pDrawWindow(win, update);
     }
 }
 

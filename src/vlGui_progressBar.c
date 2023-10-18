@@ -169,5 +169,5 @@ vlGui_progressBarCreate(vlGui_window_t *parent, int16_t x, int16_t y,
 void 
 vlGui_progressBarDestroy(struct vlGui_progressBar_t *pbar)
 {
-    vlGui_windowDelete((vlGui_window_t *)pbar);
+    VLGUI_UNUSED(pbar);
 }
