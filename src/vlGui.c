@@ -23,10 +23,43 @@
 #include "vlGui.h"
 #include "vlGui_input.h"
 #include <string.h>
+#include <stdio.h>
 
 struct vlGui_t *vlGui_cur_screen;
 //TODO
 // static void *g_vlGui_semphr = NULL;
+
+static void
+vlGui_switchEngineCb(void *param, int16_t delta)
+{
+    vlGui_window_t *win;
+
+    win = (vlGui_window_t *)param;
+    vlGui_windowScroll(win, delta, 0);
+    if (!vlGui_engineIsRunning(&vlGui_cur_screen->switchEngine)) {
+        
+    }
+}
+
+static void 
+vlGui_refreshWindow(vlGui_window_t *win, uint8_t drawFlags)
+{
+    vlGui_window_t *next;
+
+    // win->refresh = 0;
+    
+    // vlGui_checkAnimation(win);
+    vlGui_engineRender(win->engines);
+
+    if(win->pDrawWindow) {
+        win->pDrawWindow(win, drawFlags);
+        next = win->next;
+        while (next) {
+            next->pDrawWindow(next, drawFlags);
+            next = next->next;
+        }
+    }
+}
 
 int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height)
 {
@@ -54,26 +87,6 @@ void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver
 {
     screen->displayDriver = driver;
     driver->pInit(1);
-}
-
-void 
-vlGui_windowRefresh(vlGui_window_t *win, uint8_t drawFlags)
-{
-    vlGui_window_t *next;
-
-    // win->refresh = 0;
-    
-    // vlGui_checkAnimation(win);
-    vlGui_engineRender(win->engines);
-
-    if(win->pDrawWindow) {
-        win->pDrawWindow(win, drawFlags);
-        next = win->next;
-        while (next) {
-            next->pDrawWindow(next, drawFlags);
-            next = next->next;
-        }
-    }
 }
 
 void vlGui_refresh(void)
@@ -107,6 +120,8 @@ void vlGui_refresh(void)
         }
     }
 
+    vlGui_engineRender(&vlGui_cur_screen->switchEngine);
+
     // win->refresh = 1;
 
     /* Check if this screen need to be refreshed.
@@ -123,9 +138,15 @@ void vlGui_refresh(void)
             }
             drawFlags = win->drawFlag;
             if (drawFlags == VLGUI_WIN_DRAW_INIT) {
+                vlGui_engineStop(&vlGui_cur_screen->switchEngine);
+                vlGui_engineInit(&vlGui_cur_screen->switchEngine,
+                                 vlGui_engineCurveOutQuint,
+                                 vlGui_switchEngineCb, win);
+                vlGui_engineStart(&vlGui_cur_screen->switchEngine, 
+                                  win->win_width, 1000);
                 win->drawFlag = VLGUI_WIN_DRAW_REFRESH;
             }
-            vlGui_windowRefresh(win, drawFlags);
+            vlGui_refreshWindow(win, drawFlags);
         }
     
         vlGui_cur_screen->displayDriver->pFresh();
@@ -151,7 +172,7 @@ void vlGui_refresh(void)
     //         }
     //         /* According to refresh flag, draw corresponding window */
     //         if (drawWin->backgroundUpdate || drawWin->refresh) {
-    //             vlGui_windowRefresh(drawWin, background);
+    //             vlGui_refreshWindow(drawWin, background);
     //         }
     //         vlGui_refreshAllBrothers(drawWin, background);   
     //         drawWin = drawWin->child;

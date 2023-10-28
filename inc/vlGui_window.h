@@ -83,8 +83,6 @@ void vlGui_windowDeleteChildren(vlGui_window_t *win);
 
 void vlGui_windowBlur(vlGui_window_t *win, uint8_t factor);
 
-void vlGui_windowRefresh(vlGui_window_t *win, uint8_t drawFlags);
-
 void vlGui_windowSetRefresh(vlGui_window_t * win);
 
 void vlGui_windowSetDrawCb(vlGui_window_t *win, vlGui_drawWindowCb_t func);

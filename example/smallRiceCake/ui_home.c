@@ -63,7 +63,7 @@ ui_homeProcessKeyCb(vlGui_window_t *win, uint8_t key)
     switch (key)
     {
     case VLGUI_KEY_OK:
-        ui_menuWinCreate(win, 0, 0, win->win_width, win->win_height);
+        ui_menuWinCreate(win, -10, 0, win->win_width, win->win_height);
         break;
     
     default:

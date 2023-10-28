@@ -27,13 +27,13 @@
 #include "vlGui_port.h"
 #include "vlGui_base.h"
 #include "vlGui_fonts.h"
-
+#include <assert.h>
 
 #define VLGUI_COLOR_BLACK       (0)
 #define VLGUI_COLOR_WHITE       (1)
 #define VLGUI_COLOR_CONVERT     (2)
 
-#define VLGUI_ASSERT(cons)  
+#define VLGUI_ASSERT(cons)      assert(cons)
 #define VLGUI_TIME_GET(a, b)    ((int)(a - b) >= 0)
 #define VLGUI_TIME_LET(a, b)    ((int)(a - b) <= 0)
 #define VLGUI_TIME_GT(a, b)     ((int)(a - b) > 0)
@@ -76,6 +76,7 @@ struct vlGui_t {
     struct vlGui_driver_t *displayDriver;
     vlGui_window_t *window;
     vlGui_window_t *topWin;
+    vlGui_engine_t switchEngine;
 };
 
 

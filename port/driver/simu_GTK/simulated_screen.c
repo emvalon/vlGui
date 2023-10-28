@@ -40,6 +40,9 @@ vlGui_color pixMap[SIMU_SCREEN_WIDTH][SIMU_SCREEN_HEIGHT];
 void 
 vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color)
 {
+    if ((x >= SIMU_SCREEN_WIDTH) || (y >= SIMU_SCREEN_HEIGHT)) {
+        VLGUI_ASSERT(0);
+    }
     pixMap[x][y] = color;
 }
 
