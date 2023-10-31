@@ -105,13 +105,13 @@ void vlGui_drawPoint(vlGui_window_t *win, int16_t x, int16_t y, uint8_t color)
     VLGUI_ASSERT(driver->pGetPointColor);
 
     actualX = win->x1 + x + win->x_offset;
-    if((actualX < win->x1) || (actualX > win->x2)) {
+    if((actualX < win->x1) || (actualX > win->x2) || (actualX < 0) || (actualX > 128)) {
         /* Out of window */
         return;
     }
 
     actualY = win->y1 + y + win->y_offset;
-    if((actualY < win->y1) || (actualY > win->y2)) {
+    if((actualY < win->y1) || (actualY > win->y2) || (actualY < 0) || (actualY > 63)) {
         /* Out of window */
         return;
     }

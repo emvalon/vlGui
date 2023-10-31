@@ -165,12 +165,13 @@ void vlGui_windowMove(vlGui_window_t *win, int16_t dx, int16_t dy)
 
 void vlGui_windowClear(vlGui_window_t *win)
 {
-    int16_t x, y;
+    // int16_t x, y;
 
-    x = -win->x_offset;
-    y = -win->y_offset;
+    // x = -win->x_offset;
+    // y = -win->y_offset;
 
-    vlGui_drawBlock(win, x, y, win->win_width, win->win_height, 0);
+    // vlGui_drawBlock(win, x, y, win->win_width, win->win_height, 0);
+    vlGui_drawBlock(win, 0, 0, win->win_width, win->win_height, 0);
 }
 
 void vlGui_windowScroll(vlGui_window_t *win, int16_t dx, int16_t dy)
