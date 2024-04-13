@@ -4,7 +4,7 @@ project(vlGui)
 
 set(ROOT_PAT ${PROJECT_SOURCE_DIR}/../..)
 
-include(${ROOT_PAT}/proj.cmake)
+include(${ROOT_PAT}/vlGuiProj.cmake)
 
 
 set(PORT ${ROOT_PAT}/port/driver/simu_GTK/simulated_screen.c)

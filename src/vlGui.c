@@ -195,3 +195,10 @@ void vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display)
 {
     screen->displayDriver->pInit(display);
 }
+
+void
+vlGui_init(void)
+{
+    vlGui_portInit();
+    vlGui_inputInit();
+}

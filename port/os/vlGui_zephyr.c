@@ -3,9 +3,9 @@
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2024-04-13
  * 
- * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
+ * Copyright © 2021 - 2024 Weilong Shen (valonshen@foxmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,35 @@
  * limitations under the License.
  * 
  */
-#include "vlGui.h"
-#include <zephyr.h>
-#include "vlGui_ssd1306.h"
+#include <stdint.h>
+#include "zephyr.h"
 
-
-struct vlGui_driver_t vlGui_driver;
-
-
-void * vlGui_malloc(uint32_t size)
+void *
+vlGui_osMalloc(uint32_t size)
 {
     return k_malloc(size);
 }
 
-uint32_t vlGui_getTime(void)
+void
+vlGui_osFree(void * addr)
+{
+    k_free(addr);
+}
+
+uint32_t
+vlGui_osGetTimeMs(void)
 {
     return k_uptime_get_32();
 }
 
-static void vlGui_portDrawPixel(uint16_t x, uint16_t y, uint8_t color)
+void
+vlGui_osDelay(uint32_t ms)
 {
-    ssd1306_DrawPixel(x, y, color);
+    osDelay(ms);
 }
 
-
-struct vlGui_driver_t * vlGui_portGetDriver(void)
+void
+vlGui_osInit(void)
 {
-    vlGui_driver.pInit = ssd1306_Init;
-    vlGui_driver.pDrawPoint = vlGui_portDrawPixel;
-    vlGui_driver.pFresh = ssd1306_UpdateScreen;
-
-    return &vlGui_driver;
+    
 }

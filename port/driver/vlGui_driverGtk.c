@@ -24,7 +24,6 @@
 #include "vlGui.h"
 #include "vlGui_input.h"
 
-
 #define SIMU_SCREEN_WIDTH       128
 #define SIMU_SCREEN_HEIGHT      64
 #define SIMU_SCREEN_MULTIPLE    2
@@ -38,7 +37,7 @@ vlGui_color pixMap[SIMU_SCREEN_WIDTH][SIMU_SCREEN_HEIGHT];
 
 
 void 
-vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color)
+vlGui_driverGtkDrawPixel(uint16_t x, uint16_t y, vlGui_color color)
 {
     if ((x >= SIMU_SCREEN_WIDTH) || (y >= SIMU_SCREEN_HEIGHT)) {
         VLGUI_ASSERT(0);
@@ -47,7 +46,7 @@ vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color)
 }
 
 vlGui_color
-vlGui_portGetPixelColor(uint16_t x, uint16_t y)
+vlGui_driverGtkGetPixelColor(uint16_t x, uint16_t y)
 {
     if (pixMap[x][y]) {
         return VLGUI_COLOR_WHITE;
@@ -57,7 +56,7 @@ vlGui_portGetPixelColor(uint16_t x, uint16_t y)
 }
 
 void
-vlGui_portRefresh(void)
+vlGui_driverGtkRefresh(void)
 {
 
     if (closed) {
@@ -70,7 +69,7 @@ vlGui_portRefresh(void)
 }
 
 static void
-closeWin(GtkWidget  * window, gpointer data) 
+vlGui_driverGtkCloseWin(GtkWidget  * window, gpointer data) 
 {
     VLGUI_UNUSED(window);
     VLGUI_UNUSED(data);
@@ -80,7 +79,7 @@ closeWin(GtkWidget  * window, gpointer data)
 }
 
 static gboolean 
-refreshCb(GtkWidget *da, GdkEventExpose *event, gpointer data)
+vlGui_driverGtkRefreshCb(GtkWidget *da, GdkEventExpose *event, gpointer data)
 {
     uint16_t x,y,ax,ay;
     GdkGC *gc; 
@@ -128,7 +127,7 @@ refreshCb(GtkWidget *da, GdkEventExpose *event, gpointer data)
 }
 
 static gboolean 
-keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
+vlGui_driverGtkKeyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
     VLGUI_UNUSED(widget);
     VLGUI_UNUSED(data);
@@ -163,7 +162,7 @@ keyPressCb(GtkWidget *widget, GdkEventKey *event, gpointer data)
 }
 
 static void 
-guiMain(void)
+vlGui_driverGtkGuiMain(void)
 {
     gdk_threads_enter();  
     gtk_main();  
@@ -171,7 +170,7 @@ guiMain(void)
 }
 
 void
-vlGui_portInit(uint8_t display) 
+vlGui_driverGtkInit(uint8_t display) 
 {
     VLGUI_UNUSED(display);
     gtk_init(NULL, NULL);
@@ -183,8 +182,8 @@ vlGui_portInit(uint8_t display)
                                 SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
                                 SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE);
 
-    g_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(closeWin), NULL);
-    g_signal_connect(window, "key-press-event", G_CALLBACK(keyPressCb), NULL);
+    g_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(vlGui_driverGtkCloseWin), NULL);
+    g_signal_connect(window, "key-press-event", G_CALLBACK(vlGui_driverGtkKeyPressCb), NULL);
     
     draware = gtk_drawing_area_new();
     gtk_widget_set_size_request(draware, 
@@ -192,10 +191,19 @@ vlGui_portInit(uint8_t display)
                                 SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE);
     gtk_container_add(GTK_CONTAINER(window), draware);
 
-    g_signal_connect(draware, "expose_event", G_CALLBACK(refreshCb), NULL);
+    g_signal_connect(draware, "expose_event", G_CALLBACK(vlGui_driverGtkRefreshCb), NULL);
 
     gtk_widget_show_all(window);
     
     /*创建线程*/  
-    g_thread_new("reflash",(GThreadFunc)guiMain, NULL);
+    g_thread_new("reflash",(GThreadFunc)vlGui_driverGtkGuiMain, NULL);
 }
+
+
+struct vlGui_driver_t const vlGui_driverGtk = {
+    .pInit = vlGui_driverGtkInit,
+    .pDrawPoint = vlGui_driverGtkDrawPixel,
+    .pGetPointColor = vlGui_driverGtkGetPixelColor,
+    .pFresh = vlGui_driverGtkRefresh,
+};
+

@@ -29,7 +29,7 @@ void * vlGui_malloc(uint32_t size);
 
 void vlGui_free(void *addr);
 
-uint32_t vlGui_getTime(void);
+uint32_t vlGui_getTimeMs(void);
 
 void vlGui_delay(uint32_t ms);
 
@@ -41,12 +41,18 @@ void vlGui_portSemphrTake(void *semphr, uint32_t delay_time);
 
 void vlGui_portSemphrGive(void *semphr);
 
-void vlGui_portInit(uint8_t dispaly);
+void vlGui_portInit(void);
 
 void vlGui_portDrawPixel(uint16_t x, uint16_t y, vlGui_color color);
 
 vlGui_color vlGui_portGetPixelColor(uint16_t x, uint16_t y);
 
 void vlGui_portRefresh(void);
+
+/* The list of display drivers which we have supported now. 
+ * Can be used as the second parameter of `vlGui_register_driver()`.
+ */
+extern struct vlGui_driver_t const vlGui_driverGtk;
+extern struct vlGui_driver_t vlGui_driverSsd1306;
 
 #endif 
