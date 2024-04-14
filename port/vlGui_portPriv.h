@@ -1,11 +1,11 @@
 /**
- * @file vlGui_port.c
+ * @file vlGui_portPriv.h
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2024-04-13
  * 
- * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
+ * Copyright © 2021 - 2024 Weilong Shen (valonshen@foxmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,36 +20,18 @@
  * limitations under the License.
  * 
  */
-#include "vlGui.h"
-#include "vlGui_port.h"
-#include "vlGui_portPriv.h"
+#ifndef _VLGUI_PORTPRIV_H_
+#define _VLGUI_PORTPRIV_H_
+#include <stdint.h>
 
-void *
-vlGui_malloc(uint32_t size)
-{
-    return vlGui_osMalloc(size);
-}
+void * vlGui_osMalloc(uint32_t size);
 
-void
-vlGui_free(void *addr)
-{
-    return vlGui_osFree(addr);
-}
+void vlGui_osFree(void * addr);
 
-uint32_t
-vlGui_getTimeMs(void)
-{
-    return vlGui_osGetTimeMs();
-}
+uint32_t vlGui_osGetTimeMs(void);
 
-void
-vlGui_delay(uint32_t ms)
-{
-    vlGui_osDelay(ms);
-}
+void vlGui_osDelay(uint32_t ms);
 
-void
-vlGui_portInit(void)
-{
-    vlGui_osInit();
-}
+void vlGui_osInit(void);
+
+#endif //_VLGUI_PORTPRIV_H_

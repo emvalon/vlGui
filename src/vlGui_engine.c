@@ -99,7 +99,7 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
         return 0;
     }
 
-    now = vlGui_getTime();
+    now = vlGui_getTimeMs();
 
     if(now >= (engine->startTime + engine->duration)) {
         engine->enabled = 0;
@@ -182,7 +182,7 @@ vlGui_engineStart(vlGui_engine_t *engine, int16_t distance,
     }
     engine->currentDistance = 0;
     engine->duration = durationMs;
-    engine->startTime = vlGui_getTime();
+    engine->startTime = vlGui_getTimeMs();
 }
 
 void

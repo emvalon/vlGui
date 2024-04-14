@@ -90,7 +90,7 @@ vlGui_drawClock(vlGui_window_t *win, uint8_t arg)
     clk = (struct vlGui_clock_t *)win;
     strFont = clk->strFont;
     clkFont = clk->clockFont;
-    now = vlGui_getTime();
+    now = vlGui_getTimeMs();
     if (VLGUI_TIME_GET(now, clk->nextSecPoint)) {
         clk->nextSecPoint = now + 1000;
         update = vlGui_clockElapsed(clk, 1);
@@ -175,7 +175,7 @@ vlGui_clockCreate(vlGui_window_t *parent, int16_t x, int16_t y,
     clk->week = 0;
     clk->weather = 0;
     clk->flags = 0;
-    clk->nextSecPoint = vlGui_getTime() + 1000;
+    clk->nextSecPoint = vlGui_getTimeMs() + 1000;
 
     vlGui_windowSetKeyCb(&clk->win, vlGui_clockProcessKey);
     vlGui_windowSetDrawCb(&clk->win, vlGui_drawClock);

@@ -116,7 +116,7 @@ static void vlGui_checkAnimation(vlGui_window_t *win)
         return;
     }
 
-    now = vlGui_getTime();
+    now = vlGui_getTimeMs();
 
     if(now >= (win->start_time + win->ani_ms)) {
         win->x_offset = win->ori_x_offset + win->ani_dx;
@@ -198,7 +198,7 @@ void vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy,
     }
     win->ori_x_offset = win->x_offset;
     win->ori_y_offset = win->y_offset;
-    win->start_time = vlGui_getTime();
+    win->start_time = vlGui_getTimeMs();
     win->ani_ms     = ms;
     win->pAnimatinDone = cb;
     win->animatinDoneArg = arg;

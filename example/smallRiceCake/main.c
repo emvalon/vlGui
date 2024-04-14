@@ -60,11 +60,12 @@ main(void)
     static struct vlGui_t screen;
     vlGui_window_t *mainWin;
 
-    memset(&screen, 0, sizeof(screen));
-    vlGui_inputInit();
+    vlGui_init();
+    
     /* Initialize the screen with 128x64 pixels */
     vlGui_screen_init(&screen, 128, 64);
-    vlGui_register_driver(&screen, vlGui_portGetDriver());
+    /* Set the dispaly driver. For multiple screans, we can set different drivers for them. */
+    vlGui_register_driver(&screen, (struct vlGui_driver_t *)&vlGui_driverGtk);
 
     mainWin = vlinGui_getMainWindow(&screen);
     vlGui_windowSetDrawCb(mainWin, menuBarDrawCb);

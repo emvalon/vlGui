@@ -1,11 +1,11 @@
 /**
- * @file vlGui_port.c
+ * @file vlGui_zephyr.c
  * @author Weilong Shen (valonshen@foxmail.com)
  * @brief 
  * @version 0.1
- * @date 2022-04-21
+ * @date 2024-04-13
  * 
- * Copyright © 2021 - 2022 Weilong Shen (valonshen@foxmail.com)
+ * Copyright © 2021 - 2024 Weilong Shen (valonshen@foxmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,36 +20,38 @@
  * limitations under the License.
  * 
  */
-#include "vlGui.h"
-#include "vlGui_port.h"
-#include "vlGui_portPriv.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/times.h>
+#include <unistd.h>
 
 void *
-vlGui_malloc(uint32_t size)
+vlGui_osMalloc(uint32_t size)
 {
-    return vlGui_osMalloc(size);
+    return malloc(size);
 }
 
 void
-vlGui_free(void *addr)
+vlGui_osFree(void * addr)
 {
-    return vlGui_osFree(addr);
+    free(addr);
 }
 
 uint32_t
-vlGui_getTimeMs(void)
+vlGui_osGetTimeMs(void)
 {
-    return vlGui_osGetTimeMs();
+    return times(NULL) / (CLOCKS_PER_SEC / 1000);
 }
 
 void
-vlGui_delay(uint32_t ms)
+vlGui_osDelay(uint32_t ms)
 {
-    vlGui_osDelay(ms);
+    usleep(ms * 1000);
 }
 
 void
-vlGui_portInit(void)
+vlGui_osInit(void)
 {
-    vlGui_osInit();
+    
 }

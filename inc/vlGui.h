@@ -83,6 +83,8 @@ struct vlGui_t {
 extern struct vlGui_t *vlGui_cur_screen;
 
 
+void vlGui_init(void);
+
 int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height);
 
 void vlGui_register_driver(struct vlGui_t *screen, struct vlGui_driver_t *driver);
