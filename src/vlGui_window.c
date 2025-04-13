@@ -195,26 +195,6 @@ vlGui_windowSetKeyCb(vlGui_window_t *win, vlGui_processKeyCb_t func)
 }
 
 void
-vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy, uint16_t ms,
-                            vlGui_animationDoneCb cb, void *arg)
-{
-    if (win->animation) {
-        win->ani_dx = win->ori_x_offset + win->ani_dx + dx - win->x_offset;
-        win->ani_dy = win->ori_y_offset + win->ani_dy + dy - win->y_offset;
-    } else {
-        win->animation = 1;
-        win->ani_dx = dx;
-        win->ani_dy = dy;
-    }
-    win->ori_x_offset = win->x_offset;
-    win->ori_y_offset = win->y_offset;
-    win->start_time = vlGui_getTime();
-    win->ani_ms = ms;
-    win->pAnimatinDone = cb;
-    win->animatinDoneArg = arg;
-}
-
-void
 vlGui_windowSetRefresh(vlGui_window_t *win)
 {
     win->refresh = 1;
@@ -230,4 +210,11 @@ void
 vlGui_windowBackgroundUpdate(vlGui_window_t *win, bool enable)
 {
     win->backgroundUpdate = enable;
+}
+
+void
+vlGui_windowResize(vlGui_window_t *win, int16_t width, int16_t hight)
+{
+    win->win_width = width;
+    win->win_height = hight;
 }

@@ -128,6 +128,24 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
     return delta;
 }
 
+/*
+ **************************************************************************************************
+ * Public Functions
+ **************************************************************************************************
+ */
+int16_t
+vlGui_engineMap2OtherDist(vlGui_engine_t *engine, int16_t delta, int16_t newDist)
+{
+    float result;
+
+    if (!engine->enabled) {
+        return newDist;
+    }
+
+    result = ((float)delta / engine->distance) * newDist;
+    return (int16_t)result;
+}
+
 void
 vlGui_engineInit(vlGui_engine_t *engine, vlGui_engineCurve_t curve, vlGui_engineProcessCb_t cb,
                  void *param)
@@ -200,7 +218,7 @@ vlGui_engineStart(vlGui_engine_t *engine, int16_t distance, uint16_t durationMs)
 }
 
 void
-vlGui_engineStop(vlGui_engine_t *engine)
+vlGui_engineFinish(vlGui_engine_t *engine)
 {
     if (!engine->enabled) {
         return;
@@ -208,4 +226,10 @@ vlGui_engineStop(vlGui_engine_t *engine)
 
     engine->enabled = 0;
     engine->processCb(engine->param, engine->distance - engine->currentDistance);
+}
+
+void
+vlGui_engineStop(vlGui_engine_t *engine)
+{
+    engine->enabled = 0;
 }

@@ -30,7 +30,7 @@
 #include "vlGui_input.h"
 #include "ui/ui.h"
 
-#define STATUS_BAR_HEIGHT (10)
+#define STATUS_BAR_HEIGHT (0)
 
 static void
 menuBarDrawCb(vlGui_window_t *win, uint8_t flag)

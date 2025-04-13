@@ -94,6 +94,4 @@ ui_menuWinCreate(vlGui_window_t *parent, int16_t x, int16_t y, int16_t width, in
     for (int i = 0; i < (int)(sizeof(s_menuItems) / sizeof(s_menuItems[0])); i++) {
         vlGui_iconMenuAddItem(menu, &s_menuItems[i]);
     }
-
-    vlGui_windowBlurEnable(&menu->win, true);
 }

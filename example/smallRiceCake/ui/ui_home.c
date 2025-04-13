@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include "vlGui.h"
 #include "widgets/vlGui_clock.h"
+#include "widgets/vlGui_progressBar.h"
 #include "ui.h"
 
 #define UI_HOME_BLESSING_WIDTH (60)
@@ -94,7 +95,9 @@ ui_homeProcessKeyCb(vlGui_window_t *win, uint8_t key)
     case VLGUI_KEY_OK:
         ui_menuWinCreate(win, 0, 0, win->win_width, win->win_height);
         break;
-
+    case VLGUI_KEY_UP:
+        vlGui_progressBarCreate(win, 0, 20, win->win_width, 30);
+        break;
     default:
         break;
     }

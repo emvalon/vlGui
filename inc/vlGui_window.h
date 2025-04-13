@@ -98,11 +98,12 @@ void vlGui_windowScroll(vlGui_window_t *win, int16_t dx, int16_t dy);
 
 void vlGui_windowSetKeyCb(vlGui_window_t *win, vlGui_processKeyCb_t func);
 
-void vlGui_windowScrollAnimation(vlGui_window_t *win, int16_t dx, int16_t dy, uint16_t ms,
-                                 vlGui_animationDoneCb cb, void *arg);
-
 void vlGui_windowBlurEnable(vlGui_window_t *win, bool enable);
 
 void vlGui_windowBackgroundUpdate(vlGui_window_t *win, bool enable);
+
+void vlGui_windowResize(vlGui_window_t *win, int16_t width, int16_t hight);
+
+#define vlGui_windowScrollAnimation(win, dx, dy, ms, cb, arg)
 
 #endif

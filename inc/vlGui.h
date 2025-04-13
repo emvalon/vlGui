@@ -77,7 +77,12 @@ struct vlGui_t {
     struct vlGui_driver_t *displayDriver;
     vlGui_window_t *window;
     vlGui_window_t *topWin;
+
+#if LVGUI_ANIMATION
+    uint8_t switchEngineRestarted;
+    int16_t switchParam;
     vlGui_engine_t switchEngine;
+#endif /* LVGUI_ANIMATION */
 };
 
 int vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height);
@@ -102,5 +107,7 @@ void vlGui_setFont(const struct vlGui_font_t *font);
 void vlGui_switchEffectRight2LeftCb(void *param, int16_t delta);
 
 void vlGui_switchEffectLargenCb(void *param, int16_t delta);
+
+void vlGui_switchEffectTop2BottomCb(void *param, int16_t delta);
 
 #endif

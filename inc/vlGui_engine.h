@@ -139,6 +139,25 @@ void vlGui_engineStart(vlGui_engine_t *engine, int16_t destination, uint16_t dur
  *
  * @param engine
  */
+void vlGui_engineFinish(vlGui_engine_t *engine);
+
+/**
+ * @brief Stop the engine immediately. The complete callback won't be invoked.
+ *
+ * @param engine
+ * @return * void
+ */
 void vlGui_engineStop(vlGui_engine_t *engine);
+
+/**
+ * @brief Map the `delta` in `vlGui_engineProcessCb_t` to another distense. This won't affect
+ * the original distance in the engine.
+ *
+ * @param engine
+ * @param delta
+ * @param newDist
+ * @return int16_t
+ */
+int16_t vlGui_engineMap2OtherDist(vlGui_engine_t *engine, int16_t delta, int16_t newDist);
 
 #endif // _VLGUI_ENGIN_H_
