@@ -100,7 +100,7 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
     if (now >= (engine->startTime + engine->duration)) {
         engine->enabled = 0;
         if (engine->cumulative) {
-            return engine->distance;
+            return engine->currentDistance + engine->distance;
         } else {
             return engine->distance - engine->currentDistance;
         }
@@ -115,7 +115,7 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
     }
 
     if (engine->cumulative) {
-        return expected;
+        return engine->currentDistance + expected;
     }
 
     if (expected != engine->currentDistance) {
@@ -137,12 +137,21 @@ int16_t
 vlGui_engineMap2OtherDist(vlGui_engine_t *engine, int16_t delta, int16_t newDist)
 {
     float result;
+    int16_t dis;
 
-    if (!engine->enabled) {
-        return newDist;
+    VLGUI_ASSERT(engine->distance);
+
+    if (engine->distance > 0) {
+        dis = engine->distance;
+    } else {
+        dis = -engine->distance;
     }
 
-    result = ((float)delta / engine->distance) * newDist;
+    if (newDist < 0) {
+        newDist = -newDist;
+    }
+
+    result = (delta / (float)dis) * newDist;
     return (int16_t)result;
 }
 
@@ -205,14 +214,24 @@ vlGui_engineIsRunning(vlGui_engine_t *engine)
 void
 vlGui_engineStart(vlGui_engine_t *engine, int16_t distance, uint16_t durationMs)
 {
+    int16_t cur;
+
     if (engine->enabled) {
-        engine->distance -= engine->currentDistance;
-        engine->distance += distance;
+        if (engine->cumulative) {
+            cur = vlGui_engineGetResult(engine);
+            engine->distance -= cur - engine->currentDistance;
+            engine->distance += distance;
+            engine->currentDistance = cur;
+        } else {
+            engine->distance -= engine->currentDistance;
+            engine->distance += distance;
+            engine->currentDistance = 0;
+        }
     } else {
-        engine->enabled = 1;
         engine->distance = distance;
+        engine->currentDistance = 0;
     }
-    engine->currentDistance = 0;
+    engine->enabled = 1;
     engine->duration = durationMs;
     engine->startTime = vlGui_getTime();
 }
@@ -225,7 +244,11 @@ vlGui_engineFinish(vlGui_engine_t *engine)
     }
 
     engine->enabled = 0;
-    engine->processCb(engine->param, engine->distance - engine->currentDistance);
+    if (engine->cumulative) {
+        engine->processCb(engine->param, engine->distance + engine->currentDistance);
+    } else {
+        engine->processCb(engine->param, engine->distance - engine->currentDistance);
+    }
 }
 
 void

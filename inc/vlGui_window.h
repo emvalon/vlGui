@@ -62,6 +62,7 @@ struct vlGui_window {
     void *animatinDoneArg;
 
     vlGui_engine_t *engines;
+    vlGui_engineProcessCb_t switchEffect;
 
     struct vlGui_window *parent;
     struct vlGui_window *child;
@@ -103,6 +104,8 @@ void vlGui_windowBlurEnable(vlGui_window_t *win, bool enable);
 void vlGui_windowBackgroundUpdate(vlGui_window_t *win, bool enable);
 
 void vlGui_windowResize(vlGui_window_t *win, int16_t width, int16_t hight);
+
+void vlGui_windowSetSwitchEffect(vlGui_window_t *win, vlGui_engineProcessCb_t effect);
 
 #define vlGui_windowScrollAnimation(win, dx, dy, ms, cb, arg)
 

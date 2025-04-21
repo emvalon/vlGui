@@ -24,6 +24,7 @@
 #include "vlGui.h"
 #include "widgets/vlGui_clock.h"
 #include "widgets/vlGui_progressBar.h"
+#include "widgets/vlGui_scrollBar.h"
 #include "ui.h"
 
 #define UI_HOME_BLESSING_WIDTH (60)
@@ -78,16 +79,18 @@ ui_homeDrawCb(vlGui_window_t *win, uint8_t flag)
     y0 = VLGUI_STR_CENTER_Y(win->win_height, font, 2) - 3;
 
     vlGui_setFont(font);
-    vlGui_drawLine(
-        win, lineX, y0 - 2, lineX, y0 + (2 * font->fontHeight) + 2, 2, VLGUI_COLOR_WHITE);
+    vlGui_drawLine(win, lineX, y0 - 2, lineX, y0 + (2 * font->fontHeight) + 2, 2,
+                   VLGUI_COLOR_WHITE);
     vlGui_drawString(win, x0, y0, (char *)str_blessing1_cn, VLGUI_COLOR_WHITE);
-    vlGui_drawString(
-        win, x0, y0 + font->fontHeight + 2, (char *)str_blessing2_cn, VLGUI_COLOR_WHITE);
+    vlGui_drawString(win, x0, y0 + font->fontHeight + 2, (char *)str_blessing2_cn,
+                     VLGUI_COLOR_WHITE);
 }
 
 static int
 ui_homeProcessKeyCb(vlGui_window_t *win, uint8_t key)
 {
+    vlGui_progressBar_t *pbar;
+
     VLGUI_UNUSED(win);
     VLGUI_UNUSED(key);
 
@@ -96,8 +99,9 @@ ui_homeProcessKeyCb(vlGui_window_t *win, uint8_t key)
         ui_menuWinCreate(win, 0, 0, win->win_width, win->win_height);
         break;
     case VLGUI_KEY_UP:
-        vlGui_progressBarCreate(win, 0, 20, win->win_width, 30);
-        break;
+        pbar = vlGui_progressBarCreate(win, 10, 5, win->win_width - 20, 31);
+        vlGui_progressBarSetTitle(&pbar->data, "Volume");
+        vlGui_windowSetSwitchEffect(&pbar->win, vlGui_switchEffectTop2BottomCb);
     default:
         break;
     }
@@ -118,8 +122,8 @@ ui_homeWinCreate(vlGui_window_t *parent, int16_t x, int16_t y, int16_t width, in
     vlGui_clockData_t *clkData;
     vlGui_clockTime_t time;
 
-    homeWin = (ui_homeWin_t *)vlGui_windowCreate(
-        parent, x, y, width, height, sizeof(ui_homeWin_t) - sizeof(vlGui_window_t));
+    homeWin = (ui_homeWin_t *)vlGui_windowCreate(parent, x, y, width, height,
+                                                 sizeof(ui_homeWin_t) - sizeof(vlGui_window_t));
 
     win = &homeWin->win;
     vlGui_windowSetDrawCb(win, ui_homeDrawCb);

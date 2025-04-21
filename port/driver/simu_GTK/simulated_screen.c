@@ -176,16 +176,14 @@ vlGui_portInit(uint8_t display)
     gtk_window_set_title(GTK_WINDOW(window), "vlGui Simulater");
 
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    gtk_window_set_default_size(GTK_WINDOW(window),
-                                SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
+    gtk_window_set_default_size(GTK_WINDOW(window), SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
                                 SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE);
 
     g_signal_connect(GTK_OBJECT(window), "destroy", GTK_SIGNAL_FUNC(closeWin), NULL);
     g_signal_connect(window, "key-press-event", G_CALLBACK(keyPressCb), NULL);
 
     draware = gtk_drawing_area_new();
-    gtk_widget_set_size_request(draware,
-                                SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
+    gtk_widget_set_size_request(draware, SIMU_SCREEN_WIDTH * SIMU_SCREEN_MULTIPLE,
                                 SIMU_SCREEN_HEIGHT * SIMU_SCREEN_MULTIPLE);
     gtk_container_add(GTK_CONTAINER(window), draware);
 

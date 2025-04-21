@@ -16,6 +16,8 @@ set(CMAKE_C_FLAGS "-O0 -ggdb -Werror -Wall -Wextra -Wno-unused-function -Wno-imp
 
 # set(CMAKE_CXX_COMPILER "gcc")
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 AUX_SOURCE_DIRECTORY(./ DIR_MAIN)
 AUX_SOURCE_DIRECTORY(./pictures DIR_PICTURE)
 AUX_SOURCE_DIRECTORY(./ui DIR_UI)

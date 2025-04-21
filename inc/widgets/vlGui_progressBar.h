@@ -39,6 +39,15 @@ struct vlGui_progressBar {
 };
 typedef struct vlGui_progressBar vlGui_progressBar_t;
 
+/**
+ * @brief Callback function for progress bar to process coming key.
+ *
+ * @param win
+ * @param key
+ * @return int
+ */
+int vlGui_progressBarProcessKey(vlGui_window_t *win, uint8_t key);
+
 void vlGui_progressBarDrawWin(vlGui_window_t *win, vlGui_progressBarData_t *pbarData, uint8_t flag);
 
 vlGui_progressBar_t *vlGui_progressBarCreate(vlGui_window_t *parent, int16_t x, int16_t y,

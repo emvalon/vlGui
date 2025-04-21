@@ -63,25 +63,53 @@ static void
 vlGui_refreshScreen(vlGui_window_t *firstWin, vlGui_window_t *secWin)
 {
     if (firstWin->refresh) {
-        // firstWin->refresh = 0;
+        firstWin->refresh = 0;
         vlGui_refreshWindow(firstWin, true);
     }
     if (secWin && secWin->refresh) {
-        // secWin->refresh = 0;
+        secWin->refresh = 0;
         vlGui_refreshWindow(secWin, false);
     }
     vlGui_cur_screen->displayDriver->pFresh();
 }
 
-static void
-vlGui_switchTopWindowTo(vlGui_engine_t *switchEngine, vlGui_window_t *targetWin)
+static int
+vlGui_switchTopWindowTo(vlGui_engine_t *switchEngine, vlGui_window_t *targetWin,
+                        vlGui_engineProcessCb_t effect)
 {
+#if 1
+    if (!effect) {
+        effect = vlGui_switchEffectNoneCb;
+    }
     vlGui_cur_screen->switchEngineRestarted = 0;
-
+    vlGui_engineInit(switchEngine, vlGui_engineCurveOutQuint, effect, (void *)targetWin);
     vlGui_engineSetCumulative(switchEngine, true);
-    vlGui_engineSetParam(switchEngine, (void *)targetWin);
-    vlGui_engineStart(
-        switchEngine, 1 << VLGUI_SWITCH_ANIMATION_CALC_BITS, VLGUI_SWITCH_ANIMATION_TIME_US);
+    vlGui_engineStart(switchEngine, 1 << VLGUI_SWITCH_ANIMATION_CALC_BITS,
+                      VLGUI_SWITCH_ANIMATION_TIME_US);
+    return 1;
+#else
+    if (effect) {
+        vlGui_cur_screen->switchEngineRestarted = 0;
+        vlGui_engineInit(switchEngine, vlGui_engineCurveOutQuint, effect, (void *)targetWin);
+        vlGui_engineSetCumulative(switchEngine, true);
+        vlGui_engineStart(switchEngine, 1 << VLGUI_SWITCH_ANIMATION_CALC_BITS,
+                          VLGUI_SWITCH_ANIMATION_TIME_US);
+        return 1;
+    }
+
+    /* `targetWin->child != NULL` means this is not a new window created. Its childen windows need
+     * to be deleted.
+     */
+    if (targetWin->child) {
+        vlGui_windowDeleteChildren(targetWin);
+    }
+
+    targetWin->drawFlag = VLGUI_WIN_DRAW_INIT;
+    vlGui_windowSetRefresh(targetWin);
+    vlGui_cur_screen->topWin = targetWin;
+
+    return 0;
+#endif
 }
 
 /*
@@ -108,12 +136,8 @@ vlGui_screen_init(struct vlGui_t *screen, int16_t width, int16_t height)
     vlGui_cur_screen->window = win;
     vlGui_cur_screen->topWin = win;
 
-    vlGui_engineInit(&vlGui_cur_screen->switchEngine,
-                     vlGui_engineCurveInOutQuart,
-                     vlGui_switchEffectTop2BottomCb,
-                     //  vlGui_switchEffectLargenCb,
-                     //  vlGui_switchEffectRight2LeftCb,
-                     NULL);
+    vlGui_engineInit(&vlGui_cur_screen->switchEngine, vlGui_engineCurveNone,
+                     vlGui_switchEffectNoneCb, NULL);
 
     return 0;
 }
@@ -150,8 +174,9 @@ vlGui_refresh(void)
         while (win->child) {
             win = win->child;
         }
-        vlGui_switchTopWindowTo(switchEngine, win);
-        return;
+        if (vlGui_switchTopWindowTo(switchEngine, win, win->switchEffect)) {
+            return;
+        }
     }
 
     /* Process all of keys enqueued */
@@ -161,13 +186,16 @@ vlGui_refresh(void)
             break;
         }
         rc = topWin->pProcessKey(topWin, key);
-        if (rc) {
+        if (rc < 0) {
             win = topWin->parent;
             if (!win) {
                 continue;
             }
-            vlGui_switchTopWindowTo(switchEngine, win);
-            return;
+            if (vlGui_switchTopWindowTo(switchEngine, win, topWin->switchEffect)) {
+                return;
+            }
+        } else if (rc > 0) {
+            vlGui_windowSetRefresh(topWin);
         }
     }
 
@@ -200,6 +228,32 @@ vlGui_turnOnOff(struct vlGui_t *screen, uint8_t display)
  * Switching Effect Functions
  **************************************************************************************************
  */
+void
+vlGui_switchEffectNoneCb(void *param, int16_t delta)
+{
+    vlGui_window_t *win;
+    vlGui_window_t *topWin;
+
+    VLGUI_UNUSED(delta);
+    win = (vlGui_window_t *)param;
+    topWin = vlGui_cur_screen->topWin;
+
+    win->drawFlag = VLGUI_WIN_DRAW_INIT;
+    vlGui_windowSetRefresh(win);
+    vlGui_engineStop(&vlGui_cur_screen->switchEngine);
+
+    if (topWin->child) {
+        topWin->drawFlag = VLGUI_WIN_DRAW_INIT;
+        vlGui_windowSetRefresh(topWin);
+        vlGui_refreshScreen(topWin, win);
+    } else {
+        vlGui_windowDeleteChildren(win);
+        vlGui_refreshScreen(win, NULL);
+    }
+
+    vlGui_cur_screen->topWin = win;
+}
+
 void
 vlGui_switchEffectRight2LeftCb(void *param, int16_t delta)
 {
@@ -360,15 +414,14 @@ vlGui_switchEffectLargenCb(void *param, int16_t delta)
 
             largen = win->win_width - VLGUI_SWITCH_ANIMATION_MIN_WIDTH;
             vlGui_engineStop(engine);
-            vlGui_windowResize(
-                win, VLGUI_SWITCH_ANIMATION_MIN_WIDTH, VLGUI_SWITCH_ANIMATION_MIN_WIDTH);
+            vlGui_windowResize(win, VLGUI_SWITCH_ANIMATION_MIN_WIDTH,
+                               VLGUI_SWITCH_ANIMATION_MIN_WIDTH);
             vlGui_engineStart(engine, largen, engine->duration);
             return;
         }
 
         vlGui_windowResize(
-            win,
-            VLGUI_SWITCH_ANIMATION_MIN_WIDTH + delta,
+            win, VLGUI_SWITCH_ANIMATION_MIN_WIDTH + delta,
             VLGUI_SWITCH_ANIMATION_MIN_WIDTH +
                 vlGui_engineMap2OtherDist(engine, delta, vlGui_cur_screen->switchParam));
 
@@ -391,8 +444,7 @@ vlGui_switchEffectLargenCb(void *param, int16_t delta)
             vlGui_cur_screen->switchEngineRestarted = 1;
             return;
         }
-        vlGui_windowResize(topWin,
-                           topWin->win_width + delta,
+        vlGui_windowResize(topWin, topWin->win_width + delta,
                            topWin->win_height + vlGui_engineMap2OtherDist(
                                                     engine, delta, vlGui_cur_screen->switchParam));
 

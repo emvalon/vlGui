@@ -22,12 +22,12 @@
  */
 #include <stdio.h>
 #include "vlGui.h"
-#include "ui/ui.h"
-#include "vlGui_iconMenu.h"
+#include "ui.h"
+#include "widgets/vlGui_iconMenu.h"
 
-#include "rightArrow.h"
-#include "leftArrow.h"
-#include "btIcon.h"
+// #include "rightArrow.h"
+// #include "leftArrow.h"
+// #include "pictures/btIcon.h"
 
 static const uint16_t strBleSetting_cn[] = {0xc0b6, 0xd1c0, 0xc9e8, 0xd6c3, 0x0000};
 // static const uint16_t bleStr[] = {0xc0b6, 0xd1c0, 0xc9e8, 0xd6c3, 0x0000};
@@ -90,8 +90,10 @@ ui_menuWinCreate(vlGui_window_t *parent, int16_t x, int16_t y, int16_t width, in
     vlGui_iconMenu_t *menu;
 
     menu = vlGui_iconMenuCreate(parent, x, y, width, height, 30);
-    vlGui_iconMenuSetFont(menu, vlGui_wenquan_9pt);
+    vlGui_iconMenuSetFont(&menu->data, vlGui_wenquan_9pt);
     for (int i = 0; i < (int)(sizeof(s_menuItems) / sizeof(s_menuItems[0])); i++) {
-        vlGui_iconMenuAddItem(menu, &s_menuItems[i]);
+        vlGui_iconMenuAddItem(&menu->data, &s_menuItems[i]);
     }
+
+    vlGui_windowSetSwitchEffect(&menu->win, vlGui_switchEffectLargenCb);
 }

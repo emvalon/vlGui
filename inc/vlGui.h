@@ -104,6 +104,8 @@ void vlGui_setFont(const struct vlGui_font_t *font);
  * Switching Effect Functions
  **************************************************************************************************
  */
+void vlGui_switchEffectNoneCb(void *param, int16_t delta);
+
 void vlGui_switchEffectRight2LeftCb(void *param, int16_t delta);
 
 void vlGui_switchEffectLargenCb(void *param, int16_t delta);

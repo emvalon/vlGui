@@ -295,10 +295,10 @@ vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, in
 
     x2 = x + width - 1;
     y2 = y + height - 1;
-    vlGui_drawLine(win, x, y, x, y2, 1, color);
-    vlGui_drawLine(win, x2, y, x2, y2, 1, color);
-    vlGui_drawLine(win, x, y, x2, y, 1, color);
-    vlGui_drawLine(win, x, y2, x2, y2, 1, color);
+    vlGui_drawLine(win, x, y + 1, x, y2 - 1, 1, color);
+    vlGui_drawLine(win, x2, y + 1, x2, y2 - 1, 1, color);
+    vlGui_drawLine(win, x + 1, y, x2 - 1, y, 1, color);
+    vlGui_drawLine(win, x + 1, y2, x2 - 1, y2, 1, color);
 }
 
 // static char vlGui_drawChar(vlGui_window_t *win, int16_t x, int16_t y, char ch, uint8_t color)

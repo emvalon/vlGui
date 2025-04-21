@@ -27,6 +27,14 @@
 #include "widgets/vlGui_progressBar.h"
 #include "vlGui_fonts.h"
 
+#define VLGUI_PROGRESSBAR_LEFT_MARGIN (5)
+#define VLGUI_PROGRESSBAR_TOP_MARGIN (3)
+
+/*
+ **************************************************************************************************
+ * Static Functions
+ **************************************************************************************************
+ */
 /**
  * @brief Callback function for progress bar to draw this window.
  * If want to implement special effect, can modify here.
@@ -43,81 +51,85 @@ vlGui_progressBarDrawCb(vlGui_window_t *win, uint8_t arg)
     vlGui_progressBarDrawWin(win, (vlGui_progressBarData_t *)win->userData, arg);
 }
 
-/**
- * @brief Callback function for progress bar to process coming key.
- *
- * @param win
- * @param key
- * @return int
- */
-int
-vlGui_progressBarProcessKey(vlGui_window_t *win, uint8_t key)
-{
-    VLGUI_UNUSED(win);
-    VLGUI_UNUSED(key);
-
-    // struct vlGui_selector_t *sel;
-
-    // sel = (struct vlGui_selector_t *)win;
-    // if((key == VLGUI_KEY_UP) && (sel->temp_index > 0)) {
-    //     --sel->temp_index;
-    //     vlGui_windowScrollAnimation(win, 0, sel->bigFont->fontHeight + 4, 300,
-    //     vlGui_selectorScrollUpCb, sel);
-    // } else if((key == VLGUI_KEY_DOWN) && (sel->temp_index < (sel->num - 1))) {
-    //     ++sel->temp_index;
-    //     vlGui_windowScrollAnimation(win, 0, -sel->bigFont->fontHeight - 4, 300,
-    //     vlGui_selectorScrollDownCb, sel);
-    // }
-    return 0;
-}
-
 /*
  **************************************************************************************************
  * Public Functions
  **************************************************************************************************
  */
+int
+vlGui_progressBarProcessKey(vlGui_window_t *win, uint8_t key)
+{
+    vlGui_progressBarData_t *data;
+
+    data = (vlGui_progressBarData_t *)&win->userData;
+
+    switch (key) {
+    case VLGUI_KEY_ESC:
+        return -1;
+    case VLGUI_KEY_RIGHT:
+        vlGui_progressBarSetValue(data, data->value + 10);
+        return 1;
+    case VLGUI_KEY_LEFT:
+        vlGui_progressBarSetValue(data, data->value - 10);
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 void
 vlGui_progressBarDrawWin(vlGui_window_t *win, vlGui_progressBarData_t *pbarData, uint8_t flag)
 {
     uint16_t len;
     char num[5];
-    char *title;
     const struct vlGui_font_t *font;
+    int16_t numPosX;
+    int16_t numPosY;
+    int16_t titleHight;
+    int16_t barWidth;
 
-    VLGUI_UNUSED(flag);
-    font = &vlGui_font6x8;
-
+    font = vlGui_asc6x8;
     vlGui_setFont(font);
-    /* Clear window */
-    vlGui_windowClear(win);
-    /* Draw boundary of window */
-    vlGui_drawRectangle(win, 1, 1, win->win_width - 2, win->win_height - 2, 1);
 
-    /* Draw boundary of progress bar. Reserve space for percentage value */
-    vlGui_drawRectangle(win, 5, (win->win_height >> 1) - 2, win->win_width - 10 - 25, 10, 1);
-    /* Draw process bar with active color */
-    len = (win->win_width - 14 - 25) * pbarData->value / 100;
-    vlGui_drawBlock(win, 7, (win->win_height >> 1), len, 6, 1);
+    titleHight = VLGUI_PROGRESSBAR_TOP_MARGIN + font->fontHeight;
+    numPosX = win->win_width - VLGUI_PROGRESSBAR_LEFT_MARGIN - (3 * font->fontWidth);
+    numPosY = titleHight + VLGUI_STR_CENTER_Y(win->win_height - titleHight, font, 1);
+    barWidth = numPosX - 2 * VLGUI_PROGRESSBAR_LEFT_MARGIN - 4;
 
-    vlGui_setFont(&vlGui_font6x8);
-
-    if (pbarData->value > 99) {
-        num[0] = 'O';
-        num[1] = 'k';
-        num[2] = '\0';
+    if (flag == VLGUI_WIN_DRAW_INIT) {
+        /* Draw boundary of window */
+        vlGui_drawRectangle(win, 1, 1, win->win_width - 2, win->win_height - 2, VLGUI_COLOR_WHITE);
+        /* Draw title if has */
+        if (pbarData->title) {
+            vlGui_drawString(win, VLGUI_PROGRESSBAR_LEFT_MARGIN, VLGUI_PROGRESSBAR_TOP_MARGIN,
+                             pbarData->title, VLGUI_COLOR_WHITE);
+        }
+        /* Draw boundary of progress bar. Reserve space for percentage value */
+        vlGui_drawRectangle(win, VLGUI_PROGRESSBAR_LEFT_MARGIN, numPosY - 2, barWidth + 4,
+                            font->fontHeight + 2, VLGUI_COLOR_WHITE);
     } else {
-        snprintf(num, sizeof(num), "%02d", pbarData->value);
+        vlGui_drawBlock(win, numPosX, numPosY, 3 * font->fontWidth, font->fontHeight,
+                        VLGUI_COLOR_BLACK);
     }
-    vlGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
-    /* Draw title if has */
-    title = pbarData->title;
-    if (title) {
-        len = strlen(title) * font->fontWidth;
-        vlGui_drawString(win, (win->win_width - len) >> 1, 3, pbarData->title, 1);
+    /* Draw process bar with active color */
+    if (pbarData->value == 100) {
+        vlGui_drawBlock(win, VLGUI_PROGRESSBAR_LEFT_MARGIN + 2, numPosY, barWidth,
+                        font->fontHeight - 2, VLGUI_COLOR_WHITE);
+    } else {
+        len = (barWidth * pbarData->value) / 100;
+        vlGui_drawBlock(win, VLGUI_PROGRESSBAR_LEFT_MARGIN + 2, numPosY, len, font->fontHeight - 2,
+                        VLGUI_COLOR_WHITE);
+        vlGui_drawBlock(win, VLGUI_PROGRESSBAR_LEFT_MARGIN + 2 + len, numPosY, barWidth - len,
+                        font->fontHeight - 2, VLGUI_COLOR_BLACK);
     }
+
     /* Draw the value of percentage */
-    snprintf(num, sizeof(num), "%02d%%", pbarData->value);
-    vlGui_drawString(win, win->win_width - 10 - 15, win->win_height >> 1, num, 1);
+    if (pbarData->value > 99) {
+        vlGui_drawString(win, numPosX, numPosY, "100", 1);
+    } else {
+        snprintf(num, sizeof(num), "%02d%%", pbarData->value);
+        vlGui_drawString(win, numPosX, numPosY, num, 1);
+    }
 }
 
 /**
@@ -153,8 +165,9 @@ vlGui_progressBarInitData(vlGui_window_t *win, vlGui_progressBarData_t *pbarData
 {
     VLGUI_UNUSED(win);
 
-    pbarData->value = 0;
-    pbarData->title = NULL;
+    vlGui_windowBlurEnable(win, true);
+    pbarData->value = 50;
+    pbarData->title = "Pls set text";
 }
 
 /**
@@ -174,13 +187,14 @@ vlGui_progressBarCreate(vlGui_window_t *parent, int16_t x, int16_t y, int16_t wi
     vlGui_progressBar_t *pbar;
     VLGUI_ASSERT(parent);
 
-    pbar = (vlGui_progressBar_t *)vlGui_windowCreate(
-        parent, x, y, width, height, sizeof(*pbar) - sizeof(*parent));
+    pbar = (vlGui_progressBar_t *)vlGui_windowCreate(parent, x, y, width, height,
+                                                     sizeof(vlGui_progressBarData_t));
     if (!pbar) {
         return NULL;
     }
 
     pbar->win.type = VLGUI_WIN_TYPE_PROGBAR;
+    vlGui_progressBarInitData(&pbar->win, &pbar->data);
     vlGui_windowSetDrawCb(&pbar->win, vlGui_progressBarDrawCb);
     vlGui_windowSetKeyCb(&pbar->win, vlGui_progressBarProcessKey);
 

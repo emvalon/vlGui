@@ -218,3 +218,9 @@ vlGui_windowResize(vlGui_window_t *win, int16_t width, int16_t hight)
     win->win_width = width;
     win->win_height = hight;
 }
+
+void
+vlGui_windowSetSwitchEffect(vlGui_window_t *win, vlGui_engineProcessCb_t effect)
+{
+    win->switchEffect = effect;
+}
