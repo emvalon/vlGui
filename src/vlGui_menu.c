@@ -25,7 +25,7 @@
 #include "stdio.h"
 #include "vlGui_menu.h"
 #include "vlGui_base.h"
-#include "vlGui_fonts.h"
+#include "fonts/vlGui_fonts.h"
 #include "vlGui_input.h"
 
 #define VLGUI_MENU_ENTRY_PADDING (1)
@@ -141,8 +141,8 @@ vlGui_menuDrawBox(vlGui_menu_t *menu, int16_t y, vlGui_menuEntry_t *entry)
 
     if (boxWidth) {
         offset = (s - boxWidth) >> 1;
-        vlGui_drawBlock(
-            win, x + offset, y + VLGUI_MENU_LINE_SPACING + offset, boxWidth, boxWidth, color);
+        vlGui_drawBlock(win, x + offset, y + VLGUI_MENU_LINE_SPACING + offset, boxWidth, boxWidth,
+                        color);
     }
 }
 
@@ -255,9 +255,7 @@ vlGui_menuDraw(vlGui_window_t *win, uint8_t flag)
             vlGui_drawString(win,
                              VLGUI_MENU_ENTRY_MARGIN + VLGUI_MENU_ENTRY_PADDING +
                                  (VLGUI_MENU_ENTRY_RETRACE * entry->level),
-                             y + VLGUI_MENU_LINE_SPACING,
-                             entry->str,
-                             VLGUI_COLOR_WHITE);
+                             y + VLGUI_MENU_LINE_SPACING, entry->str, VLGUI_COLOR_WHITE);
         }
         y += dy;
     }
@@ -267,33 +265,24 @@ vlGui_menuDraw(vlGui_window_t *win, uint8_t flag)
         vlGui_drawBlock(win,
                         VLGUI_MENU_ENTRY_MARGIN + VLGUI_MENU_ENTRY_PADDING +
                             (VLGUI_MENU_ENTRY_RETRACE * entrySelected->level),
-                        ySelected + VLGUI_MENU_LINE_SPACING,
-                        win->win_width - 2,
-                        font->fontHeight,
+                        ySelected + VLGUI_MENU_LINE_SPACING, win->win_width - 2, font->fontHeight,
                         VLGUI_COLOR_BLACK);
     }
     vlGui_drawString(win,
                      VLGUI_MENU_ENTRY_MARGIN + VLGUI_MENU_ENTRY_PADDING +
                          (VLGUI_MENU_ENTRY_RETRACE * entrySelected->level),
-                     ySelected + VLGUI_MENU_LINE_SPACING,
-                     entrySelected->str,
-                     VLGUI_COLOR_WHITE);
+                     ySelected + VLGUI_MENU_LINE_SPACING, entrySelected->str, VLGUI_COLOR_WHITE);
     /* Draw the selected bar. We may cover the child entries' text. */
     x = VLGUI_MENU_ENTRY_MARGIN + menu->selectedRectRetract;
-    vlGui_drawBlock(win,
-                    x,
-                    rectOffset,
+    vlGui_drawBlock(win, x, rectOffset,
                     win->win_width - 2 - (2 * VLGUI_MENU_ENTRY_MARGIN) - menu->selectedRectRetract,
-                    font->fontHeight,
-                    VLGUI_COLOR_CONVERT);
+                    font->fontHeight, VLGUI_COLOR_CONVERT);
     vlGui_drawPoint(win, x, rectOffset, VLGUI_COLOR_BLACK);
     vlGui_drawPoint(win, x, rectOffset + font->fontHeight - 1, VLGUI_COLOR_BLACK);
-    vlGui_drawPoint(
-        win, win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3, rectOffset, VLGUI_COLOR_BLACK);
-    vlGui_drawPoint(win,
-                    win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3,
-                    rectOffset + font->fontHeight - 1,
+    vlGui_drawPoint(win, win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3, rectOffset,
                     VLGUI_COLOR_BLACK);
+    vlGui_drawPoint(win, win->win_width - VLGUI_MENU_ENTRY_MARGIN - 3,
+                    rectOffset + font->fontHeight - 1, VLGUI_COLOR_BLACK);
 
     // if (entrySelected->checkbox) {
     //     vlGui_drawBlock(win, win->win_width - 12 - 8,
@@ -634,8 +623,8 @@ vlGui_menuCreate(vlGui_window_t *parent, int16_t x, int16_t y, int16_t width, ui
     vlGui_menu_t *menu;
     VLGUI_ASSERT(parent);
 
-    menu = (vlGui_menu_t *)vlGui_windowCreate(
-        parent, x, y, width, height, sizeof(*menu) - sizeof(*parent));
+    menu = (vlGui_menu_t *)vlGui_windowCreate(parent, x, y, width, height,
+                                              sizeof(*menu) - sizeof(*parent));
     if (!menu) {
         return menu;
     }

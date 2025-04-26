@@ -26,8 +26,9 @@
 #include "vlGui_window.h"
 #include "vlGui_port.h"
 #include "vlGui_base.h"
-#include "vlGui_fonts.h"
+#include "fonts/vlGui_fonts.h"
 #include <assert.h>
+#include <stdio.h>
 
 #define VLGUI_COLOR_BLACK (0)
 #define VLGUI_COLOR_WHITE (1)
@@ -98,6 +99,8 @@ void vlGui_refresh(void);
 struct vlGui_driver_t *vlGui_portGetDriver(void);
 
 void vlGui_setFont(const struct vlGui_font_t *font);
+
+struct vlGui_t *vlGui_getCurScreenInstance(void);
 
 /*
  **************************************************************************************************

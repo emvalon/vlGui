@@ -27,7 +27,7 @@
 #include "vlGui.h"
 #include "vlGui_window.h"
 #include "vlGui_input.h"
-#include "vlGui_fonts.h"
+#include "fonts/vlGui_fonts.h"
 #include "vlGui_engine.h"
 #include "vlGui_scrollBar.h"
 

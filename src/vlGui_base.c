@@ -22,10 +22,36 @@
  */
 #include "vlGui.h"
 #include "vlGui_base.h"
+#include "vlGui_window.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 extern struct vlGui_t *vlGui_cur_screen;
+
+int
+vlGui_baseGetOverlappingArea(vlGui_windowRectArea_t *rect1, vlGui_windowRectArea_t *rect2)
+{
+    int16_t lx, rx;
+    int16_t ty, by;
+
+    lx = VLGUI_MAX(rect1->x, rect2->x);
+    rx = VLGUI_MIN(rect1->x + rect1->width, rect2->x + rect2->width);
+    if (lx >= rx) {
+        return -1;
+    }
+    ty = VLGUI_MAX(rect1->y, rect2->y);
+    by = VLGUI_MIN(rect1->y + rect1->hight, rect2->y + rect2->hight);
+    if (ty >= by) {
+        return -1;
+    }
+
+    rect1->x = lx;
+    rect1->width = rx - lx;
+    rect1->y = ty;
+    rect1->hight = by - ty;
+    return 0;
+}
+
 /**
  *
  * @brief Fill block with given color.
@@ -157,6 +183,51 @@ drawLineByPixel(vlGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, int16_t
             y1 += signY;
         } else {
             /*nothing to do*/
+        }
+    }
+}
+
+void
+vlGui_drawHLine(vlGui_window_t *win, int16_t x, int16_t y, uint8_t len, uint8_t width,
+                uint8_t color)
+{
+    vlGui_windowRectArea_t rect1;
+    vlGui_windowRectArea_t rect2;
+    struct vlGui_driver_t *display = vlGui_cur_screen->displayDriver;
+
+    VLGUI_ASSERT(width);
+
+    rect1.x = 0;
+    rect1.y = 0;
+    rect1.width = vlGui_cur_screen->width;
+    rect1.hight = vlGui_cur_screen->height;
+
+    rect2.x = win->x1;
+    rect2.width = win->win_width;
+    rect2.y = win->y1;
+    rect2.hight = win->win_height;
+
+    if (vlGui_baseGetOverlappingArea(&rect1, &rect2)) {
+        return;
+    }
+
+    rect2.x = win->x1 + x;
+    rect2.width = len;
+    rect2.y = win->y1 + y;
+    rect2.hight = width;
+
+    if (vlGui_baseGetOverlappingArea(&rect1, &rect2)) {
+        return;
+    }
+
+    if (display->pDrawBlock) {
+        display->pDrawBlock(rect1.x, rect1.y, rect1.width, rect1.hight, color);
+        return;
+    }
+
+    for (int16_t row = 0; row < rect1.hight; row++) {
+        for (int16_t i = 0; i < rect1.width; i++) {
+            display->pDrawPoint(rect1.x + i, rect1.y + row, color);
         }
     }
 }

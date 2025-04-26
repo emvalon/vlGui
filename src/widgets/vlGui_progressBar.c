@@ -25,7 +25,7 @@
 #include "vlGui.h"
 #include "vlGui_base.h"
 #include "widgets/vlGui_progressBar.h"
-#include "vlGui_fonts.h"
+#include "fonts/vlGui_fonts.h"
 
 #define VLGUI_PROGRESSBAR_LEFT_MARGIN (5)
 #define VLGUI_PROGRESSBAR_TOP_MARGIN (3)

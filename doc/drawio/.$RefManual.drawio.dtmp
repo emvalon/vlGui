@@ -1,0 +1,37 @@
+<mxfile host="Electron" modified="2025-04-26T07:31:24.756Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="cLHZPfScWna4vbhp0yha" version="21.2.8" type="device">
+  <diagram name="Arch" id="J7ol4yucV4giLQ688vrG">
+    <mxGraphModel dx="705" dy="693" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-1" value="Driver" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="580" width="420" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-3" value="Window" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="180" y="540" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-4" value="Screen" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="180" y="460" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-11" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.polygon;polyCoords=[[0.25,0],[0.75,0],[1,0],[1,1],[0.19,1],[0.19,0.43],[0,0.43],[0,0]];polyline=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="230" y="420" width="370" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-12" value="UI / Widgets&lt;br&gt;Fonts" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="390" y="440" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-15" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.polygon;polyCoords=[[0.3,0.4],[1,0.4],[1,0.7],[0.1,0.69],[0.1,1],[0,1],[0,0.75],[0,0.4]];polyline=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="180" y="330" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-16" value="User Application" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="380" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-17" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.polygon;polyCoords=[[0.3,0.4],[1,0.4],[1,0.7],[0.1,0.69],[0.1,1],[0,1],[0,0.75],[0,0.4]];polyline=0;fillColor=#fff2cc;strokeColor=#d6b656;flipH=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="450" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp7M_MlK634FYoFB-g5I-18" value="UI / Base" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="500" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

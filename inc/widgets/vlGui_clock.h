@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include "vlGui_window.h"
 #include "vlGui_input.h"
-#include "vlGui_fonts.h"
+#include "fonts/vlGui_fonts.h"
 
 struct vlGui_clockDate {
     uint16_t year;

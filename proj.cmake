@@ -15,10 +15,10 @@ include_directories(
 
 AUX_SOURCE_DIRECTORY(${ROOT_PAT}/src DIR_SRCS)
 AUX_SOURCE_DIRECTORY(${ROOT_PAT}/src/widgets DIR_SRCS)
+AUX_SOURCE_DIRECTORY(${ROOT_PAT}/src/fonts DIR_SRCS)
+AUX_SOURCE_DIRECTORY(${ROOT_PAT}/src/fonts/lib DIR_SRCS)
 
 list(APPEND SRC
     ${DIR_SRCS}
     ${ROOT_PAT}/port/vlGui_port.c
-    ${ROOT_PAT}/src/fonts/vlGui_fonts.c
-    ${ROOT_PAT}/src/fonts/vlGui_wenquan_9pt.c
 )

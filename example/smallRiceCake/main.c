@@ -29,27 +29,42 @@
 #include "vlGui.h"
 #include "vlGui_input.h"
 #include "ui/ui.h"
+#include "fonts/vlGui_u8Fonts.h"
 
-#define STATUS_BAR_HEIGHT (0)
+#define STATUS_BAR_HEIGHT (8)
+#define STATUS_BAR_SPACING (0)
 
 static void
 menuBarDrawCb(vlGui_window_t *win, uint8_t flag)
 {
+    int16_t x;
+    const struct vlGui_font_t *font;
+
     VLGUI_UNUSED(flag);
 
     vlGui_windowClear(win);
     // vlGui_drawBlock(win, 0, 0, win->win_width, 10, VLGUI_COLOR_WHITE);
-    vlGui_drawRectangle(win, 110, 1, 12, 7, VLGUI_COLOR_WHITE);
-    vlGui_drawLine(win, 109, 3, 109, 5, 2, VLGUI_COLOR_WHITE);
+    // vlGui_drawRectangle(win, 110, 1, 12, 7, VLGUI_COLOR_WHITE);
+    // vlGui_drawLine(win, 109, 3, 109, 5, 2, VLGUI_COLOR_WHITE);
 
-    for (uint8_t i = 0; i < 3; i++) {
-        vlGui_drawLine(win, 112 + (i * 3), 3, 112 + (i * 3), 5, 2, VLGUI_COLOR_WHITE);
-    }
+    font = vlGui_font_openIconicEmbeded8x8;
+    vlGui_setFont(font);
+    x = win->win_width;
+    x -= font->fontWidth + STATUS_BAR_SPACING;
+    /* Battery icon */
+    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x49);
 
-    for (uint8_t i = 0; i < 3; i++) {
-        vlGui_drawLine(
-            win, 100 - (i * 2), 7 - (i * 2), 100 + (i * 2), 7 - (i * 2), 1, VLGUI_COLOR_WHITE);
-    }
+    /* Bluetooth icon */
+    x -= font->fontWidth + STATUS_BAR_SPACING;
+    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x4a);
+
+    /* Wifi icon */
+    x -= font->fontWidth + STATUS_BAR_SPACING;
+    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x50);
+
+    /* warning icon */
+    x -= font->fontWidth + STATUS_BAR_SPACING;
+    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x47);
 }
 
 int
@@ -66,8 +81,8 @@ main(void)
 
     mainWin = vlinGui_getMainWindow(&screen);
     vlGui_windowSetDrawCb(mainWin, menuBarDrawCb);
-    ui_homeWinCreate(
-        mainWin, 0, STATUS_BAR_HEIGHT, mainWin->win_width, mainWin->win_height - STATUS_BAR_HEIGHT);
+    ui_homeWinCreate(mainWin, 0, STATUS_BAR_HEIGHT, mainWin->win_width,
+                     mainWin->win_height - STATUS_BAR_HEIGHT);
 
     /* Fresh the screen with about 30 fps */
     while (1) {

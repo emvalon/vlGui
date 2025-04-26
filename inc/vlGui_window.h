@@ -37,6 +37,14 @@
 #define VLGUI_WIN_DRAW_REFRESH (1)
 #define VLGUI_WIN_DRAW_BACKGROUND (2)
 
+struct vlGui_windowRectArea {
+    int16_t x;
+    int16_t y;
+    int16_t width;
+    int16_t hight;
+};
+typedef struct vlGui_windowRectArea vlGui_windowRectArea_t;
+
 struct vlGui_window {
     uint8_t type : 4;
     uint8_t animation : 1;

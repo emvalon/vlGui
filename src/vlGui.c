@@ -462,3 +462,9 @@ vlGui_switchEffectLargenCb(void *param, int16_t delta)
         }
     }
 }
+
+struct vlGui_t *
+vlGui_getCurScreenInstance(void)
+{
+    return vlGui_cur_screen;
+}

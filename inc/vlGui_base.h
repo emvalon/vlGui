@@ -31,6 +31,9 @@ void vlGui_drawBlock(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, i
 
 void vlGui_drawPoint(vlGui_window_t *win, int16_t x, int16_t y, uint8_t color);
 
+void vlGui_drawHLine(vlGui_window_t *win, int16_t x, int16_t y, uint8_t len, uint8_t width,
+                     uint8_t color);
+
 void vlGui_drawLine(vlGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, int16_t y2,
                     int16_t width, uint8_t color);
 
