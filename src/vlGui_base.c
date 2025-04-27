@@ -359,6 +359,58 @@ vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16
 }
 
 void
+vlGui_drawBitmapInRect(vlGui_window_t *win, vlGui_windowRectArea_t *rect, const uint8_t *bitmap)
+{
+    vlGui_windowRectArea_t winRect;
+    uint16_t w, h;
+    uint16_t pw, ph;
+
+    winRect.x = win->x1;
+    winRect.y = win->y1;
+    winRect.width = win->win_width;
+    winRect.hight = win->win_height;
+
+    if (vlGui_baseGetOverlappingArea(&winRect, rect)) {
+        return;
+    }
+
+    w = bitmap[0] | (bitmap[1] << 8);
+    // 宽度按8的倍数向上取整
+    // TODO: 需要不按照字节对齐，以减少内存
+    w = ((w + 7) / 8) * 8;
+    pw = VLGUI_MIN(w, winRect.width);
+
+    h = bitmap[2] | (bitmap[3] << 8);
+    ph = VLGUI_MIN(h, winRect.hight);
+
+    uint16_t l, r;
+    uint8_t v;
+
+    bitmap += 4;
+    v = *bitmap;
+
+    for (l = 0; l < ph; l++) {
+        r = 0;
+        while (1) {
+            if ((v & 0x01) && (r < pw)) {
+                vlGui_drawPoint(win, winRect.x + r, winRect.y + l, 1);
+            }
+
+            ++r;
+            if ((r % 8) == 0) {
+                ++bitmap;
+                v = *bitmap;
+                if (r == w) {
+                    break;
+                }
+            } else {
+                v >>= 1;
+            }
+        }
+    }
+}
+
+void
 vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height,
                     uint8_t color)
 {

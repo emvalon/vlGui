@@ -1,0 +1,16 @@
+<mxfile host="Electron" modified="2025-04-27T16:01:16.104Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="BFrf1SWWzGTFdDp__Aps" version="21.2.8" type="device">
+  <diagram name="petEgg" id="B3OamZNHvZ3Feebf6zFA">
+    <mxGraphModel dx="617" dy="607" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rAMtasVIbsSn_YOCmKEd-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="291.5" y="390" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d46Gz1_tIezmHDXyRlUa-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=data:image/svg+xml,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBoZWlnaHQ9IjY0IiB3aWR0aD0iNjQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgY2xhc3M9Imljb24iPjxwYXRoIGZpbGw9IiMyYzJjMmMiIGQ9Ik01MDMgMTE3Yy0xOTAuOSAwLTMyNC45IDMxNy4zLTMyNC45IDQ4OS4xQzE3OC4xIDc4Mi4yIDMyNi45IDkzMSA1MDMgOTMxczMyNC45LTE0OC44IDMyNC45LTMyNC45YzAtMTcxLjgtMTM0LTQ4OS4xLTMyNC45LTQ4OS4xeiBtMCA3NjYuNWMtMTUwLjQgMC0yNzcuNC0xMjctMjc3LjQtMjc3LjQgMC0xNDcuMyAxMTkuOS00NDEuNiAyNzcuNC00NDEuNnMyNzcuNCAyOTQuMyAyNzcuNCA0NDEuNmMwIDE1MC40LTEyNy4xIDI3Ny40LTI3Ny40IDI3Ny40eiIvPjxwYXRoIGZpbGw9IiMyYzJjMmMiIGQ9Ik00MDQuOCAzNTMuOW0tNDIuOCAwYTQyLjggNDIuOCAwIDEgMCA4NS42IDAgNDIuOCA0Mi44IDAgMSAwLTg1LjYgMFoiLz48cGF0aCBmaWxsPSIjMmMyYzJjIiBkPSJNMzYyIDU5NC41bS03MC41IDBhNzAuNSA3MC41IDAgMSAwIDE0MSAwIDcwLjUgNzAuNSAwIDEgMC0xNDEgMFoiLz48cGF0aCBmaWxsPSIjMmMyYzJjIiBkPSJNNjE1LjMgNjkwLjdtLTEwNS40IDBhMTA1LjQgMTA1LjQgMCAxIDAgMjEwLjggMCAxMDUuNCAxMDUuNCAwIDEgMC0yMTAuOCAwWiIvPjwvc3ZnPg==;" vertex="1" parent="1">
+          <mxGeometry x="295" y="392.5" width="55" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

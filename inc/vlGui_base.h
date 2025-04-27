@@ -43,6 +43,9 @@ void vlGui_drawLine(vlGui_window_t *win, int16_t x1, int16_t y1, int16_t x2, int
 void vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height,
                       const uint8_t *bitmap);
 
+void vlGui_drawBitmapInRect(vlGui_window_t *win, vlGui_windowRectArea_t *rect,
+                            const uint8_t *bitmap);
+
 void vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height,
                          uint8_t color);
 
