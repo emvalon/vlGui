@@ -31,7 +31,7 @@
 #include "ui/ui.h"
 #include "fonts/vlGui_u8Fonts.h"
 
-#define STATUS_BAR_HEIGHT (8)
+#define STATUS_BAR_HEIGHT (9)
 #define STATUS_BAR_SPACING (0)
 
 static void
@@ -52,19 +52,19 @@ menuBarDrawCb(vlGui_window_t *win, uint8_t flag)
     x = win->win_width;
     x -= font->fontWidth + STATUS_BAR_SPACING;
     /* Battery icon */
-    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x49);
+    vlGui_u8FontsDrawGlyph(win, x, 1, 0x49);
 
     /* Bluetooth icon */
     x -= font->fontWidth + STATUS_BAR_SPACING;
-    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x4a);
+    vlGui_u8FontsDrawGlyph(win, x, 1, 0x4a);
 
     /* Wifi icon */
     x -= font->fontWidth + STATUS_BAR_SPACING;
-    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x50);
+    vlGui_u8FontsDrawGlyph(win, x, 1, 0x50);
 
     /* warning icon */
     x -= font->fontWidth + STATUS_BAR_SPACING;
-    vlGui_u8FontsDrawGlyph(win, x, STATUS_BAR_HEIGHT, 0x47);
+    vlGui_u8FontsDrawGlyph(win, x, 1, 0x47);
 }
 
 int

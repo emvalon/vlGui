@@ -46,7 +46,7 @@ const uint8_t u8g2_font_open_iconic_weather_1x_t[103] U8G2_FONT_SECTION(
 
 const struct vlGui_font_t __vlGui_font_openIconicWeather8x8 = {
     .version = 0x1,
-    .encoding = VLGUI_FONT_ENCOIDING_U8G2,
+    .encoding = VLGUI_FONT_ENCOIDING_U8G2_UNICODE,
     .fontWidth = 8,
     .fontHeight = 8,
     .bytesPerChar = 0,
@@ -75,7 +75,7 @@ const uint8_t u8g2_font_open_iconic_embedded_1x_t[244] U8G2_FONT_SECTION(
 
 const struct vlGui_font_t __vlGui_font_openIconicEmbeded8x8 = {
     .version = 0x1,
-    .encoding = VLGUI_FONT_ENCOIDING_U8G2,
+    .encoding = VLGUI_FONT_ENCOIDING_U8G2_UNICODE,
     .fontWidth = 8,
     .fontHeight = 8,
     .bytesPerChar = 0,

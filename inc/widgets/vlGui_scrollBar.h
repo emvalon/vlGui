@@ -61,11 +61,15 @@ void vlGui_scrollBarInitData(vlGui_window_t *win, vlGui_scrollBarData_t *data, u
 
 void vlGui_scrollBarSetRange(vlGui_scrollBarData_t *data, uint8_t range);
 
+uint8_t vlGui_scrollBarGetRange(vlGui_scrollBarData_t *data);
+
 void vlGui_scrollBarSetVisible(vlGui_scrollBarData_t *data, uint8_t visible);
 
 uint8_t vlGui_scrollBarGetVisible(vlGui_scrollBarData_t *data);
 
 void vlGui_scrollBarSetPosition(vlGui_scrollBarData_t *data, uint8_t pos);
+
+uint8_t vlGui_scrollBarGetPosition(vlGui_scrollBarData_t *data);
 
 void vlGui_scrollBarShowEndpoint(vlGui_scrollBarData_t *data, uint8_t show);
 

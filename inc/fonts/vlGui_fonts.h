@@ -27,7 +27,7 @@
 
 #define VLGUI_FONT_ENCOIDING_UTF8 (0)
 #define VLGUI_FONT_ENCODING_GB2312 (1)
-#define VLGUI_FONT_ENCOIDING_U8G2 (2)
+#define VLGUI_FONT_ENCOIDING_U8G2_UNICODE (2)
 
 #define VLGUI_FONT_STR_DEF(name, language)                                                         \
     extern const unsigned char str_##name##_##language[];                                          \

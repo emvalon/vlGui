@@ -115,6 +115,8 @@ void vlGui_windowResize(vlGui_window_t *win, int16_t width, int16_t hight);
 
 void vlGui_windowSetSwitchEffect(vlGui_window_t *win, vlGui_engineProcessCb_t effect);
 
+void vlGui_windowAppendEngine(vlGui_window_t *win, vlGui_engine_t *engine);
+
 #define vlGui_windowScrollAnimation(win, dx, dy, ms, cb, arg)
 
 #endif

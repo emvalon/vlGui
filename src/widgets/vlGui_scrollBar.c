@@ -139,6 +139,12 @@ vlGui_scrollBarSetRange(vlGui_scrollBarData_t *data, uint8_t range)
     data->totalCount = range;
 }
 
+uint8_t
+vlGui_scrollBarGetRange(vlGui_scrollBarData_t *data)
+{
+    return data->totalCount;
+}
+
 void
 vlGui_scrollBarSetVisible(vlGui_scrollBarData_t *data, uint8_t visible)
 {
@@ -157,6 +163,12 @@ vlGui_scrollBarSetPosition(vlGui_scrollBarData_t *data, uint8_t pos)
     if (pos <= data->totalCount) {
         data->position = pos;
     }
+}
+
+uint8_t
+vlGui_scrollBarGetPosition(vlGui_scrollBarData_t *data)
+{
+    return data->position;
 }
 
 void

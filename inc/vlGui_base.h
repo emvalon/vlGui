@@ -49,7 +49,7 @@ void vlGui_drawBitmapInRect(vlGui_window_t *win, vlGui_windowRectArea_t *rect,
 void vlGui_drawRectangle(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16_t height,
                          uint8_t color);
 
-void vlGui_drawString(vlGui_window_t *win, int16_t x, int16_t y, char *str, uint8_t color);
+void vlGui_drawString(vlGui_window_t *win, int16_t x, int16_t y, const char *str, uint8_t color);
 
 void vlGui_drawCircle(vlGui_window_t *win, int16_t x0, int16_t y0, uint8_t rad);
 

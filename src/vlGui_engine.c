@@ -117,7 +117,6 @@ vlGui_engineGetResult(vlGui_engine_t *engine)
     if (engine->cumulative) {
         return engine->currentDistance + expected;
     }
-
     if (expected != engine->currentDistance) {
         delta = expected - engine->currentDistance;
         engine->currentDistance = expected;

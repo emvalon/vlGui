@@ -63,11 +63,11 @@ static void
 vlGui_refreshScreen(vlGui_window_t *firstWin, vlGui_window_t *secWin)
 {
     if (firstWin->refresh) {
-        firstWin->refresh = 0;
+        // firstWin->refresh = 0;
         vlGui_refreshWindow(firstWin, true);
     }
     if (secWin && secWin->refresh) {
-        secWin->refresh = 0;
+        // secWin->refresh = 0;
         vlGui_refreshWindow(secWin, false);
     }
     vlGui_cur_screen->displayDriver->pFresh();

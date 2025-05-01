@@ -23,6 +23,7 @@
 #include "vlGui.h"
 #include "vlGui_window.h"
 #include "vlGui_base.h"
+#include "vlGui_engine.h"
 #include <string.h>
 
 /**
@@ -223,4 +224,14 @@ void
 vlGui_windowSetSwitchEffect(vlGui_window_t *win, vlGui_engineProcessCb_t effect)
 {
     win->switchEffect = effect;
+}
+
+void
+vlGui_windowAppendEngine(vlGui_window_t *win, vlGui_engine_t *engine)
+{
+    if (win->engines) {
+        vlGui_engineAppend(win->engines, engine);
+    } else {
+        win->engines = engine;
+    }
 }

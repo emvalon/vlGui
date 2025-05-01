@@ -20,11 +20,14 @@
  * limitations under the License.
  *
  */
+#include <stdlib.h>
+#include <stdio.h>
 #include "vlGui.h"
 #include "vlGui_base.h"
 #include "vlGui_window.h"
-#include <stdlib.h>
-#include <stdio.h>
+#if VLGUI_SUPPORT_U8G2_FONT
+#include "fonts/vlGui_u8Fonts.h"
+#endif // VLGUI_SUPPORT_U8G2_FONT
 
 extern struct vlGui_t *vlGui_cur_screen;
 
@@ -361,27 +364,45 @@ vlGui_drawBitmap(vlGui_window_t *win, int16_t x, int16_t y, int16_t width, int16
 void
 vlGui_drawBitmapInRect(vlGui_window_t *win, vlGui_windowRectArea_t *rect, const uint8_t *bitmap)
 {
-    vlGui_windowRectArea_t winRect;
     uint16_t w, h;
     uint16_t pw, ph;
 
-    winRect.x = win->x1;
-    winRect.y = win->y1;
-    winRect.width = win->win_width;
-    winRect.hight = win->win_height;
+    vlGui_windowRectArea_t rect1;
+    vlGui_windowRectArea_t rect2;
+    struct vlGui_driver_t *display = vlGui_cur_screen->displayDriver;
 
-    if (vlGui_baseGetOverlappingArea(&winRect, rect)) {
+    rect1.x = 0;
+    rect1.y = 0;
+    rect1.width = vlGui_cur_screen->width;
+    rect1.hight = vlGui_cur_screen->height;
+
+    rect2.x = win->x1;
+    rect2.width = win->win_width;
+    rect2.y = win->y1;
+    rect2.hight = win->win_height;
+
+    if (vlGui_baseGetOverlappingArea(&rect1, &rect2)) {
         return;
     }
 
+    rect2.x = rect->x + win->x1;
+    rect2.y = rect->y + win->y1;
+    rect2.width = rect->width;
+    rect2.hight = rect->hight;
+
+    if (vlGui_baseGetOverlappingArea(&rect1, &rect2)) {
+        return;
+    }
+
+    // TODO: 需要检查左上角是否需要绘制
     w = bitmap[0] | (bitmap[1] << 8);
     // 宽度按8的倍数向上取整
     // TODO: 需要不按照字节对齐，以减少内存
     w = ((w + 7) / 8) * 8;
-    pw = VLGUI_MIN(w, winRect.width);
+    pw = VLGUI_MIN(w, rect1.width);
 
     h = bitmap[2] | (bitmap[3] << 8);
-    ph = VLGUI_MIN(h, winRect.hight);
+    ph = VLGUI_MIN(h, rect1.hight);
 
     uint16_t l, r;
     uint8_t v;
@@ -393,7 +414,7 @@ vlGui_drawBitmapInRect(vlGui_window_t *win, vlGui_windowRectArea_t *rect, const 
         r = 0;
         while (1) {
             if ((v & 0x01) && (r < pw)) {
-                vlGui_drawPoint(win, winRect.x + r, winRect.y + l, 1);
+                display->pDrawPoint(rect1.x + r, rect1.y + l, VLGUI_COLOR_WHITE);
             }
 
             ++r;
@@ -463,6 +484,13 @@ vlGui_drawGlyph(vlGui_window_t *win, int16_t x, int16_t y, uint16_t glyph,
     uint16_t segIndex;
     const struct vlGui_font_table_item_t *item;
 
+#if VLGUI_SUPPORT_U8G2_FONT
+    if (font->encoding == VLGUI_FONT_ENCOIDING_U8G2_UNICODE) {
+        vlGui_u8FontsDrawGlyph(win, x, y, glyph);
+        return;
+    }
+#endif // VLGUI_SUPPORT_U8G2_FONT
+
     /* Search for correct segment */
     for (segIndex = 0; segIndex < font->tableLen; segIndex++) {
         item = &font->table[segIndex];
@@ -501,14 +529,18 @@ vlGui_drawGlyph(vlGui_window_t *win, int16_t x, int16_t y, uint16_t glyph,
 }
 
 static uint16_t
-vlGui_getGlyphCode(char **str, uint8_t coding)
+vlGui_getGlyphCode(const char **str, uint8_t coding)
 {
-    char *addr;
+    const char *addr;
     uint16_t glyph;
 
     addr = *str;
-    if (coding == VLGUI_FONT_ENCODING_GB2312) {
-        if (addr[0] && addr[1]) {
+    switch (coding) {
+    case VLGUI_FONT_ENCODING_GB2312:
+#if VLGUI_SUPPORT_U8G2_FONT
+    case VLGUI_FONT_ENCOIDING_U8G2_UNICODE:
+#endif // VLGUI_SUPPORT_U8G2_FONT
+        if (addr[0]) {
 #if VLGUI_UNICODE_BIGEND
             /* Get this glyph with big-endian */
             glyph = (addr[0] << 8) | (uint8_t)addr[1];
@@ -521,10 +553,12 @@ vlGui_getGlyphCode(char **str, uint8_t coding)
         } else {
             glyph = 0;
         }
-    } else if (coding == VLGUI_FONT_ENCOIDING_UTF8) {
+        break;
+    case VLGUI_FONT_ENCOIDING_UTF8:
         glyph = addr[0];
         *str = *str + 1;
-    } else {
+        break;
+    default:
         glyph = 0;
     }
 
@@ -532,7 +566,7 @@ vlGui_getGlyphCode(char **str, uint8_t coding)
 }
 
 void
-vlGui_drawString(vlGui_window_t *win, int16_t x, int16_t y, char *str, uint8_t color)
+vlGui_drawString(vlGui_window_t *win, int16_t x, int16_t y, const char *str, uint8_t color)
 {
     int16_t offset;
     uint16_t glyph;

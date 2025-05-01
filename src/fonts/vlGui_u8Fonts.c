@@ -367,9 +367,9 @@ vlGui_u8FontsDrawUnicode(vlGui_window_t *win, const vlGui_u8FontsInfo_t *fontInf
     y = vlGui_u8FontsDecodeGetSignedBits(decode, fontInfo->bits_per_char_y);
     d = vlGui_u8FontsDecodeGetSignedBits(decode, fontInfo->bits_per_delta_x);
 
-    if (decode->glyph_width > 0) {        
+    if (decode->glyph_width > 0) {
         posX += x;
-        posY -= h + y;
+        posY += y;
 
         /* reset local x/y position */
         decode->x = 0;
